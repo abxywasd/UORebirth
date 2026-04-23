@@ -194,7 +194,7 @@ namespace Server.Regions
 			mobile.MoveToWorld( loc, map );
 			mobile.OnAfterSpawn();
 
-			return mobile;
+			return (ISpawnable)mobile;
 		}
 
 		protected virtual Mobile CreateMobile()
@@ -247,7 +247,7 @@ namespace Server.Regions
 			item.MoveToWorld( loc, map );
 			item.OnAfterSpawn();
 
-			return item;
+			return (ISpawnable)item;
 		}
 
 		protected virtual Item CreateItem()

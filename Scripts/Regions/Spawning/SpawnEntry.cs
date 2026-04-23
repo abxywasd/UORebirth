@@ -84,6 +84,22 @@ namespace Server.Regions
 			return m_Region.RandomSpawnLocation( spawnHeight, land, water, m_Home, m_Range );
 		}
 
+		// Implémentation de ISpawner pour la compatibilité Rebirth
+        public Point3D Home
+        {
+            get { return m_Home; }
+        }
+
+        public int Range
+        {
+            get { return m_Range; }
+        }
+
+        public bool CanSpawn
+        {
+            get { return true; } // Par défaut à true pour les SpawnEntries
+        }
+
 		public void Start()
 		{
 			if ( m_Running )
@@ -120,9 +136,9 @@ namespace Server.Regions
 			//	((BaseCreature)spawn).RemoveIfUntamed = this.RemoveIfUntamed;
 		}
 
-		void ISpawner.Remove( ISpawnable spawn )
+		void ISpawner.Remove( object o )
 		{
-			m_SpawnedObjects.Remove( spawn );
+			m_SpawnedObjects.Remove( (ISpawnable)o );
 
 			CheckTimer();
 		}
