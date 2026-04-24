@@ -12,6 +12,7 @@ namespace Server.Mobiles
         private DateTime m_NextCastTime;
         private DateTime m_NextSpeechTime;
         private DateTime m_NextActivityChange;
+        private DateTime m_NextTargetScanTime;
         private int      m_CombatTick;
 
         // Navigation stuck detection
@@ -44,9 +45,13 @@ namespace Server.Mobiles
                 return true;
             }
 
-            // Recruited bots obey their control master via the standard Obey() path
+            // Controlled bots: handle attack orders and master-assist ourselves
             if ( m_Mobile.Controled && m_Mobile.ControlMaster != null )
-                return base.Think();
+                return DoControlledThink( bot );
+
+            // Uncontrolled: self-defense runs before any activity
+            if ( CheckSelfDefense( bot ) )
+                return true;
 
             switch ( bot.CurrentActivity )
             {
@@ -61,6 +66,82 @@ namespace Server.Mobiles
             }
         }
 
+        // ── Obey override: run our custom logic every controlled AI tick ──────────
+        // The RunUO timer calls Obey() (not Think()) when Controled==true.
+        // Without this override, Think()/DoControlledThink() only runs when
+        // DoOrderAttack fires — so the bot wanders to its spawn point and
+        // goes out of EndPickTarget range (14 tiles) before the player can
+        // issue a kill order.
+        public override bool Obey()
+        {
+            if ( m_Mobile.Deleted )
+                return false;
+
+            PlayerBot bot = m_Mobile as PlayerBot;
+            if ( bot == null )
+                return base.Obey();
+
+            Target targ = m_Mobile.Target;
+            if ( targ != null )
+            {
+                ProcessSpellTarget( targ, bot );
+                return true;
+            }
+
+            return DoControlledThink( bot );
+        }
+
+        // ── Controlled-bot dispatch ────────────────────────────────────────────
+        private bool DoControlledThink( PlayerBot bot )
+        {
+            Mobile master = m_Mobile.ControlMaster;
+            if ( master == null || master.Deleted )
+                return false;
+
+            // Attack order: fight the designated target directly
+            if ( m_Mobile.ControlOrder == OrderType.Attack )
+            {
+                Mobile ct = m_Mobile.ControlTarget;
+                if ( ct != null && !ct.Deleted && ct.Alive && ct.Map == m_Mobile.Map )
+                {
+                    m_Mobile.Combatant = ct;
+                    m_Mobile.Warmode   = true;
+                    bot.ActivityState.SetActivity( BotActivity.Combat );
+                    return DoActivityCombat( bot );
+                }
+                // ct != null but dead/gone — clear the stale order
+                // ct == null means the targeting cursor hasn't been resolved yet; keep order pending
+                if ( ct != null )
+                {
+                    m_Mobile.ControlTarget = null;
+                    m_Mobile.ControlOrder  = OrderType.None;
+                }
+            }
+
+            // Assist master when they are in combat
+            if ( master.Alive && master.Combatant != null
+                 && !master.Combatant.Deleted && master.Combatant.Alive )
+            {
+                m_Mobile.Combatant = master.Combatant;
+                m_Mobile.Warmode   = true;
+                bot.ActivityState.SetActivity( BotActivity.Combat );
+                return DoActivityCombat( bot );
+            }
+
+            // Defend ourselves if attacked
+            if ( CheckSelfDefense( bot ) )
+                return true;
+
+            // Default: follow master
+            m_Mobile.Warmode = false;
+            bot.ActivityState.SetActivity( BotActivity.Wandering );
+            if ( master.Alive && !m_Mobile.InRange( master, 3 ) )
+                MoveTo( master, true, 2 );
+            else
+                base.DoActionWander();
+            return true;
+        }
+
         // ── Activity: Wander ──────────────────────────────────────────────────
         private bool DoActivityWander( PlayerBot bot )
         {
@@ -73,8 +154,24 @@ namespace Server.Mobiles
                 m_NextActivityChange = DateTime.Now + TimeSpan.FromSeconds( 30.0 + Utility.Random( 60 ) );
             }
 
-            // Scan for enemies
-            if ( AquireFocusMob( m_Mobile.RangePerception, m_Mobile.FightMode, false, false, true ) )
+            // PKs proactively scan for any valid target (rate-limited to ~2s)
+            if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+            {
+                if ( DateTime.Now >= m_NextTargetScanTime )
+                {
+                    m_NextTargetScanTime = DateTime.Now + TimeSpan.FromSeconds( 2.0 );
+                    Mobile target = ScanForTarget( bot, m_Mobile.RangePerception );
+                    if ( target != null )
+                    {
+                        m_Mobile.Combatant = target;
+                        m_Mobile.FocusMob  = target;
+                        bot.ActivityState.SetActivity( BotActivity.Combat );
+                        m_Mobile.Warmode = true;
+                        return true;
+                    }
+                }
+            }
+            else if ( AquireFocusMob( m_Mobile.RangePerception, m_Mobile.FightMode, false, false, true ) )
             {
                 if ( bot.ShouldAttack( m_Mobile.FocusMob ) )
                 {
@@ -110,8 +207,22 @@ namespace Server.Mobiles
                 return true;
             }
 
-            // Interrupt travel if attacked
-            if ( AquireFocusMob( m_Mobile.RangePerception, FightMode.Agressor, false, false, true ) )
+            // Interrupt travel: PKs scan for any target; others react to aggressors only
+            if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller
+                 && DateTime.Now >= m_NextTargetScanTime )
+            {
+                m_NextTargetScanTime = DateTime.Now + TimeSpan.FromSeconds( 2.0 );
+                Mobile target = ScanForTarget( bot, m_Mobile.RangePerception );
+                if ( target != null )
+                {
+                    m_Mobile.Combatant = target;
+                    m_Mobile.FocusMob  = target;
+                    bot.ActivityState.SetActivity( BotActivity.Combat );
+                    m_Mobile.Warmode = true;
+                    return true;
+                }
+            }
+            else if ( AquireFocusMob( m_Mobile.RangePerception, FightMode.Agressor, false, false, true ) )
             {
                 if ( bot.ShouldAttack( m_Mobile.FocusMob ) )
                 {
@@ -182,15 +293,15 @@ namespace Server.Mobiles
                 return DoActivityCombat( bot );
             }
 
-            if ( AquireFocusMob( m_Mobile.RangePerception, FightMode.Closest, false, false, true ) )
+            // Direct scan bypasses AquireFocusMob's faction-check limitation
+            Mobile target = ScanForTarget( bot, m_Mobile.RangePerception );
+            if ( target != null )
             {
-                if ( bot.ShouldAttack( m_Mobile.FocusMob ) )
-                {
-                    m_Mobile.Combatant = m_Mobile.FocusMob;
-                    bot.ActivityState.SetActivity( BotActivity.Combat );
-                    m_Mobile.Warmode = true;
-                    return true;
-                }
+                m_Mobile.Combatant = target;
+                m_Mobile.FocusMob  = target;
+                bot.ActivityState.SetActivity( BotActivity.Combat );
+                m_Mobile.Warmode = true;
+                return true;
             }
 
             WalkRandomInHome( 1, 2, 2 );
@@ -213,14 +324,12 @@ namespace Server.Mobiles
             if ( c == null || c.Deleted || !c.Alive || c.Map != m_Mobile.Map )
             {
                 // Try to find a new target before giving up
-                if ( AquireFocusMob( m_Mobile.RangePerception, m_Mobile.FightMode, false, false, true ) )
+                Mobile next = ScanForTarget( bot, m_Mobile.RangePerception );
+                if ( next != null )
                 {
-                    if ( bot.ShouldAttack( m_Mobile.FocusMob ) )
-                    {
-                        m_Mobile.Combatant = m_Mobile.FocusMob;
-                        m_Mobile.FocusMob  = null;
-                        return true;
-                    }
+                    m_Mobile.Combatant = next;
+                    m_Mobile.FocusMob  = null;
+                    return true;
                 }
 
                 bot.ActivityState.SetActivity( BotActivity.Hunting );
@@ -416,6 +525,62 @@ namespace Server.Mobiles
             {
                 targ.Cancel( m_Mobile, TargetCancelType.Canceled );
             }
+        }
+
+        // ── Self-defense: react to aggressors regardless of current activity ─────
+        private bool CheckSelfDefense( PlayerBot bot )
+        {
+            if ( bot.CurrentActivity == BotActivity.Combat || bot.CurrentActivity == BotActivity.Fleeing )
+                return false;
+
+            List<AggressorInfo> list = m_Mobile.Aggressors;
+            for ( int i = 0; i < list.Count; i++ )
+            {
+                Mobile aggr = ((AggressorInfo)list[i]).Attacker;
+                if ( aggr != null && !aggr.Deleted && aggr.Alive
+                     && aggr.Map == m_Mobile.Map
+                     && m_Mobile.InRange( aggr.Location, m_Mobile.RangePerception ) )
+                {
+                    m_Mobile.Combatant = aggr;
+                    m_Mobile.FocusMob  = aggr;
+                    bot.ActivityState.SetActivity( BotActivity.Combat );
+                    m_Mobile.Warmode = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // ── Direct target scan (bypasses AquireFocusMob faction-check) ──────────
+        private Mobile ScanForTarget( PlayerBot bot, int range )
+        {
+            Map map = bot.Map;
+            if ( map == null || map == Map.Internal )
+                return null;
+
+            Mobile best     = null;
+            double bestDist = double.MaxValue;
+
+            IPooledEnumerable eable = map.GetMobilesInRange( bot.Location, range );
+            foreach ( Mobile m in eable )
+            {
+                if ( !m.Alive || m.Deleted || m.IsDeadBondedPet )
+                    continue;
+                if ( !bot.CanSee( m ) || !bot.InLOS( m ) )
+                    continue;
+                if ( !bot.ShouldAttack( m ) )
+                    continue;
+
+                double dist = bot.GetDistanceToSqrt( m );
+                if ( dist < bestDist )
+                {
+                    bestDist = dist;
+                    best     = m;
+                }
+            }
+            eable.Free();
+
+            return best;
         }
 
         // ── Speech helper ──────────────────────────────────────────────────────

@@ -580,7 +580,12 @@ namespace Server.Mobiles
             if ( target == null || target.Deleted || !target.Alive )
                 return false;
 
-            // PKs attack everything
+            // Never attack own group members
+            if ( m_Group != null && target is PlayerBot
+                 && m_Group.Members.Contains( (PlayerBot)target ) )
+                return false;
+
+            // PKs attack everything else
             if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                 return true;
 

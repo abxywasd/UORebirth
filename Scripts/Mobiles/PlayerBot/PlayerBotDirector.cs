@@ -138,7 +138,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            int live = GetLiveBots().Count;
+            int live = GetRegularBotCount();
             if ( live >= m_TargetBotCount )
             {
                 m_BurstTimer.Stop();
@@ -232,7 +232,7 @@ namespace Server.Mobiles
         private void POITick()
         {
             if ( !m_Enabled || Deleted ) return;
-            if ( GetLiveBots().Count >= m_TargetBotCount ) return;
+            if ( GetRegularBotCount() >= m_TargetBotCount ) return;
 
             List<BotPOI> underpopulated = PlayerBotPOI.GetUnderpopulated();
             int spawned = 0;
@@ -240,7 +240,7 @@ namespace Server.Mobiles
             foreach ( BotPOI poi in underpopulated )
             {
                 if ( spawned >= 3 ) break;
-                if ( GetLiveBots().Count >= m_TargetBotCount ) break;
+                if ( GetRegularBotCount() >= m_TargetBotCount ) break;
 
                 Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
                 PlayerBot bot = new PlayerBot();
@@ -370,6 +370,19 @@ namespace Server.Mobiles
                     result.Add( (PlayerBot)m );
             }
             return result;
+        }
+
+        // Encounter bots are excluded from the population cap
+        private int GetRegularBotCount()
+        {
+            int count = 0;
+            foreach ( Serial s in m_BotSerials )
+            {
+                PlayerBot bot = World.FindMobile( s ) as PlayerBot;
+                if ( bot != null && !bot.Deleted && !bot.IsEncounterBot )
+                    count++;
+            }
+            return count;
         }
 
         private void TryFormRandomGroup()
