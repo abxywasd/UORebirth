@@ -1141,6 +1141,24 @@ namespace Server.Mobiles
 
         public override void OnSpeech( SpeechEventArgs e )
         {
+            if ( !e.Handled && e.Mobile.InRange( this, 6 ) )
+            {
+                // Owner management trigger: "status" or "manage"
+                string speech = e.Speech.ToLower();
+                if ( speech.Contains( "status" ) || speech.Contains( "manage" ) )
+                {
+                    e.Handled = true;
+
+                    if ( this.Controled && this.ControlMaster == e.Mobile )
+                        e.Mobile.SendGump( new PlayerBotManageGump( e.Mobile, this ) );
+                    else
+                        Say( "I don't think we've been introduced..." );
+
+                    base.OnSpeech( e );
+                    return;
+                }
+            }
+
             if ( !e.Handled && e.Mobile.InRange( this, 4 ) )
             {
                 // Hire keyword

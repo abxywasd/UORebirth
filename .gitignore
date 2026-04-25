@@ -1,7 +1,8 @@
 Logs
 /Scripts/Output
-Backups
-RunUO-2.1
+/Backups
+/RunUO-2.1
 badspawn.log
 Packets.log
 Saves
+RunUO.exe

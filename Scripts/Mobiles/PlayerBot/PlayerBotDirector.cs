@@ -34,6 +34,7 @@ namespace Server.Mobiles
             CommandSystem.Register( "BotStatus",        AccessLevel.GameMaster, new CommandEventHandler( BotStatus_OnCommand ) );
             CommandSystem.Register( "HireNearbyBots",   AccessLevel.GameMaster, new CommandEventHandler( HireNearbyBots_OnCommand ) );
             CommandSystem.Register( "DismissBots",      AccessLevel.GameMaster, new CommandEventHandler( DismissBots_OnCommand ) );
+            CommandSystem.Register( "MyBots",           AccessLevel.Player,     new CommandEventHandler( MyBots_OnCommand ) );
         }
 
         // ── Persistent state ───────────────────────────────────────────────────
@@ -484,6 +485,13 @@ namespace Server.Mobiles
             eable.Free();
 
             e.Mobile.SendMessage( "Hired {0} bot{1}.", hired, hired == 1 ? "" : "s" );
+        }
+
+        [Usage("MyBots")]
+        [Description("Opens the PlayerBot management interface for your controlled bots.")]
+        private static void MyBots_OnCommand( CommandEventArgs e )
+        {
+            e.Mobile.SendGump( new PlayerBotListGump( e.Mobile, 0 ) );
         }
 
         [Usage("DismissBots")]
