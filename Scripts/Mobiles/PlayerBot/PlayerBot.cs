@@ -12,6 +12,38 @@ namespace Server.Mobiles
     {
         static Random m_Rnd = new Random();
 
+        // ── Player-typical dye palette ─────────────────────────────────────────
+        private static readonly int[] PlayerHues = new int[]
+        {
+            0x21, 0x26, 0x2B, 0x2F,       // reds
+            0x05, 0x0B, 0x10, 0x15,       // blues
+            0x40, 0x44, 0x48, 0x52,       // greens
+            0x72, 0x76, 0x7A,             // purples
+            0x35, 0x38, 0x8A, 0x8C,       // yellows/oranges
+            0x96, 0x97, 0x99,             // browns/tans
+            0x01, 0x66,                   // blacks/dark
+            0x03F5, 0x047E                // whites/light
+        };
+
+        private static int RandomPlayerHue()
+        {
+            return PlayerHues[Utility.Random( PlayerHues.Length )];
+        }
+
+        private enum ArmorMat { Naked, Leather, Studded, Ringmail, Chain, Bone, Plate }
+
+        // [matIdx, slotIdx]: matIdx = (int)ArmorMat - 1 (Leather=0 … Plate=5)
+        // slotIdx: Chest=0, Legs=1, Arms=2, Gloves=3, Gorget=4, Helm=5
+        private static readonly int[,] SlotChances = new int[,]
+        {
+            {  80,  70,  60,  50,  40,  35 },  // Leather
+            {  80,  70,  60,  50,  40,  35 },  // Studded
+            {  80,  70,  60,  50,  40,   0 },  // Ringmail (no helm slot)
+            {  85,  75,  65,  55,   0,  45 },  // Chain (no gorget slot)
+            {  85,  75,  65,  55,   0,  45 },  // Bone (no gorget slot)
+            {  90,  80,  70,  60,  55,  40 },  // Plate
+        };
+
         // ── Persona ────────────────────────────────────────────────────────────
         private PlayerBotPersona m_Persona;
         private bool             m_IsPlayerKiller;
@@ -129,6 +161,7 @@ namespace Server.Mobiles
             InitOutfit();
             if ( m_UsesMagic )
                 InitReagents();
+            InitBackpack();
             StartSkillTimer();
             m_LastObserved = DateTime.Now;
         }
@@ -347,99 +380,310 @@ namespace Server.Mobiles
             InitHair();
             InitClothing();
             InitArmor();
+            InitFashionLayer();
             InitWeapon();
         }
 
         private void InitClothing()
         {
-            int hue = Utility.RandomNondyedHue();
-
-            // Everyone gets basic clothing
+            // Base layer with vivid player hues
             if ( Female )
             {
                 switch ( Utility.Random( 2 ) )
                 {
-                    case 0: AddItem( new Kilt( hue ) ); break;
-                    default: AddItem( new PlainDress( hue ) ); break;
+                    case 0:  AddItem( new Kilt( RandomPlayerHue() ) ); break;
+                    default: AddItem( new PlainDress( RandomPlayerHue() ) ); break;
                 }
             }
             else
             {
-                AddItem( new LongPants( hue ) );
+                // 30% short pants, 70% long pants
+                if ( Utility.Random( 10 ) < 3 )
+                    AddItem( new ShortPants( RandomPlayerHue() ) );
+                else
+                    AddItem( new LongPants( RandomPlayerHue() ) );
             }
 
-            AddItem( new Shirt( Utility.RandomNondyedHue() ) );
-            AddItem( new Shoes( Utility.RandomNondyedHue() ) );
+            AddItem( new Shirt( RandomPlayerHue() ) );
 
-            // Mages and crafters get a robe over their clothes
-            if ( m_UsesMagic || m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.Crafter )
-                AddItem( new Robe( Utility.RandomNondyedHue() ) );
+            // Footwear variety: boots, shoes, or thigh boots
+            switch ( Utility.Random( 3 ) )
+            {
+                case 0:  AddItem( new Boots( RandomPlayerHue() ) ); break;
+                case 1:  AddItem( new Shoes( RandomPlayerHue() ) ); break;
+                default: AddItem( new ThighBoots( RandomPlayerHue() ) ); break;
+            }
         }
+
+        // ── Armor system ────────────────────────────────────────────────────────
 
         private void InitArmor()
         {
-            // Crafters and newbies wear no armor
+            // Crafters wear no armor
             if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.Crafter )
                 return;
-            if ( m_Persona.Experience == PlayerBotPersona.PlayerBotExperience.Newbie )
-                return;
 
+            ArmorMat mat = RollArmorMaterial();
+            if ( mat == ArmorMat.Naked ) return;
+
+            bool fullSet = Utility.RandomBool();
+            // Cross-tier mixing: for full sets above leather tier, 15% per slot drops one tier
+            bool doMix = fullSet && mat > ArmorMat.Studded;
+
+            AddArmorChest( mat, fullSet, doMix );
+            AddArmorLegs(  mat, fullSet, doMix );
+            AddArmorArms(  mat, fullSet, doMix );
+            AddArmorGloves( mat, fullSet, doMix );
+            AddArmorGorget( mat, fullSet, doMix );
+            AddArmorHelm(  mat, fullSet, doMix );
+        }
+
+        private ArmorMat RollArmorMaterial()
+        {
+            int r = Utility.Random( 100 );
             switch ( m_Persona.Experience )
             {
+                case PlayerBotPersona.PlayerBotExperience.Newbie:
+                    // 50% Naked, 40% Leather, 10% Chain/Ring
+                    if ( r < 50 ) return ArmorMat.Naked;
+                    if ( r < 90 ) return RollLeatherSub();
+                    return RollChainRingSub();
+
                 case PlayerBotPersona.PlayerBotExperience.Average:
-                    // Partial leather
-                    if ( Utility.RandomBool() ) AddItem( new LeatherChest() );
-                    if ( Utility.RandomBool() ) AddItem( new LeatherLegs() );
-                    break;
+                    // 10% Naked, 50% Leather, 30% Chain/Ring, 10% Plate
+                    if ( r < 10 ) return ArmorMat.Naked;
+                    if ( r < 60 ) return RollLeatherSub();
+                    if ( r < 90 ) return RollChainRingSub();
+                    return ArmorMat.Plate;
 
                 case PlayerBotPersona.PlayerBotExperience.Proficient:
-                    // Full leather
-                    AddItem( new LeatherChest() );
-                    AddItem( new LeatherLegs() );
-                    AddItem( new LeatherArms() );
-                    AddItem( new LeatherGloves() );
-                    if ( Utility.RandomBool() ) AddItem( new LeatherGorget() );
-                    if ( Utility.RandomBool() ) AddItem( new LeatherCap() );
-                    break;
+                    // 30% Leather, 40% Chain/Ring, 30% Plate
+                    if ( r < 30 ) return RollLeatherSub();
+                    if ( r < 70 ) return RollChainRingSub();
+                    return ArmorMat.Plate;
 
-                case PlayerBotPersona.PlayerBotExperience.Grandmaster:
-                    // Full leather; PKs and fighters get a chance at chain/plate pieces
-                    if ( m_UsesMagic )
+                default: // Grandmaster
+                    // 15% Leather, 30% Chain/Ring, 55% Plate
+                    if ( r < 15 ) return RollLeatherSub();
+                    if ( r < 45 ) return RollChainRingSub();
+                    return ArmorMat.Plate;
+            }
+        }
+
+        private ArmorMat RollLeatherSub()
+        {
+            return Utility.RandomBool() ? ArmorMat.Leather : ArmorMat.Studded;
+        }
+
+        private ArmorMat RollChainRingSub()
+        {
+            switch ( Utility.Random( 3 ) )
+            {
+                case 0:  return ArmorMat.Chain;
+                case 1:  return ArmorMat.Ringmail;
+                default: return ArmorMat.Bone;
+            }
+        }
+
+        private ArmorMat TierDown( ArmorMat mat )
+        {
+            switch ( mat )
+            {
+                case ArmorMat.Plate:    return RollChainRingSub();
+                case ArmorMat.Chain:
+                case ArmorMat.Ringmail:
+                case ArmorMat.Bone:     return RollLeatherSub();
+                default:                return mat;
+            }
+        }
+
+        private ArmorMat GetSlotMat( ArmorMat mat, bool doMix )
+        {
+            return ( doMix && Utility.Random( 100 ) < 15 ) ? TierDown( mat ) : mat;
+        }
+
+        private bool ShouldAddSlot( ArmorMat mat, int slot, bool fullSet )
+        {
+            int matIdx = (int)mat - 1; // Leather=0 … Plate=5
+            int chance = SlotChances[matIdx, slot];
+            if ( chance == 0 ) return false;
+            return fullSet || Utility.Random( 100 ) < chance;
+        }
+
+        private void AddArmorChest( ArmorMat mat, bool fullSet, bool doMix )
+        {
+            if ( !ShouldAddSlot( mat, 0, fullSet ) ) return;
+            switch ( GetSlotMat( mat, doMix ) )
+            {
+                case ArmorMat.Leather:  AddItem( new LeatherChest() );  break;
+                case ArmorMat.Studded:  AddItem( new StuddedChest() );  break;
+                case ArmorMat.Ringmail: AddItem( new RingmailChest() ); break;
+                case ArmorMat.Chain:    AddItem( new ChainChest() );    break;
+                case ArmorMat.Bone:     AddItem( new BoneChest() );     break;
+                case ArmorMat.Plate:    AddItem( new PlateChest() );    break;
+            }
+        }
+
+        private void AddArmorLegs( ArmorMat mat, bool fullSet, bool doMix )
+        {
+            if ( !ShouldAddSlot( mat, 1, fullSet ) ) return;
+            switch ( GetSlotMat( mat, doMix ) )
+            {
+                case ArmorMat.Leather:  AddItem( new LeatherLegs() );  break;
+                case ArmorMat.Studded:  AddItem( new StuddedLegs() );  break;
+                case ArmorMat.Ringmail: AddItem( new RingmailLegs() ); break;
+                case ArmorMat.Chain:    AddItem( new ChainLegs() );    break;
+                case ArmorMat.Bone:     AddItem( new BoneLegs() );     break;
+                case ArmorMat.Plate:    AddItem( new PlateLegs() );    break;
+            }
+        }
+
+        private void AddArmorArms( ArmorMat mat, bool fullSet, bool doMix )
+        {
+            if ( !ShouldAddSlot( mat, 2, fullSet ) ) return;
+            switch ( GetSlotMat( mat, doMix ) )
+            {
+                case ArmorMat.Leather:  AddItem( new LeatherArms() );  break;
+                case ArmorMat.Studded:  AddItem( new StuddedArms() );  break;
+                case ArmorMat.Ringmail:
+                case ArmorMat.Chain:    AddItem( new RingmailArms() ); break; // no ChainArms exists
+                case ArmorMat.Bone:     AddItem( new BoneArms() );     break;
+                case ArmorMat.Plate:    AddItem( new PlateArms() );    break;
+            }
+        }
+
+        private void AddArmorGloves( ArmorMat mat, bool fullSet, bool doMix )
+        {
+            if ( !ShouldAddSlot( mat, 3, fullSet ) ) return;
+            switch ( GetSlotMat( mat, doMix ) )
+            {
+                case ArmorMat.Leather:  AddItem( new LeatherGloves() );  break;
+                case ArmorMat.Studded:  AddItem( new StuddedGloves() );  break;
+                case ArmorMat.Ringmail:
+                case ArmorMat.Chain:    AddItem( new RingmailGloves() ); break; // no ChainGloves exists
+                case ArmorMat.Bone:     AddItem( new BoneGloves() );     break;
+                case ArmorMat.Plate:    AddItem( new PlateGloves() );    break;
+            }
+        }
+
+        private void AddArmorGorget( ArmorMat mat, bool fullSet, bool doMix )
+        {
+            if ( !ShouldAddSlot( mat, 4, fullSet ) ) return;
+            ArmorMat m = GetSlotMat( mat, doMix );
+            // Chain/Bone have no matching gorget; fall back to leather sub if mixing put us there
+            if ( m == ArmorMat.Chain || m == ArmorMat.Bone )
+                m = RollLeatherSub();
+            switch ( m )
+            {
+                case ArmorMat.Leather:  AddItem( new LeatherGorget() ); break;
+                case ArmorMat.Studded:  AddItem( new StuddedGorget() ); break;
+                case ArmorMat.Ringmail: // no ring gorget; use a mixed piece
+                    switch ( Utility.Random( 3 ) )
                     {
-                        // Mages stay light
-                        AddItem( new LeatherChest() );
-                        AddItem( new LeatherLegs() );
-                        AddItem( new LeatherGloves() );
+                        case 0:  AddItem( new PlateGorget() );   break;
+                        case 1:  AddItem( new LeatherGorget() ); break;
+                        default: AddItem( new StuddedGorget() ); break;
                     }
-                    else if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    break;
+                case ArmorMat.Plate:    AddItem( new PlateGorget() );   break;
+            }
+        }
+
+        private void AddArmorHelm( ArmorMat mat, bool fullSet, bool doMix )
+        {
+            if ( !ShouldAddSlot( mat, 5, fullSet ) ) return;
+            ArmorMat m = GetSlotMat( mat, doMix );
+            // Ringmail has 0% helm; if mixing drops us here substitute Chain
+            if ( m == ArmorMat.Ringmail ) m = ArmorMat.Chain;
+            switch ( m )
+            {
+                case ArmorMat.Leather:
+                case ArmorMat.Studded:
+                    switch ( Utility.Random( 6 ) )
                     {
-                        AddItem( new ChainChest() );
-                        AddItem( new ChainLegs() );
-                        AddItem( new RingmailArms() );
-                        AddItem( new RingmailGloves() );
-                        if ( Utility.RandomBool() ) AddItem( new PlateHelm() );
+                        case 0:  AddItem( new LeatherCap() ); break;
+                        case 1:  AddItem( new ChainCoif() );  break;
+                        case 2:  AddItem( new PlateHelm() );  break;
+                        case 3:  AddItem( new CloseHelm() );  break;
+                        case 4:  AddItem( new NorseHelm() );  break;
+                        default: AddItem( new OrcHelm() );    break;
                     }
-                    else
+                    break;
+                case ArmorMat.Chain:
+                case ArmorMat.Bone:
+                    switch ( Utility.Random( 5 ) )
                     {
-                        AddItem( new LeatherChest() );
-                        AddItem( new LeatherLegs() );
-                        AddItem( new LeatherArms() );
-                        AddItem( new LeatherGloves() );
-                        AddItem( new LeatherGorget() );
-                        AddItem( new LeatherCap() );
+                        case 0:  AddItem( new ChainCoif() ); break;
+                        case 1:  AddItem( new PlateHelm() ); break;
+                        case 2:  AddItem( new CloseHelm() ); break;
+                        case 3:  AddItem( new NorseHelm() ); break;
+                        default: AddItem( new OrcHelm() );   break;
+                    }
+                    break;
+                case ArmorMat.Plate:
+                    switch ( Utility.Random( 5 ) )
+                    {
+                        case 0:  AddItem( new PlateHelm() ); break;
+                        case 1:  AddItem( new CloseHelm() ); break;
+                        case 2:  AddItem( new ChainCoif() ); break;
+                        case 3:  AddItem( new NorseHelm() ); break;
+                        default: AddItem( new OrcHelm() );   break;
                     }
                     break;
             }
         }
+
+        // ── Fashion layer ────────────────────────────────────────────────────────
+        // Dyed overgarments on top of armor — layered using distinct equipment slots.
+
+        private void InitFashionLayer()
+        {
+            // Robe: 25%, Layer.OuterTorso
+            if ( Utility.Random( 100 ) < 25 && FindItemOnLayer( Layer.OuterTorso ) == null )
+                AddItem( new Robe( RandomPlayerHue() ) );
+
+            // Cloak: 35%, Layer.Cloak
+            if ( Utility.Random( 100 ) < 35 && FindItemOnLayer( Layer.Cloak ) == null )
+                AddItem( new Cloak( RandomPlayerHue() ) );
+
+            // BodySash: 30%, Layer.MiddleTorso
+            if ( Utility.Random( 100 ) < 30 && FindItemOnLayer( Layer.MiddleTorso ) == null )
+                AddItem( new BodySash( RandomPlayerHue() ) );
+
+            // Kilt over pants for males: 20%, Layer.OuterLegs (different from pants Layer.Pants)
+            if ( !Female && Utility.Random( 100 ) < 20 && FindItemOnLayer( Layer.OuterLegs ) == null )
+                AddItem( new Kilt( RandomPlayerHue() ) );
+
+            // Skirt for females: 15%, Layer.OuterLegs
+            if ( Female && Utility.Random( 100 ) < 15 && FindItemOnLayer( Layer.OuterLegs ) == null )
+                AddItem( new Skirt( RandomPlayerHue() ) );
+
+            // HalfApron: 20%, Layer.Waist
+            if ( Utility.Random( 100 ) < 20 && FindItemOnLayer( Layer.Waist ) == null )
+                AddItem( new HalfApron( RandomPlayerHue() ) );
+
+            // FullApron: 10%, Layer.MiddleTorso (skipped if BodySash already there)
+            if ( Utility.Random( 100 ) < 10 && FindItemOnLayer( Layer.MiddleTorso ) == null )
+                AddItem( new FullApron( RandomPlayerHue() ) );
+        }
+
+        // ── Weapon init ─────────────────────────────────────────────────────────
 
         private void InitWeapon()
         {
             if ( m_UsesMagic && !m_PrefersMelee )
             {
-                // Mage-only: no weapon, just spellbook
+                // Pure mage: spellbook + 40% chance to carry a visible sidearm
                 var book = new Spellbook();
                 book.Content = GetSpellbookContent();
                 PackItem( book );
+                if ( Utility.Random( 10 ) < 4 )
+                {
+                    if ( Utility.RandomBool() )
+                        AddItem( new Dagger() );
+                    else
+                        AddItem( new Kryss() );
+                }
                 return;
             }
 
@@ -503,6 +747,126 @@ namespace Server.Mobiles
             PackItem( new SulfurousAsh( qty ) );
         }
 
+        // ── Backpack loot ────────────────────────────────────────────────────────
+
+        private void InitBackpack()
+        {
+            // Gold scaled to experience
+            int gold;
+            switch ( m_Persona.Experience )
+            {
+                case PlayerBotPersona.PlayerBotExperience.Newbie:       gold = Utility.Random( 5,   56   ); break;
+                case PlayerBotPersona.PlayerBotExperience.Average:      gold = Utility.Random( 50,  201  ); break;
+                case PlayerBotPersona.PlayerBotExperience.Proficient:   gold = Utility.Random( 150, 451  ); break;
+                default: /* Grandmaster */                               gold = Utility.Random( 300, 1201 ); break;
+            }
+            PackItem( new Gold( gold ) );
+
+            // Bandages (non-crafters always carry some)
+            if ( m_Persona.Profile != PlayerBotPersona.PlayerBotProfile.Crafter )
+            {
+                int bandages;
+                switch ( m_Persona.Experience )
+                {
+                    case PlayerBotPersona.PlayerBotExperience.Newbie:       bandages = Utility.Random( 5,  16  ); break;
+                    case PlayerBotPersona.PlayerBotExperience.Average:      bandages = Utility.Random( 15, 36  ); break;
+                    case PlayerBotPersona.PlayerBotExperience.Proficient:   bandages = Utility.Random( 30, 51  ); break;
+                    default: /* Grandmaster */                               bandages = Utility.Random( 50, 101 ); break;
+                }
+                PackItem( new Bandage( bandages ) );
+            }
+
+            // Food: 2-5 random items
+            int foodCount = 2 + Utility.Random( 4 );
+            for ( int i = 0; i < foodCount; i++ )
+                PackItem( RandomFoodItem() );
+
+            // Profile-specific loot
+            if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.PlayerKiller ||
+                 m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.Adventurer )
+            {
+                // Hunting spoils: each category ~40% chance
+                if ( Utility.Random( 10 ) < 4 ) PackItem( new Leather( Utility.Random( 5,  26 ) ) );
+                if ( Utility.Random( 10 ) < 4 ) PackItem( new IronIngot( Utility.Random( 2, 14 ) ) );
+                if ( Utility.Random( 10 ) < 4 ) PackItem( RandomGem( Utility.Random( 1,  3  ) ) );
+                if ( Utility.Random( 10 ) < 4 ) PackItem( new Bone( Utility.Random( 1,   5  ) ) );
+                // Extra arrows if carrying a bow (base allotment already in InitWeapon)
+                if ( FindItemOnLayer( Layer.TwoHanded ) is Bow )
+                    PackItem( new Arrow( Utility.Random( 10, 31 ) ) );
+            }
+            else if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.Crafter )
+            {
+                PackItem( new IronIngot( Utility.Random( 10, 41 ) ) );
+                PackItem( new Board( Utility.Random( 5, 21 ) ) );
+                if ( Utility.RandomBool() )
+                {
+                    switch ( Utility.Random( 4 ) )
+                    {
+                        case 0:  PackItem( new Tongs() );       break;
+                        case 1:  PackItem( new SmithHammer() ); break;
+                        case 2:  PackItem( new Saw() );         break;
+                        default: PackItem( new Scissors() );    break;
+                    }
+                }
+            }
+
+            // Non-mages sometimes carry a few reagents
+            if ( !m_UsesMagic && Utility.Random( 100 ) < 20 )
+            {
+                int stacks = 1 + Utility.Random( 3 );
+                for ( int i = 0; i < stacks; i++ )
+                {
+                    int qty = Utility.Random( 5, 11 );
+                    switch ( Utility.Random( 8 ) )
+                    {
+                        case 0:  PackItem( new BlackPearl( qty ) );    break;
+                        case 1:  PackItem( new Bloodmoss( qty ) );     break;
+                        case 2:  PackItem( new Garlic( qty ) );        break;
+                        case 3:  PackItem( new Ginseng( qty ) );       break;
+                        case 4:  PackItem( new MandrakeRoot( qty ) );  break;
+                        case 5:  PackItem( new Nightshade( qty ) );    break;
+                        case 6:  PackItem( new SpidersSilk( qty ) );   break;
+                        default: PackItem( new SulfurousAsh( qty ) );  break;
+                    }
+                }
+            }
+
+            // Misc
+            if ( Utility.Random( 100 ) < 30 )
+            {
+                int torchCount = 1 + Utility.Random( 3 );
+                for ( int i = 0; i < torchCount; i++ )
+                    PackItem( new Torch() );
+            }
+            if ( Utility.Random( 100 ) < 15 )
+                PackItem( new Candle() );
+        }
+
+        private static Item RandomFoodItem()
+        {
+            switch ( Utility.Random( 4 ) )
+            {
+                case 0:  return new BreadLoaf();
+                case 1:  return new CheeseWheel();
+                case 2:  return new Grapes();
+                default: return new Watermelon();
+            }
+        }
+
+        private static Item RandomGem( int qty )
+        {
+            switch ( Utility.Random( 7 ) )
+            {
+                case 0:  return new Citrine( qty );
+                case 1:  return new Tourmaline( qty );
+                case 2:  return new Amethyst( qty );
+                case 3:  return new Sapphire( qty );
+                case 4:  return new Ruby( qty );
+                case 5:  return new Emerald( qty );
+                default: return new Diamond( qty );
+            }
+        }
+
         private void InitHair()
         {
             var hairHue = Utility.RandomHairHue();
@@ -519,20 +883,22 @@ namespace Server.Mobiles
             if ( PreferedCombatSkill == SkillName.Swords )
             {
                 if ( Str >= 25 ) { pool.Add( new Broadsword() ); pool.Add( new Cutlass() ); pool.Add( new Katana() ); pool.Add( new Scimitar() ); }
-                if ( Str >= 35 ) pool.Add( new Longsword() );
-                if ( Str >= 40 ) pool.Add( new VikingSword() );
+                if ( Str >= 35 ) { pool.Add( new Longsword() ); pool.Add( new TwoHandedAxe() ); }
+                if ( Str >= 40 ) { pool.Add( new VikingSword() ); pool.Add( new Bardiche() ); pool.Add( new ExecutionersAxe() ); }
+                if ( Str >= 45 ) pool.Add( new Halberd() );
             }
             else if ( PreferedCombatSkill == SkillName.Macing )
             {
                 if ( Str >= 10 ) pool.Add( new Club() );
+                if ( Str >= 15 ) pool.Add( new QuarterStaff() );
                 if ( Str >= 20 ) { pool.Add( new Mace() ); pool.Add( new Maul() ); }
                 if ( Str >= 30 ) pool.Add( new WarMace() );
-                if ( Str >= 35 ) pool.Add( new HammerPick() );
+                if ( Str >= 35 ) { pool.Add( new HammerPick() ); pool.Add( new WarAxe() ); }
                 if ( Str >= 40 ) { pool.Add( new Scepter() ); pool.Add( new WarHammer() ); }
             }
             else if ( PreferedCombatSkill == SkillName.Fencing )
             {
-                if ( Str >= 10 ) pool.Add( new Pitchfork() );
+                if ( Str >= 10 ) { pool.Add( new Pitchfork() ); pool.Add( new Kryss() ); }
                 if ( Str >= 15 ) pool.Add( new ShortSpear() );
                 if ( Str >= 30 ) pool.Add( new Spear() );
                 if ( Str >= 35 ) pool.Add( new WarFork() );
