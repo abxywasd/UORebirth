@@ -152,7 +152,12 @@ namespace Server.Spells
 
 		public virtual bool ConsumeReagents()
 		{
-			if ( m_Scroll != null || !m_Caster.Player )
+			if ( m_Scroll != null )
+				return true;
+
+			// Non-player mobiles skip reagent checks, except PlayerBots which
+			// carry and consume reagents like a real player character.
+			if ( !m_Caster.Player && !(m_Caster is Server.Mobiles.PlayerBot) )
 				return true;
 
 			if ( AosAttributes.GetValue( m_Caster, AosAttribute.LowerRegCost ) > Utility.Random( 100 ) )

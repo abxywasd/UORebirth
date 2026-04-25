@@ -127,6 +127,8 @@ namespace Server.Mobiles
             InitStats();
             InitSkills();
             InitOutfit();
+            if ( m_UsesMagic )
+                InitReagents();
             StartSkillTimer();
             m_LastObserved = DateTime.Now;
         }
@@ -434,9 +436,19 @@ namespace Server.Mobiles
         {
             if ( m_UsesMagic && !m_PrefersMelee )
             {
-                // Mage-only: no weapon, just spellbook feel (uses hands)
-                PackItem( new Spellbook() );
+                // Mage-only: no weapon, just spellbook
+                var book = new Spellbook();
+                book.Content = GetSpellbookContent();
+                PackItem( book );
                 return;
+            }
+
+            if ( m_UsesMagic )
+            {
+                // Hybrid fighter/mage: carry a spellbook alongside their weapon
+                var book = new Spellbook();
+                book.Content = GetSpellbookContent();
+                PackItem( book );
             }
 
             if ( m_PrefersMelee )
@@ -450,6 +462,45 @@ namespace Server.Mobiles
                 PackItem( new Arrow( Utility.Random( 50, 100 ) ) );
                 PackItem( new Dagger() );
             }
+        }
+
+        // Content bitmask: each circle has 8 spells (0-7, 8-15, ...).
+        // Fill through the bot's castable circle, always including Heal and Cure.
+        private ulong GetSpellbookContent()
+        {
+            double mag  = Skills[SkillName.Magery].Value;
+            int maxCircle = (int)(mag / 87.5 * 8.0);
+            if ( maxCircle > 8 ) maxCircle = 8;
+            if ( maxCircle < 1 ) maxCircle = 1;
+
+            ulong content = maxCircle >= 8 ? ulong.MaxValue : (1ul << (maxCircle * 8)) - 1;
+
+            // Always include Heal (3) and Cure (10) even for low-circle bots
+            content |= (1ul << 3);
+            content |= (1ul << 10);
+
+            return content;
+        }
+
+        private void InitReagents()
+        {
+            int qty;
+            switch ( m_Persona.Experience )
+            {
+                case PlayerBotPersona.PlayerBotExperience.Newbie:       qty = 10; break;
+                case PlayerBotPersona.PlayerBotExperience.Average:      qty = 25; break;
+                case PlayerBotPersona.PlayerBotExperience.Proficient:   qty = 50; break;
+                default: /* Grandmaster */                               qty = 80; break;
+            }
+
+            PackItem( new BlackPearl( qty ) );
+            PackItem( new Bloodmoss( qty ) );
+            PackItem( new Garlic( qty ) );
+            PackItem( new Ginseng( qty ) );
+            PackItem( new MandrakeRoot( qty ) );
+            PackItem( new Nightshade( qty ) );
+            PackItem( new SpidersSilk( qty ) );
+            PackItem( new SulfurousAsh( qty ) );
         }
 
         private void InitHair()

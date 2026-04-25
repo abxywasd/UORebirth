@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Server;
+using Server.Items;
 using Server.Spells;
 using Server.Spells.First;
 using Server.Spells.Second;
@@ -27,16 +29,32 @@ namespace Server.Mobiles
             50   // circle 8
         };
 
+        // Spell IDs (from Initializer.cs) for every spell used by bots.
+        private const int ID_Heal         = 3;
+        private const int ID_MagicArrow   = 4;
+        private const int ID_Weaken       = 7;
+        private const int ID_Cure         = 10;
+        private const int ID_Harm         = 11;
+        private const int ID_Fireball     = 17;
+        private const int ID_Poison       = 19;
+        private const int ID_GreaterHeal  = 28;
+        private const int ID_Lightning    = 29;
+        private const int ID_MindBlast    = 36;
+        private const int ID_EnergyBolt   = 41;
+        private const int ID_Explosion    = 42;
+        private const int ID_FlameStrike  = 50;
+
         // Choose an offensive spell scaled to the bot's Magery skill.
-        // Returns null if no spell can be cast right now.
+        // Only returns a spell the bot has in its spellbook AND has reagents for.
+        // Returns null if no valid spell is available right now.
         public static Spell ChooseOffensiveSpell( PlayerBot bot, Mobile target )
         {
-            int mana   = bot.Mana;
-            double mag = bot.Skills[SkillName.Magery].Value;
+            int mana     = bot.Mana;
+            double mag   = bot.Skills[SkillName.Magery].Value;
+            Container pack = bot.Backpack;
 
-            if ( mana < 4 ) return null;
+            if ( mana < 4 || pack == null ) return null;
 
-            // Max circle the bot can cast based on Magery (mirrors MageAI)
             int maxCircle = (int)(mag / 87.5 * 8.0);
             if ( maxCircle > 8 ) maxCircle = 8;
             if ( maxCircle < 1 ) maxCircle = 1;
@@ -45,41 +63,64 @@ namespace Server.Mobiles
             while ( maxCircle > 1 && s_CircleMana[maxCircle] > mana / 2 )
                 maxCircle--;
 
-            switch ( Utility.Random( maxCircle ) + 1 )
+            // Build list of spells available right now (spellbook + reagents + mana)
+            var candidates = new List<Spell>( 4 );
+
+            if ( maxCircle >= 1 )
             {
-                case 1:
-                    switch ( Utility.Random( 2 ) )
-                    {
-                        case 0:  return new MagicArrowSpell( bot, null );
-                        default: return new WeakenSpell( bot, null );
-                    }
-
-                case 2:
-                    return new HarmSpell( bot, null );
-
-                case 3:
-                    return Utility.RandomBool()
-                        ? (Spell)new FireballSpell( bot, null )
-                        : (Spell)new PoisonSpell( bot, null );
-
-                case 4:
-                    return new LightningSpell( bot, null );
-
-                case 5:
-                    return new MindBlastSpell( bot, null );
-
-                case 6:
-                    return Utility.RandomBool()
-                        ? (Spell)new EnergyBoltSpell( bot, null )
-                        : (Spell)new ExplosionSpell( bot, null );
-
-                case 7:
-                case 8:
-                    return new FlameStrikeSpell( bot, null );
-
-                default:
-                    return new MagicArrowSpell( bot, null );
+                TryAdd( bot, pack, candidates, ID_MagicArrow, new MagicArrowSpell( bot, null ) );
+                TryAdd( bot, pack, candidates, ID_Weaken,     new WeakenSpell( bot, null ) );
             }
+            if ( maxCircle >= 2 )
+                TryAdd( bot, pack, candidates, ID_Harm,       new HarmSpell( bot, null ) );
+            if ( maxCircle >= 3 )
+            {
+                TryAdd( bot, pack, candidates, ID_Fireball,   new FireballSpell( bot, null ) );
+                TryAdd( bot, pack, candidates, ID_Poison,     new PoisonSpell( bot, null ) );
+            }
+            if ( maxCircle >= 4 )
+                TryAdd( bot, pack, candidates, ID_Lightning,  new LightningSpell( bot, null ) );
+            if ( maxCircle >= 5 )
+                TryAdd( bot, pack, candidates, ID_MindBlast,  new MindBlastSpell( bot, null ) );
+            if ( maxCircle >= 6 )
+            {
+                TryAdd( bot, pack, candidates, ID_EnergyBolt, new EnergyBoltSpell( bot, null ) );
+                TryAdd( bot, pack, candidates, ID_Explosion,  new ExplosionSpell( bot, null ) );
+            }
+            if ( maxCircle >= 7 )
+                TryAdd( bot, pack, candidates, ID_FlameStrike, new FlameStrikeSpell( bot, null ) );
+
+            if ( candidates.Count == 0 )
+                return null;
+
+            return candidates[Utility.Random( candidates.Count )];
+        }
+
+        // Adds the spell to candidates only if the bot has it in a spellbook
+        // and has all required reagents in their backpack.
+        private static void TryAdd( PlayerBot bot, Container pack, List<Spell> candidates, int spellID, Spell spell )
+        {
+            Spellbook book = Spellbook.Find( bot, spellID );
+            if ( book == null || !book.HasSpell( spellID ) )
+                return;
+
+            if ( HasReagents( pack, spell.Reagents ) )
+                candidates.Add( spell );
+        }
+
+        // Returns true if the container holds at least one of each required reagent type.
+        private static bool HasReagents( Container pack, Type[] reagents )
+        {
+            if ( reagents == null || reagents.Length == 0 )
+                return true;
+
+            foreach ( Type t in reagents )
+            {
+                if ( pack.GetAmount( t ) < 1 )
+                    return false;
+            }
+
+            return true;
         }
 
         // Attempt self-cure or self-heal.  Sets nextCastTime on success.
@@ -89,11 +130,15 @@ namespace Server.Mobiles
             if ( bot.Skills[SkillName.Magery].Value < 10.0 )
                 return false;
 
+            Container pack = bot.Backpack;
+            if ( pack == null )
+                return false;
+
             // Cure poison — top priority
-            if ( bot.Poisoned && bot.Mana >= 6 )
+            if ( bot.Poisoned && bot.Mana >= s_CircleMana[2] )
             {
                 Spell cure = new CureSpell( bot, null );
-                if ( cure.Cast() )
+                if ( HasSpellAndReagents( bot, ID_Cure, cure, pack ) && cure.Cast() )
                 {
                     nextCastTime = DateTime.Now + cure.GetCastDelay()
                                  + TimeSpan.FromSeconds( 1.0 );
@@ -102,10 +147,10 @@ namespace Server.Mobiles
             }
 
             // Greater Heal
-            if ( bot.Hits < bot.HitsMax - 50 && bot.Mana >= 11 )
+            if ( bot.Hits < bot.HitsMax - 50 && bot.Mana >= s_CircleMana[4] )
             {
                 Spell gh = new GreaterHealSpell( bot, null );
-                if ( gh.Cast() )
+                if ( HasSpellAndReagents( bot, ID_GreaterHeal, gh, pack ) && gh.Cast() )
                 {
                     nextCastTime = DateTime.Now + gh.GetCastDelay()
                                  + TimeSpan.FromSeconds( 1.5 );
@@ -114,10 +159,10 @@ namespace Server.Mobiles
             }
 
             // Lesser Heal
-            if ( bot.Hits < bot.HitsMax - 15 && bot.Mana >= 4 )
+            if ( bot.Hits < bot.HitsMax - 15 && bot.Mana >= s_CircleMana[1] )
             {
                 Spell lh = new HealSpell( bot, null );
-                if ( lh.Cast() )
+                if ( HasSpellAndReagents( bot, ID_Heal, lh, pack ) && lh.Cast() )
                 {
                     nextCastTime = DateTime.Now + lh.GetCastDelay()
                                  + TimeSpan.FromSeconds( 1.0 );
@@ -126,6 +171,16 @@ namespace Server.Mobiles
             }
 
             return false;
+        }
+
+        // Checks both spellbook presence and reagent availability in one call.
+        private static bool HasSpellAndReagents( PlayerBot bot, int spellID, Spell spell, Container pack )
+        {
+            Spellbook book = Spellbook.Find( bot, spellID );
+            if ( book == null || !book.HasSpell( spellID ) )
+                return false;
+
+            return HasReagents( pack, spell.Reagents );
         }
     }
 }
