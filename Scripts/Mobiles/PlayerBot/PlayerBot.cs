@@ -325,9 +325,6 @@ namespace Server.Mobiles
                     break;
             }
 
-            SetHits( Str );
-            SetStam( Dex );
-            SetMana( Int );
         }
 
         private void InitSkills()
