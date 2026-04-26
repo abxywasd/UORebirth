@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Server;
+using Server.Items;
 using Server.Network;
 using Server.Spells;
 using Server.Targeting;
@@ -26,6 +27,10 @@ namespace Server.Mobiles
         private bool     m_LastObservedState;
         private DateTime m_NextObservationCheck;
 
+        // Weapon swap state: items unequipped before casting, restored after
+        private List<Item> m_StashedEquipment;
+        private Mobile     m_HealTarget;
+
         public PlayerBotAI( BaseCreature m ) : base( m )
         {
         }
@@ -39,6 +44,10 @@ namespace Server.Mobiles
             PlayerBot bot = m_Mobile as PlayerBot;
             if ( bot == null )
                 return base.Think();
+
+            // Restore stashed weapons whenever not actively casting or awaiting target
+            if ( bot.UsesMagic )
+                MaybeRestoreWeapons();
 
             // Handle pending spell target first (MageAI pattern)
             Target targ = m_Mobile.Target;
@@ -83,6 +92,9 @@ namespace Server.Mobiles
             PlayerBot bot = m_Mobile as PlayerBot;
             if ( bot == null )
                 return base.Obey();
+
+            if ( bot.UsesMagic )
+                MaybeRestoreWeapons();
 
             Target targ = m_Mobile.Target;
             if ( targ != null )
@@ -137,11 +149,13 @@ namespace Server.Mobiles
             if ( CheckSelfDefense( bot ) )
                 return true;
 
-            // Default: follow master; stand still when already close
+            // Default: follow master; heal them proactively if hurt
             m_Mobile.Warmode = false;
             bot.ActivityState.SetActivity( BotActivity.Wandering );
             if ( master.Alive && !m_Mobile.InRange( master, 3 ) )
                 FollowRunning( master, 2 );
+            if ( CheckMasterHeal( bot ) )
+                return true;
             return true;
         }
 
@@ -386,6 +400,10 @@ namespace Server.Mobiles
             if ( CheckSelfHeal( bot ) )
                 return true;
 
+            // Heal/cure master if controlled and they need it
+            if ( CheckMasterHeal( bot ) )
+                return true;
+
             // Offensive spells (mage path)
             if ( bot.UsesMagic && TryCastOffensiveSpell( bot, c ) )
                 return true;
@@ -518,6 +536,7 @@ namespace Server.Mobiles
             if ( spell == null )
                 return false;
 
+            StashWeaponsForCasting();
             if ( spell.Cast() )
             {
                 TimeSpan delay = spell.GetCastDelay() + TimeSpan.FromSeconds( Utility.Random( 3 ) );
@@ -525,6 +544,7 @@ namespace Server.Mobiles
                 return true;
             }
 
+            RestoreStashedWeapons();
             return false;
         }
 
@@ -534,8 +554,34 @@ namespace Server.Mobiles
             if ( !bot.UsesMagic ) return false;
             if ( m_Mobile.Spell != null && m_Mobile.Spell.IsCasting ) return false;
             if ( DateTime.Now < m_NextCastTime ) return false;
+            if ( !bot.Poisoned && bot.Hits >= bot.HitsMax - 15 ) return false;
 
-            return PlayerBotCombatHelper.TryCastHeal( bot, ref m_NextCastTime );
+            StashWeaponsForCasting();
+            bool result = PlayerBotCombatHelper.TryCastHeal( bot, ref m_NextCastTime );
+            if ( !result )
+                RestoreStashedWeapons();
+            return result;
+        }
+
+        // ── Magic: Heal/cure master ────────────────────────────────────────────
+        private bool CheckMasterHeal( PlayerBot bot )
+        {
+            if ( !bot.UsesMagic ) return false;
+            if ( m_Mobile.Spell != null && m_Mobile.Spell.IsCasting ) return false;
+            if ( DateTime.Now < m_NextCastTime ) return false;
+
+            Mobile master = m_Mobile.ControlMaster;
+            if ( master == null || master.Deleted || !master.Alive ) return false;
+            if ( !m_Mobile.InRange( master, 12 ) ) return false;
+            if ( !master.Poisoned && master.Hits >= master.HitsMax - 10 ) return false;
+
+            StashWeaponsForCasting();
+            bool result = PlayerBotCombatHelper.TryCastHealTarget( bot, master, ref m_NextCastTime );
+            if ( result )
+                m_HealTarget = master;
+            else
+                RestoreStashedWeapons();
+            return result;
         }
 
         // ── Spell target resolution (MageAI pattern) ──────────────────────────
@@ -563,7 +609,9 @@ namespace Server.Mobiles
             }
             else if ( (targ.Flags & TargetFlags.Beneficial) != 0 )
             {
-                targ.Invoke( m_Mobile, m_Mobile );
+                Mobile healTarget = m_HealTarget ?? m_Mobile;
+                m_HealTarget = null;
+                targ.Invoke( m_Mobile, healTarget );
             }
             else
             {
@@ -669,6 +717,60 @@ namespace Server.Mobiles
             eable.Free();
 
             return m_LastObservedState;
+        }
+
+        // ── Weapon swap helpers ────────────────────────────────────────────────
+
+        // Unequip weapons and shields to backpack before a cast attempt.
+        // Spellbooks are left in place — they allow casting while equipped.
+        private void StashWeaponsForCasting()
+        {
+            Container pack = m_Mobile.Backpack;
+            if ( pack == null ) return;
+
+            if ( m_StashedEquipment == null )
+                m_StashedEquipment = new List<Item>();
+
+            Item oneHanded = m_Mobile.FindItemOnLayer( Layer.OneHanded );
+            Item twoHanded = m_Mobile.FindItemOnLayer( Layer.TwoHanded );
+
+            if ( oneHanded != null && !(oneHanded is Spellbook) && !m_StashedEquipment.Contains( oneHanded ) )
+            {
+                m_StashedEquipment.Add( oneHanded );
+                pack.DropItem( oneHanded );
+            }
+            if ( twoHanded != null && !(twoHanded is Spellbook) && !m_StashedEquipment.Contains( twoHanded ) )
+            {
+                m_StashedEquipment.Add( twoHanded );
+                pack.DropItem( twoHanded );
+            }
+        }
+
+        // Re-equip anything that was stashed.
+        private void RestoreStashedWeapons()
+        {
+            if ( m_StashedEquipment == null || m_StashedEquipment.Count == 0 )
+                return;
+
+            foreach ( Item item in m_StashedEquipment )
+            {
+                if ( item != null && !item.Deleted )
+                    m_Mobile.EquipItem( item );
+            }
+            m_StashedEquipment.Clear();
+        }
+
+        // Called at top of Think()/Obey() — restores weapons once casting and
+        // any pending target cursor are both fully resolved.
+        private void MaybeRestoreWeapons()
+        {
+            if ( m_StashedEquipment == null || m_StashedEquipment.Count == 0 )
+                return;
+
+            bool active = (m_Mobile.Spell != null && m_Mobile.Spell.IsCasting)
+                          || m_Mobile.Target != null;
+            if ( !active )
+                RestoreStashedWeapons();
         }
 
         // ── Navigation helper (used by PlayerBotNavigator.Advance) ────────────

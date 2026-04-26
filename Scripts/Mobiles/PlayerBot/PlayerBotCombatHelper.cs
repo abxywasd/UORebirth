@@ -182,5 +182,55 @@ namespace Server.Mobiles
 
             return HasReagents( pack, spell.Reagents );
         }
+
+        // Attempt to heal or cure a specific target (e.g. the player master).
+        // Sets nextCastTime on success; returns true if a spell was initiated.
+        public static bool TryCastHealTarget( PlayerBot bot, Mobile target, ref DateTime nextCastTime )
+        {
+            if ( bot.Skills[SkillName.Magery].Value < 10.0 )
+                return false;
+
+            Container pack = bot.Backpack;
+            if ( pack == null )
+                return false;
+
+            // Cure poison — top priority
+            if ( target.Poisoned && bot.Mana >= s_CircleMana[2] )
+            {
+                Spell cure = new CureSpell( bot, null );
+                if ( HasSpellAndReagents( bot, ID_Cure, cure, pack ) && cure.Cast() )
+                {
+                    nextCastTime = DateTime.Now + cure.GetCastDelay()
+                                 + TimeSpan.FromSeconds( 1.0 );
+                    return true;
+                }
+            }
+
+            // Greater Heal
+            if ( target.Hits < target.HitsMax - 30 && bot.Mana >= s_CircleMana[4] )
+            {
+                Spell gh = new GreaterHealSpell( bot, null );
+                if ( HasSpellAndReagents( bot, ID_GreaterHeal, gh, pack ) && gh.Cast() )
+                {
+                    nextCastTime = DateTime.Now + gh.GetCastDelay()
+                                 + TimeSpan.FromSeconds( 1.5 );
+                    return true;
+                }
+            }
+
+            // Lesser Heal
+            if ( target.Hits < target.HitsMax - 10 && bot.Mana >= s_CircleMana[1] )
+            {
+                Spell lh = new HealSpell( bot, null );
+                if ( HasSpellAndReagents( bot, ID_Heal, lh, pack ) && lh.Cast() )
+                {
+                    nextCastTime = DateTime.Now + lh.GetCastDelay()
+                                 + TimeSpan.FromSeconds( 1.0 );
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
