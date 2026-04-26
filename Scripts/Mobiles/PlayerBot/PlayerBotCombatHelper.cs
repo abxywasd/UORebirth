@@ -123,6 +123,40 @@ namespace Server.Mobiles
             return true;
         }
 
+        // Returns true if the bot can cast at least one heal/cure spell for itself right now
+        // (spellbook present, reagents in pack, enough mana, condition met).
+        // Use this to avoid stashing weapons when no cast would succeed.
+        public static bool HasHealSpellReady( PlayerBot bot )
+        {
+            if ( bot.Skills[SkillName.Magery].Value < 10.0 ) return false;
+            Container pack = bot.Backpack;
+            if ( pack == null ) return false;
+
+            if ( bot.Poisoned && bot.Mana >= s_CircleMana[2] )
+                if ( HasSpellAndReagents( bot, ID_Cure, new CureSpell( bot, null ), pack ) ) return true;
+            if ( bot.Hits < bot.HitsMax - 50 && bot.Mana >= s_CircleMana[4] )
+                if ( HasSpellAndReagents( bot, ID_GreaterHeal, new GreaterHealSpell( bot, null ), pack ) ) return true;
+            if ( bot.Hits < bot.HitsMax - 15 && bot.Mana >= s_CircleMana[1] )
+                if ( HasSpellAndReagents( bot, ID_Heal, new HealSpell( bot, null ), pack ) ) return true;
+            return false;
+        }
+
+        // Same check but for an external target (master or ally bot).
+        public static bool HasHealSpellReadyFor( PlayerBot bot, Mobile target )
+        {
+            if ( bot.Skills[SkillName.Magery].Value < 10.0 ) return false;
+            Container pack = bot.Backpack;
+            if ( pack == null ) return false;
+
+            if ( target.Poisoned && bot.Mana >= s_CircleMana[2] )
+                if ( HasSpellAndReagents( bot, ID_Cure, new CureSpell( bot, null ), pack ) ) return true;
+            if ( target.Hits < target.HitsMax - 30 && bot.Mana >= s_CircleMana[4] )
+                if ( HasSpellAndReagents( bot, ID_GreaterHeal, new GreaterHealSpell( bot, null ), pack ) ) return true;
+            if ( target.Hits < target.HitsMax - 10 && bot.Mana >= s_CircleMana[1] )
+                if ( HasSpellAndReagents( bot, ID_Heal, new HealSpell( bot, null ), pack ) ) return true;
+            return false;
+        }
+
         // Attempt self-cure or self-heal.  Sets nextCastTime on success.
         // Returns true if a heal spell was initiated.
         public static bool TryCastHeal( PlayerBot bot, ref DateTime nextCastTime )
@@ -141,7 +175,7 @@ namespace Server.Mobiles
                 if ( HasSpellAndReagents( bot, ID_Cure, cure, pack ) && cure.Cast() )
                 {
                     nextCastTime = DateTime.Now + cure.GetCastDelay()
-                                 + TimeSpan.FromSeconds( 1.0 );
+                                 + TimeSpan.FromSeconds( 0.25 );
                     return true;
                 }
             }
@@ -153,7 +187,7 @@ namespace Server.Mobiles
                 if ( HasSpellAndReagents( bot, ID_GreaterHeal, gh, pack ) && gh.Cast() )
                 {
                     nextCastTime = DateTime.Now + gh.GetCastDelay()
-                                 + TimeSpan.FromSeconds( 1.5 );
+                                 + TimeSpan.FromSeconds( 0.25 );
                     return true;
                 }
             }
@@ -165,7 +199,7 @@ namespace Server.Mobiles
                 if ( HasSpellAndReagents( bot, ID_Heal, lh, pack ) && lh.Cast() )
                 {
                     nextCastTime = DateTime.Now + lh.GetCastDelay()
-                                 + TimeSpan.FromSeconds( 1.0 );
+                                 + TimeSpan.FromSeconds( 0.25 );
                     return true;
                 }
             }
@@ -201,7 +235,7 @@ namespace Server.Mobiles
                 if ( HasSpellAndReagents( bot, ID_Cure, cure, pack ) && cure.Cast() )
                 {
                     nextCastTime = DateTime.Now + cure.GetCastDelay()
-                                 + TimeSpan.FromSeconds( 1.0 );
+                                 + TimeSpan.FromSeconds( 0.25 );
                     return true;
                 }
             }
@@ -213,7 +247,7 @@ namespace Server.Mobiles
                 if ( HasSpellAndReagents( bot, ID_GreaterHeal, gh, pack ) && gh.Cast() )
                 {
                     nextCastTime = DateTime.Now + gh.GetCastDelay()
-                                 + TimeSpan.FromSeconds( 1.5 );
+                                 + TimeSpan.FromSeconds( 0.25 );
                     return true;
                 }
             }
@@ -225,7 +259,7 @@ namespace Server.Mobiles
                 if ( HasSpellAndReagents( bot, ID_Heal, lh, pack ) && lh.Cast() )
                 {
                     nextCastTime = DateTime.Now + lh.GetCastDelay()
-                                 + TimeSpan.FromSeconds( 1.0 );
+                                 + TimeSpan.FromSeconds( 0.25 );
                     return true;
                 }
             }

@@ -570,6 +570,7 @@ namespace Server.Mobiles
             if ( m_Mobile.Spell != null && m_Mobile.Spell.IsCasting ) return false;
             if ( DateTime.Now < m_NextCastTime ) return false;
             if ( !bot.Poisoned && bot.Hits >= bot.HitsMax - 15 ) return false;
+            if ( !PlayerBotCombatHelper.HasHealSpellReady( bot ) ) return false;
 
             StashWeaponsForCasting();
             bool result = PlayerBotCombatHelper.TryCastHeal( bot, ref m_NextCastTime );
@@ -589,6 +590,7 @@ namespace Server.Mobiles
             if ( master == null || master.Deleted || !master.Alive ) return false;
             if ( !m_Mobile.InRange( master, 12 ) ) return false;
             if ( !master.Poisoned && master.Hits >= master.HitsMax - 10 ) return false;
+            if ( !PlayerBotCombatHelper.HasHealSpellReadyFor( bot, master ) ) return false;
 
             StashWeaponsForCasting();
             bool result = PlayerBotCombatHelper.TryCastHealTarget( bot, master, ref m_NextCastTime );
@@ -643,6 +645,7 @@ namespace Server.Mobiles
             eable.Free();
 
             if ( bestTarget == null ) return false;
+            if ( !PlayerBotCombatHelper.HasHealSpellReadyFor( bot, bestTarget ) ) return false;
 
             StashWeaponsForCasting();
             bool result = PlayerBotCombatHelper.TryCastHealTarget( bot, bestTarget, ref m_NextCastTime );
