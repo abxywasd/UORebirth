@@ -279,13 +279,12 @@ namespace Server.Mobiles
             switch ( m_Persona.Profile )
             {
                 case PlayerBotPersona.PlayerBotProfile.PlayerKiller:
-                    Karma = Utility.RandomMinMax( -45, -127 );
+                    Karma = Utility.RandomMinMax( -1, -127 );
                     break;
                 default:
-                    Karma = Utility.RandomMinMax( -5, 127 );
+                    Karma = Utility.RandomMinMax( 0, 127 );
                 break;
             }
-            // Karma = Utility.RandomMinMax( 13, -45 );
         }
 
         public virtual void InitBody()
