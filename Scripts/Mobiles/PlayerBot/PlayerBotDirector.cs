@@ -159,6 +159,11 @@ namespace Server.Mobiles
                     BotPOI poi = underpopulated[i % underpopulated.Count];
                     Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
                     PlayerBot bot = new PlayerBot();
+                    if ( (Region.Find( poi.Location, poi.Map ) is GuardedRegion) && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    {
+                        bot.Delete();
+                        continue;
+                    }
                     bot.MoveToWorld( loc, poi.Map );
                     bot.Home      = loc;
                     bot.RangeHome = poi.SpawnRadius;
@@ -167,7 +172,22 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    SpawnOneBot( null );
+                    // Fallback: spawn near Britain, but never spawn a PK inside a guarded region
+                    Point3D fallbackLoc = new Point3D(
+                        1445 + Utility.RandomMinMax( -100, 100 ),
+                        1599 + Utility.RandomMinMax( -100, 100 ),
+                        0 );
+                    fallbackLoc = new Point3D( fallbackLoc.X, fallbackLoc.Y, Map.Felucca.GetAverageZ( fallbackLoc.X, fallbackLoc.Y ) );
+                    PlayerBot fallbackBot = new PlayerBot();
+                    if ( (Region.Find( fallbackLoc, Map.Felucca ) is GuardedRegion) && fallbackBot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    {
+                        fallbackBot.Delete();
+                        continue;
+                    }
+                    fallbackBot.MoveToWorld( fallbackLoc, Map.Felucca );
+                    fallbackBot.Home      = fallbackLoc;
+                    fallbackBot.RangeHome = 25;
+                    RegisterBot( fallbackBot );
                 }
                 spawned++;
             }
@@ -246,6 +266,11 @@ namespace Server.Mobiles
 
                 Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
                 PlayerBot bot = new PlayerBot();
+                if ( (Region.Find( poi.Location, poi.Map ) is GuardedRegion) && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                {
+                    bot.Delete();
+                    continue;
+                }
                 bot.MoveToWorld( loc, poi.Map );
                 bot.Home      = loc;
                 bot.RangeHome = poi.SpawnRadius;
@@ -281,7 +306,7 @@ namespace Server.Mobiles
             Point3D? spawnPt = FindEncounterSpawnPoint( player );
             if ( !spawnPt.HasValue ) return;
 
-            bool inTown = Region.Find( player.Location, player.Map ) is GuardedRegion;
+            bool inTown = Region.Find( spawnPt.Value, player.Map ) is GuardedRegion;
 
             int count = 1 + Utility.Random( 3 ); // 1-3 bots per encounter
             for ( int i = 0; i < count; i++ )
