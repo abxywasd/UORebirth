@@ -137,13 +137,11 @@ namespace Server.Mobiles
             if ( CheckSelfDefense( bot ) )
                 return true;
 
-            // Default: follow master
+            // Default: follow master; stand still when already close
             m_Mobile.Warmode = false;
             bot.ActivityState.SetActivity( BotActivity.Wandering );
             if ( master.Alive && !m_Mobile.InRange( master, 3 ) )
                 FollowRunning( master, 2 );
-            else
-                base.DoActionWander();
             return true;
         }
 
