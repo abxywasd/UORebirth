@@ -419,9 +419,9 @@ namespace Server.Mobiles
             // Footwear variety: boots, shoes, or thigh boots
             switch ( Utility.Random( 3 ) )
             {
-                case 0:  AddItem( new Boots( RandomPlayerHue() ) ); break;
-                case 1:  AddItem( new Shoes( RandomPlayerHue() ) ); break;
-                default: AddItem( new ThighBoots( RandomPlayerHue() ) ); break;
+                case 0:  AddItem( new Boots()); break;
+                case 1:  AddItem( new Shoes()); break;
+                default: AddItem( new ThighBoots()); break;
             }
         }
 
