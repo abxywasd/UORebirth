@@ -15,6 +15,9 @@ namespace Server.Mobiles
         private DateTime m_NextTargetScanTime;
         private int      m_CombatTick;
 
+        // AI timer interval for running activities — matches player-like run cadence
+        private const double BotRunSpeed = 0.15;
+
         // Navigation stuck detection
         private Point3D  m_LastTravelPos;
         private int      m_StuckTicks;
@@ -98,6 +101,8 @@ namespace Server.Mobiles
             if ( master == null || master.Deleted )
                 return false;
 
+            EnsureRunSpeed();
+
             // Attack order: fight the designated target directly
             if ( m_Mobile.ControlOrder == OrderType.Attack )
             {
@@ -136,10 +141,44 @@ namespace Server.Mobiles
             m_Mobile.Warmode = false;
             bot.ActivityState.SetActivity( BotActivity.Wandering );
             if ( master.Alive && !m_Mobile.InRange( master, 3 ) )
-                MoveTo( master, true, 2 );
+                FollowRunning( master, 2 );
             else
                 base.DoActionWander();
             return true;
+        }
+
+        // Sets CurrentSpeed to BotRunSpeed; only fires OnCurrentSpeedChanged when transitioning from a slower speed.
+        private void EnsureRunSpeed()
+        {
+            if ( m_Mobile.CurrentSpeed > BotRunSpeed )
+                m_Mobile.CurrentSpeed = BotRunSpeed;
+        }
+
+        // Steps toward target with Direction.Running always set; falls back to pathfinding if blocked.
+        private void FollowRunning( Mobile target, int range )
+        {
+            if ( m_Mobile.InRange( target, range ) )
+            {
+                m_Path = null;
+                return;
+            }
+
+            Direction d = (m_Mobile.GetDirectionTo( target ) & Direction.Mask) | Direction.Running;
+            if ( DoMove( d ) )
+            {
+                m_Path = null;
+                return;
+            }
+
+            // Blocked — use PathFollower with run=true so each step also carries Running
+            if ( m_Path == null || m_Path.Goal != (object)target )
+            {
+                m_Path = new PathFollower( m_Mobile, target );
+                m_Path.Mover = new MoveMethod( DoMoveImpl );
+            }
+
+            if ( m_Path.Follow( true, range ) )
+                m_Path = null;
         }
 
         // ── Activity: Wander ──────────────────────────────────────────────────
@@ -206,6 +245,8 @@ namespace Server.Mobiles
                 bot.ActivityState.SetActivity( BotActivity.Wandering );
                 return true;
             }
+
+            EnsureRunSpeed();
 
             // Interrupt travel: PKs scan for any target; others react to aggressors only
             if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller
@@ -337,6 +378,8 @@ namespace Server.Mobiles
                 return true;
             }
 
+            EnsureRunSpeed();
+
             // Notify group of shared target
             if ( bot.Group != null && bot.Group.Leader == bot )
                 bot.Group.SharedTarget = c;
@@ -352,7 +395,7 @@ namespace Server.Mobiles
             // Melee approach
             if ( !m_Mobile.InRange( c, m_Mobile.RangeFight ) )
             {
-                MoveTo( c, true, m_Mobile.RangeFight );
+                FollowRunning( c, m_Mobile.RangeFight );
             }
             else if ( Utility.RandomDouble() <= 0.25 )
             {
@@ -387,6 +430,7 @@ namespace Server.Mobiles
                 return true;
             }
 
+            EnsureRunSpeed();
             m_Mobile.FocusMob = m_Mobile.Combatant;
             base.DoActionFlee();
             MaybeSpeak( bot );
@@ -435,6 +479,8 @@ namespace Server.Mobiles
             }
 
             Mobile leader = grp.Leader;
+
+            EnsureRunSpeed();
 
             // Follow leader
             WalkMobileRange( leader, 1, true, 1, 3 );

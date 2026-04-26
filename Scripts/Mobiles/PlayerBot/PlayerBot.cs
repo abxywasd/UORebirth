@@ -152,7 +152,7 @@ namespace Server.Mobiles
         public static string[] m_GuildTypes = new string[] { "", " (Chaos)", " (Order)" };
 
         // ── Constructors ────────────────────────────────────────────────────────
-        public PlayerBot( AIType AI ) : base( AI, FightMode.Agressor, 10, 1, 0.5, 0.75 )
+        public PlayerBot( AIType AI ) : base( AI, FightMode.Agressor, 10, 1, 0.15, 0.4 )
         {
             InitPersona();
             InitBody();
