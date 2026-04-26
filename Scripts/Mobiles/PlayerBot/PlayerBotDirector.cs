@@ -4,6 +4,7 @@ using Server;
 using Server.Commands;
 using Server.Gumps;
 using Server.Network;
+using Server.Regions;
 
 namespace Server.Mobiles
 {
@@ -280,6 +281,8 @@ namespace Server.Mobiles
             Point3D? spawnPt = FindEncounterSpawnPoint( player );
             if ( !spawnPt.HasValue ) return;
 
+            bool inTown = Region.Find( player.Location, player.Map ) is GuardedRegion;
+
             int count = 1 + Utility.Random( 3 ); // 1-3 bots per encounter
             for ( int i = 0; i < count; i++ )
             {
@@ -291,6 +294,11 @@ namespace Server.Mobiles
                     loc = spawnPt.Value;
 
                 PlayerBot bot = new PlayerBot();
+                if ( inTown && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                {
+                    bot.Delete();
+                    continue;
+                }
                 bot.MoveToWorld( loc, Map.Felucca );
                 bot.IsEncounterBot = true;
                 bot.MarkObserved();
