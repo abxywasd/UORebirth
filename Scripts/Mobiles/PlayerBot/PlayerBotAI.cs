@@ -27,6 +27,9 @@ namespace Server.Mobiles
         private bool     m_LastObservedState;
         private DateTime m_NextObservationCheck;
 
+        // Rate-limit the ally-heal sector scan to once per second
+        private DateTime m_NextAllyHealScanTime;
+
         // Weapon swap state: items unequipped before casting, restored after
         private List<Item> m_StashedEquipment;
         private Mobile     m_HealTarget;
@@ -48,6 +51,10 @@ namespace Server.Mobiles
             // Restore stashed weapons whenever not actively casting or awaiting target
             if ( bot.UsesMagic )
                 MaybeRestoreWeapons();
+
+            // Uncontrolled mage bots self-heal between fights
+            if ( !m_Mobile.Controled && CheckSelfHeal( bot ) )
+                return true;
 
             // Handle pending spell target first (MageAI pattern)
             Target targ = m_Mobile.Target;
@@ -149,12 +156,16 @@ namespace Server.Mobiles
             if ( CheckSelfDefense( bot ) )
                 return true;
 
-            // Default: follow master; heal them proactively if hurt
+            // Default: follow master; heal self/master/allies proactively
             m_Mobile.Warmode = false;
             bot.ActivityState.SetActivity( BotActivity.Wandering );
             if ( master.Alive && !m_Mobile.InRange( master, 3 ) )
                 FollowRunning( master, 2 );
+            if ( CheckSelfHeal( bot ) )
+                return true;
             if ( CheckMasterHeal( bot ) )
+                return true;
+            if ( CheckAllyHeal( bot ) )
                 return true;
             return true;
         }
@@ -404,6 +415,10 @@ namespace Server.Mobiles
             if ( CheckMasterHeal( bot ) )
                 return true;
 
+            // Heal/cure allied bots hired by the same master
+            if ( CheckAllyHeal( bot ) )
+                return true;
+
             // Offensive spells (mage path)
             if ( bot.UsesMagic && TryCastOffensiveSpell( bot, c ) )
                 return true;
@@ -579,6 +594,60 @@ namespace Server.Mobiles
             bool result = PlayerBotCombatHelper.TryCastHealTarget( bot, master, ref m_NextCastTime );
             if ( result )
                 m_HealTarget = master;
+            else
+                RestoreStashedWeapons();
+            return result;
+        }
+
+        // ── Magic: Heal/cure allied bots hired by the same master ────────────
+        private bool CheckAllyHeal( PlayerBot bot )
+        {
+            if ( !bot.UsesMagic ) return false;
+            if ( m_Mobile.Spell != null && m_Mobile.Spell.IsCasting ) return false;
+            if ( DateTime.Now < m_NextCastTime ) return false;
+            if ( DateTime.Now < m_NextAllyHealScanTime ) return false;
+
+            Mobile master = m_Mobile.ControlMaster;
+            if ( master == null || master.Deleted ) return false;
+
+            Map map = m_Mobile.Map;
+            if ( map == null || map == Map.Internal ) return false;
+
+            m_NextAllyHealScanTime = DateTime.Now + TimeSpan.FromSeconds( 1.0 );
+
+            Mobile bestTarget = null;
+            int worstDeficit  = 0;
+
+            IPooledEnumerable eable = map.GetMobilesInRange( m_Mobile.Location, 12 );
+            foreach ( Mobile m in eable )
+            {
+                if ( m == m_Mobile || m.Deleted || !m.Alive ) continue;
+                if ( m == master ) continue;
+
+                BaseCreature bc = m as BaseCreature;
+                if ( bc == null || !bc.Controled || bc.ControlMaster != master ) continue;
+
+                if ( m.Poisoned )
+                {
+                    bestTarget = m;
+                    break;
+                }
+
+                int deficit = m.HitsMax - m.Hits;
+                if ( deficit > worstDeficit && deficit > 10 )
+                {
+                    worstDeficit = deficit;
+                    bestTarget   = m;
+                }
+            }
+            eable.Free();
+
+            if ( bestTarget == null ) return false;
+
+            StashWeaponsForCasting();
+            bool result = PlayerBotCombatHelper.TryCastHealTarget( bot, bestTarget, ref m_NextCastTime );
+            if ( result )
+                m_HealTarget = bestTarget;
             else
                 RestoreStashedWeapons();
             return result;
