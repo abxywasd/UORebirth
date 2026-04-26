@@ -282,7 +282,7 @@ namespace Server.Mobiles
                     Karma = Utility.RandomMinMax( -45, -127 );
                     break;
                 default:
-                    Karma = Utility.RandomMinMax( -45, 127 );
+                    Karma = Utility.RandomMinMax( -5, 127 );
                 break;
             }
             // Karma = Utility.RandomMinMax( 13, -45 );
