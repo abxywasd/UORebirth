@@ -50,6 +50,7 @@ namespace Server.Items
 			if ( loc != this.Location )
 			{
 				BaseCreature.TeleportPets( m, loc, Map.Felucca );
+				PlayerBot.TeleportPlayerBots( m, loc, Map.Felucca );
 
 				m.Combatant = null;
 				m.Warmode = false;
@@ -398,6 +399,7 @@ namespace Server.Items
 			else
 			{
 				BaseCreature.TeleportPets( m_Mobile, entry.Location, list.Map );
+				PlayerBot.TeleportPlayerBots( m_Mobile, entry.Location, list.Map );
 
 				m_Mobile.Combatant = null;
 				m_Mobile.Warmode = false;

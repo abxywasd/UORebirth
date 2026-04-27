@@ -146,6 +146,7 @@ namespace Server.Items
 			else
 			{
 				BaseCreature.TeleportPets( m, m_Target, m_TargetMap );
+				PlayerBot.TeleportPlayerBots( m, m_Target, m_TargetMap );
 
 				m.Map = m_TargetMap;
 				m.Location = m_Target;

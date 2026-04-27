@@ -190,6 +190,21 @@ namespace Server.Mobiles
         {
         }
 
+        // Teleport all PlayerBots controlled by master to the given location.
+        // Collected into a list first to avoid mutating World.Mobiles during iteration.
+        public static void TeleportPlayerBots( Mobile master, Point3D loc, Map map )
+        {
+            var bots = new System.Collections.Generic.List<PlayerBot>();
+            foreach ( Mobile m in World.Mobiles.Values )
+            {
+                PlayerBot pb = m as PlayerBot;
+                if ( pb != null && !pb.Deleted && pb.Controled && pb.ControlMaster == master )
+                    bots.Add( pb );
+            }
+            foreach ( PlayerBot pb in bots )
+                pb.MoveToWorld( loc, map );
+        }
+
         // ── Serialization ───────────────────────────────────────────────────────
         public override void Serialize( GenericWriter writer )
         {

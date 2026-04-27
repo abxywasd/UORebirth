@@ -35,10 +35,14 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
+            if ( m is PlayerMobile )
+                PlayerBot.TeleportPlayerBots( m, m.Location, m.Map );
         }
 
         public override void OnExit(Mobile m)
         {
+            if ( m is PlayerMobile )
+                PlayerBot.TeleportPlayerBots( m, m.Location, m.Map );
         }
 
         public override void AlterLightLevel(Mobile m, ref int global, ref int personal)
