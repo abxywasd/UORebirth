@@ -154,7 +154,7 @@ namespace Server.Mobiles
         // ── Constructors ────────────────────────────────────────────────────────
         public PlayerBot( AIType AI ) : base( AI, FightMode.Agressor, 10, 1, 0.15, 0.4 )
         {
-            InitPersona();
+            InitPersona( null, null );
             InitBody();
             InitStats();
             InitSkills();
@@ -169,6 +169,21 @@ namespace Server.Mobiles
         [Constructable]
         public PlayerBot() : this( AIType.AI_PlayerBot )
         {
+        }
+
+        public PlayerBot( PlayerBotPersona.PlayerBotProfile profile, PlayerBotPersona.PlayerBotExperience xp )
+            : base( AIType.AI_PlayerBot, FightMode.Agressor, 10, 1, 0.15, 0.4 )
+        {
+            InitPersona( profile, xp );
+            InitBody();
+            InitStats();
+            InitSkills();
+            InitOutfit();
+            if ( m_UsesMagic )
+                InitReagents();
+            InitBackpack();
+            StartSkillTimer();
+            m_LastObserved = DateTime.Now;
         }
 
         public PlayerBot( Serial serial ) : base( serial )
@@ -259,23 +274,37 @@ namespace Server.Mobiles
         }
 
         // ── Init helpers ────────────────────────────────────────────────────────
-        private void InitPersona()
+        private void InitPersona( PlayerBotPersona.PlayerBotProfile? profileOverride, PlayerBotPersona.PlayerBotExperience? xpOverride )
         {
             m_Persona = new PlayerBotPersona();
 
-            switch ( Utility.Random( 3 ) )
+            if ( profileOverride.HasValue )
             {
-                case 0: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.PlayerKiller; break;
-                case 1: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Crafter;      break;
-                case 2: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Adventurer;   break;
+                m_Persona.Profile = profileOverride.Value;
+            }
+            else
+            {
+                switch ( Utility.Random( 3 ) )
+                {
+                    case 0: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.PlayerKiller; break;
+                    case 1: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Crafter;      break;
+                    case 2: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Adventurer;   break;
+                }
             }
 
-            switch ( Utility.Random( 4 ) )
+            if ( xpOverride.HasValue )
             {
-                case 0: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Newbie;      break;
-                case 1: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Average;     break;
-                case 2: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Proficient;  break;
-                case 3: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Grandmaster; break;
+                m_Persona.Experience = xpOverride.Value;
+            }
+            else
+            {
+                switch ( Utility.Random( 4 ) )
+                {
+                    case 0: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Newbie;      break;
+                    case 1: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Average;     break;
+                    case 2: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Proficient;  break;
+                    case 3: m_Persona.Experience = PlayerBotPersona.PlayerBotExperience.Grandmaster; break;
+                }
             }
 
             m_IsPlayerKiller = (m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.PlayerKiller);

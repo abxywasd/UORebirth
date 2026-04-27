@@ -47,6 +47,16 @@ namespace Server.Mobiles
         private Timer        m_EncounterTimer;
         private Timer        m_BurstTimer;
 
+        // Tunable settings (serialized v1)
+        private int m_PoiTimeoutMinutes       = 15;
+        private int m_EncounterTimeoutMinutes  = 8;
+        private int m_EncounterChancePct       = 40;
+        private int m_EncounterTickSeconds     = 15;
+        private int m_PoiTickMinutes           = 2;
+        private int m_DirectorTickMinutes      = 1;
+        private int m_MaxBurstPerTick          = 5;
+        private int m_ObservationRadius        = 18;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Enabled
         {
@@ -80,6 +90,74 @@ namespace Server.Mobiles
             }
         }
 
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int PoiTimeoutMinutes
+        {
+            get { return m_PoiTimeoutMinutes; }
+            set { m_PoiTimeoutMinutes = Math.Max( 1, Math.Min( 60, value ) ); }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int EncounterTimeoutMinutes
+        {
+            get { return m_EncounterTimeoutMinutes; }
+            set { m_EncounterTimeoutMinutes = Math.Max( 1, Math.Min( 60, value ) ); }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int EncounterChancePct
+        {
+            get { return m_EncounterChancePct; }
+            set { m_EncounterChancePct = Math.Max( 5, Math.Min( 100, value ) ); }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int EncounterTickSeconds
+        {
+            get { return m_EncounterTickSeconds; }
+            set
+            {
+                m_EncounterTickSeconds = Math.Max( 5, Math.Min( 300, value ) );
+                if ( m_Enabled ) RestartEncounterTimer();
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int PoiTickMinutes
+        {
+            get { return m_PoiTickMinutes; }
+            set
+            {
+                m_PoiTickMinutes = Math.Max( 1, Math.Min( 30, value ) );
+                if ( m_Enabled ) RestartPoiTimer();
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int DirectorTickMinutes
+        {
+            get { return m_DirectorTickMinutes; }
+            set
+            {
+                m_DirectorTickMinutes = Math.Max( 1, Math.Min( 30, value ) );
+                if ( m_Enabled ) RestartDirectorTickTimer();
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int MaxBurstPerTick
+        {
+            get { return m_MaxBurstPerTick; }
+            set { m_MaxBurstPerTick = Math.Max( 1, Math.Min( 20, value ) ); }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ObservationRadius
+        {
+            get { return m_ObservationRadius; }
+            set { m_ObservationRadius = Math.Max( 5, Math.Min( 50, value ) ); }
+        }
+
         // ── Constructors ────────────────────────────────────────────────────────
         private PlayerBotDirector() : base( 1 )
         {
@@ -106,21 +184,48 @@ namespace Server.Mobiles
             if ( m_EncounterTimer != null ) m_EncounterTimer.Stop();
 
             m_DirectorTimer = Timer.DelayCall(
-                TimeSpan.FromMinutes( 1.0 ),
-                TimeSpan.FromMinutes( 1.0 ),
+                TimeSpan.FromMinutes( m_DirectorTickMinutes ),
+                TimeSpan.FromMinutes( m_DirectorTickMinutes ),
                 new TimerCallback( DirectorTick ) );
 
             m_POITimer = Timer.DelayCall(
-                TimeSpan.FromMinutes( 2.0 ),
-                TimeSpan.FromMinutes( 2.0 ),
+                TimeSpan.FromMinutes( m_PoiTickMinutes ),
+                TimeSpan.FromMinutes( m_PoiTickMinutes ),
                 new TimerCallback( POITick ) );
 
             m_EncounterTimer = Timer.DelayCall(
                 TimeSpan.FromSeconds( 10.0 ),
-                TimeSpan.FromSeconds( 15.0 ),
+                TimeSpan.FromSeconds( m_EncounterTickSeconds ),
                 new TimerCallback( EncounterTick ) );
 
             StartBurstTimer();
+        }
+
+        private void RestartDirectorTickTimer()
+        {
+            if ( m_DirectorTimer != null ) m_DirectorTimer.Stop();
+            m_DirectorTimer = Timer.DelayCall(
+                TimeSpan.FromMinutes( m_DirectorTickMinutes ),
+                TimeSpan.FromMinutes( m_DirectorTickMinutes ),
+                new TimerCallback( DirectorTick ) );
+        }
+
+        private void RestartPoiTimer()
+        {
+            if ( m_POITimer != null ) m_POITimer.Stop();
+            m_POITimer = Timer.DelayCall(
+                TimeSpan.FromMinutes( m_PoiTickMinutes ),
+                TimeSpan.FromMinutes( m_PoiTickMinutes ),
+                new TimerCallback( POITick ) );
+        }
+
+        private void RestartEncounterTimer()
+        {
+            if ( m_EncounterTimer != null ) m_EncounterTimer.Stop();
+            m_EncounterTimer = Timer.DelayCall(
+                TimeSpan.FromSeconds( 10.0 ),
+                TimeSpan.FromSeconds( m_EncounterTickSeconds ),
+                new TimerCallback( EncounterTick ) );
         }
 
         private void StartBurstTimer()
@@ -147,9 +252,9 @@ namespace Server.Mobiles
                 return;
             }
 
-            // Spawn up to 5 bots per tick; prefer POI locations, fall back to Britain
+            // Spawn up to m_MaxBurstPerTick bots per tick; prefer POI locations, fall back to Britain
             List<BotPOI> underpopulated = PlayerBotPOI.GetUnderpopulated();
-            int toSpawn = Math.Min( 5, m_TargetBotCount - live );
+            int toSpawn = Math.Min( m_MaxBurstPerTick, m_TargetBotCount - live );
             int spawned = 0;
 
             for ( int i = 0; i < toSpawn; i++ )
@@ -216,8 +321,8 @@ namespace Server.Mobiles
             // Refresh observation timestamps; collect unobserved bots for despawn.
             // Encounter bots despawn after 8 min unobserved; POI bots after 15 min.
             DateTime now        = DateTime.Now;
-            TimeSpan poiTimeout = TimeSpan.FromMinutes( 15.0 );
-            TimeSpan encTimeout = TimeSpan.FromMinutes(  8.0 );
+            TimeSpan poiTimeout = TimeSpan.FromMinutes( m_PoiTimeoutMinutes );
+            TimeSpan encTimeout = TimeSpan.FromMinutes( m_EncounterTimeoutMinutes );
             List<PlayerBot> toDelete = new List<PlayerBot>();
 
             foreach ( Serial s in m_BotSerials )
@@ -227,7 +332,7 @@ namespace Server.Mobiles
                 if ( bot.Map == null || bot.Map == Map.Internal ) continue;
 
                 bool observed = false;
-                IPooledEnumerable eable = bot.Map.GetClientsInRange( bot.Location, 18 );
+                IPooledEnumerable eable = bot.Map.GetClientsInRange( bot.Location, m_ObservationRadius );
                 foreach ( NetState ns in eable )
                 {
                     if ( ns.Mobile != null && !ns.Mobile.Deleted && ns.Mobile.Alive )
@@ -305,8 +410,7 @@ namespace Server.Mobiles
                 if ( player == null || player.Deleted || !player.Alive ) continue;
                 if ( player.Map != Map.Felucca ) continue;
 
-                // 40% chance per 15s tick per connected player
-                if ( Utility.Random( 100 ) >= 40 ) continue;
+                if ( Utility.Random( 100 ) >= m_EncounterChancePct ) continue;
 
                 TrySpawnEncounter( player );
             }
@@ -419,6 +523,127 @@ namespace Server.Mobiles
             return result;
         }
 
+        public List<PlayerBot> GetEncounterBots()
+        {
+            List<PlayerBot> result = new List<PlayerBot>();
+            foreach ( Serial s in m_BotSerials )
+            {
+                PlayerBot bot = World.FindMobile( s ) as PlayerBot;
+                if ( bot != null && !bot.Deleted && bot.IsEncounterBot )
+                    result.Add( bot );
+            }
+            return result;
+        }
+
+        public List<PlayerBot> GetRegularBots()
+        {
+            List<PlayerBot> result = new List<PlayerBot>();
+            foreach ( Serial s in m_BotSerials )
+            {
+                PlayerBot bot = World.FindMobile( s ) as PlayerBot;
+                if ( bot != null && !bot.Deleted && !bot.IsEncounterBot )
+                    result.Add( bot );
+            }
+            return result;
+        }
+
+        public List<PlayerBot> GetControlledBots()
+        {
+            List<PlayerBot> result = new List<PlayerBot>();
+            foreach ( Serial s in m_BotSerials )
+            {
+                PlayerBot bot = World.FindMobile( s ) as PlayerBot;
+                if ( bot != null && !bot.Deleted && bot.Controled )
+                    result.Add( bot );
+            }
+            return result;
+        }
+
+        public List<PlayerBot> GetBotsByPersona( PlayerBotPersona.PlayerBotProfile persona )
+        {
+            List<PlayerBot> result = new List<PlayerBot>();
+            foreach ( PlayerBot bot in GetLiveBots() )
+                if ( bot.PlayerBotProfile == persona )
+                    result.Add( bot );
+            return result;
+        }
+
+        public List<PlayerBot> GetBotsByActivity( BotActivity activity )
+        {
+            List<PlayerBot> result = new List<PlayerBot>();
+            foreach ( PlayerBot bot in GetLiveBots() )
+                if ( bot.ActivityState.Current == activity )
+                    result.Add( bot );
+            return result;
+        }
+
+        public List<PlayerBotGroup> GetActiveGroups()
+        {
+            List<PlayerBotGroup> seen = new List<PlayerBotGroup>();
+            foreach ( PlayerBot bot in GetLiveBots() )
+                if ( bot.Group != null && !seen.Contains( bot.Group ) )
+                    seen.Add( bot.Group );
+            return seen;
+        }
+
+        public int DeleteEncounterBots()
+        {
+            List<PlayerBot> bots = GetEncounterBots();
+            foreach ( PlayerBot bot in bots )
+                bot.Delete();
+            return bots.Count;
+        }
+
+        public int DeleteRegularBots()
+        {
+            List<PlayerBot> bots = GetRegularBots();
+            foreach ( PlayerBot bot in bots )
+                bot.Delete();
+            return bots.Count;
+        }
+
+        public PlayerBot SpawnOneBot( Point3D? location, PlayerBotPersona.PlayerBotProfile profile, PlayerBotPersona.PlayerBotExperience xp )
+        {
+            Point3D loc = location.HasValue
+                ? location.Value
+                : new Point3D(
+                    1445 + Utility.RandomMinMax( -100, 100 ),
+                    1599 + Utility.RandomMinMax( -100, 100 ),
+                    0 );
+
+            Map map = Map.Felucca;
+            int z   = map.GetAverageZ( loc.X, loc.Y );
+            loc = new Point3D( loc.X, loc.Y, z );
+
+            PlayerBot bot = new PlayerBot( profile, xp );
+            bot.MoveToWorld( loc, map );
+            bot.Home      = loc;
+            bot.RangeHome = 25;
+            RegisterBot( bot );
+            return bot;
+        }
+
+        public int SpawnNBots( int count, Point3D? location, PlayerBotPersona.PlayerBotProfile profile, PlayerBotPersona.PlayerBotExperience xp )
+        {
+            count = Math.Max( 1, Math.Min( 50, count ) );
+            for ( int i = 0; i < count; i++ )
+                SpawnOneBot( location, profile, xp );
+            return count;
+        }
+
+        public void ResetSettingsToDefaults()
+        {
+            m_PoiTimeoutMinutes       = 15;
+            m_EncounterTimeoutMinutes  = 8;
+            m_EncounterChancePct      = 40;
+            m_EncounterTickSeconds    = 15;
+            m_PoiTickMinutes          = 2;
+            m_DirectorTickMinutes     = 1;
+            m_MaxBurstPerTick         = 5;
+            m_ObservationRadius       = 18;
+            if ( m_Enabled ) StartDirectorTimer();
+        }
+
         // Encounter bots are excluded from the population cap
         private int GetRegularBotCount()
         {
@@ -447,7 +672,7 @@ namespace Server.Mobiles
         public override void Serialize( GenericWriter writer )
         {
             base.Serialize( writer );
-            writer.Write( (int)0 ); // version
+            writer.Write( (int)1 ); // version
 
             writer.Write( (bool)m_Enabled );
             writer.Write( (int)m_TargetBotCount );
@@ -455,6 +680,16 @@ namespace Server.Mobiles
             writer.Write( (int)m_BotSerials.Count );
             foreach ( Serial s in m_BotSerials )
                 writer.Write( (int)s );
+
+            // version 1
+            writer.Write( (int)m_PoiTimeoutMinutes );
+            writer.Write( (int)m_EncounterTimeoutMinutes );
+            writer.Write( (int)m_EncounterChancePct );
+            writer.Write( (int)m_EncounterTickSeconds );
+            writer.Write( (int)m_PoiTickMinutes );
+            writer.Write( (int)m_DirectorTickMinutes );
+            writer.Write( (int)m_MaxBurstPerTick );
+            writer.Write( (int)m_ObservationRadius );
         }
 
         public override void Deserialize( GenericReader reader )
@@ -471,6 +706,29 @@ namespace Server.Mobiles
             int count = reader.ReadInt();
             for ( int i = 0; i < count; i++ )
                 m_BotSerials.Add( (Serial)reader.ReadInt() );
+
+            if ( version >= 1 )
+            {
+                m_PoiTimeoutMinutes      = reader.ReadInt();
+                m_EncounterTimeoutMinutes = reader.ReadInt();
+                m_EncounterChancePct     = reader.ReadInt();
+                m_EncounterTickSeconds   = reader.ReadInt();
+                m_PoiTickMinutes         = reader.ReadInt();
+                m_DirectorTickMinutes    = reader.ReadInt();
+                m_MaxBurstPerTick        = reader.ReadInt();
+                m_ObservationRadius      = reader.ReadInt();
+            }
+            else
+            {
+                m_PoiTimeoutMinutes       = 15;
+                m_EncounterTimeoutMinutes  = 8;
+                m_EncounterChancePct      = 40;
+                m_EncounterTickSeconds    = 15;
+                m_PoiTickMinutes          = 2;
+                m_DirectorTickMinutes     = 1;
+                m_MaxBurstPerTick         = 5;
+                m_ObservationRadius       = 18;
+            }
 
             // Re-initialize navigation landmarks after deserialization
             PlayerBotNavigator.Initialize();
