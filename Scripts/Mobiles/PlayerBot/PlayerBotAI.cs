@@ -964,6 +964,27 @@ namespace Server.Mobiles
                 RestoreStashedWeapons();
         }
 
+        // ── "all move" helper: step away from master ──────────────────────────
+        public void MoveAwayFromMaster()
+        {
+            Mobile master = m_Mobile.ControlMaster;
+            if ( master == null || master.Deleted ) return;
+
+            if ( m_Mobile.Combatant != null )
+            {
+                m_Mobile.PublicOverheadMessage( MessageType.Regular, 0x3B2, 501482 ); // I am too busy fighting...
+                return;
+            }
+
+            // Opposite direction of master; try adjacent if blocked
+            Direction away = (Direction)( ( (int)( m_Mobile.GetDirectionTo( master ) & Direction.Mask ) + 4 ) & 0x7 );
+            if ( !DoMove( away | Direction.Running ) )
+            {
+                Direction alt = (Direction)( ( (int)away + 1 ) & 0x7 );
+                DoMove( alt | Direction.Running );
+            }
+        }
+
         // ── Navigation helper (used by PlayerBotNavigator.Advance) ────────────
         public bool MoveToPoint( Point3D dest, bool run, int range )
         {

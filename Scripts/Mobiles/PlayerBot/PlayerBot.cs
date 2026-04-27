@@ -1264,6 +1264,13 @@ namespace Server.Mobiles
                     return;
                 }
 
+                if ( allCmd == "all move" )
+                {
+                    PlayerBotAllCommandHandler.BroadcastMove( e.Mobile );
+                    e.Handled = true;
+                    return;
+                }
+
                 if ( allCmd == "all release" || allCmd == "release all" )
                 {
                     e.Mobile.SendMessage( "Use the bot management gump to release bots." );

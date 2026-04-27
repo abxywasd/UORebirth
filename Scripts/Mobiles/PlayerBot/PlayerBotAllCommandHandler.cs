@@ -56,6 +56,17 @@ namespace Server.Mobiles
             }
         }
 
+        // Steps every controlled bot one tile away from the master, clearing the path.
+        public static void BroadcastMove( Mobile master )
+        {
+            foreach ( PlayerBot bot in GetControlledBots( master ) )
+            {
+                PlayerBotAI ai = bot.AIObject as PlayerBotAI;
+                if ( ai != null )
+                    ai.MoveAwayFromMaster();
+            }
+        }
+
         // Sets ForceMasterHeal on every mage bot so they cast Heal on master this tick.
         public static void BroadcastHealMaster( Mobile master )
         {
