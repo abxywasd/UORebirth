@@ -56,6 +56,16 @@ namespace Server.Mobiles
             }
         }
 
+        // Broadcasts a non-targeted order to all controlled bots.
+        public static void BroadcastOrder( Mobile master, OrderType order, Mobile orderTarget )
+        {
+            foreach ( PlayerBot bot in GetControlledBots( master ) )
+            {
+                bot.ControlTarget = orderTarget;
+                bot.ControlOrder  = order;
+            }
+        }
+
         // Steps every controlled bot one tile away from the master, clearing the path.
         public static void BroadcastMove( Mobile master )
         {

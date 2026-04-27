@@ -1238,6 +1238,27 @@ namespace Server.Mobiles
                 {
                     switch ( keywords[i] )
                     {
+                        case 0x164: // all come
+                            PlayerBotAllCommandHandler.BroadcastOrder( e.Mobile, OrderType.Come, null );
+                            return;
+
+                        case 0x16C: // all follow me
+                            PlayerBotAllCommandHandler.BroadcastOrder( e.Mobile, OrderType.Follow, e.Mobile );
+                            return;
+
+                        case 0x167: // all stop
+                            PlayerBotAllCommandHandler.BroadcastOrder( e.Mobile, OrderType.Stop, null );
+                            return;
+
+                        case 0x170: // all stay
+                            PlayerBotAllCommandHandler.BroadcastOrder( e.Mobile, OrderType.Stay, null );
+                            return;
+
+                        case 0x166: // all guard
+                        case 0x16B: // all guard me
+                            PlayerBotAllCommandHandler.BroadcastOrder( e.Mobile, OrderType.Guard, null );
+                            return;
+
                         case 0x168: // all kill
                         case 0x169: // all attack
                             // Single coordinator opens exactly one cursor for the master.
