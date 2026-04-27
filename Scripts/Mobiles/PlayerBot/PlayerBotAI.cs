@@ -73,6 +73,11 @@ namespace Server.Mobiles
             if ( !m_Mobile.Controled && CheckSelfHeal( bot ) )
                 return true;
 
+            // Engage NPCs attacking a player/group-member so Agressor-mode NPCs
+            // can retaliate against this bot and spread aggro off the real player.
+            if ( !m_Mobile.Controled && CheckDefendNearby( bot ) )
+                return true;
+
             switch ( bot.CurrentActivity )
             {
                 case BotActivity.Traveling:  return DoActivityTravel( bot );
@@ -726,6 +731,59 @@ namespace Server.Mobiles
                 }
             }
             return false;
+        }
+
+        // ── Defend nearby: engage NPCs fighting the player/group so Agressor-mode ──
+        // ── NPCs can subsequently retaliate against this bot. ─────────────────────
+        private bool CheckDefendNearby( PlayerBot bot )
+        {
+            if ( m_Mobile.Combatant != null )
+                return false;
+
+            IPooledEnumerable eable = m_Mobile.Map.GetMobilesInRange( m_Mobile.Location, m_Mobile.RangePerception );
+            Mobile bestTarget = null;
+
+            foreach ( Mobile m in eable )
+            {
+                if ( m == m_Mobile || m.Deleted || !m.Alive )
+                    continue;
+
+                BaseCreature bc = m as BaseCreature;
+                if ( bc == null || bc is PlayerBot )
+                    continue;
+
+                Mobile combatant = bc.Combatant;
+                if ( combatant == null )
+                    continue;
+
+                bool fightingPlayer = combatant is PlayerMobile;
+                bool fightingGroupMember = combatant is PlayerBot &&
+                                           ((PlayerBot)combatant).Group != null &&
+                                           ((PlayerBot)combatant).Group == bot.Group;
+
+                if ( !fightingPlayer && !fightingGroupMember )
+                    continue;
+
+                if ( !m_Mobile.CanBeHarmful( bc, false ) )
+                    continue;
+
+                if ( bot.ShouldAttack( bc ) )
+                {
+                    bestTarget = bc;
+                    break;
+                }
+            }
+
+            eable.Free();
+
+            if ( bestTarget == null )
+                return false;
+
+            m_Mobile.Combatant = bestTarget;
+            m_Mobile.FocusMob  = bestTarget;
+            bot.ActivityState.SetActivity( BotActivity.Combat );
+            m_Mobile.Warmode = true;
+            return true;
         }
 
         // ── Direct target scan (bypasses AquireFocusMob faction-check) ──────────

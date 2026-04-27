@@ -2053,7 +2053,7 @@ namespace Server.Mobiles
 					//
 					// Basic check
 					//
-					if ( m.Player || !bPlayerOnly )
+					if ( m.Player || m is PlayerBot || !bPlayerOnly )
 					{
 						if ( m.AccessLevel == AccessLevel.Player && m.Alive && !m.Blessed && !m.Deleted && m != m_Mobile && m_Mobile.CanSee( m ) )
 							bCheckIt = true;

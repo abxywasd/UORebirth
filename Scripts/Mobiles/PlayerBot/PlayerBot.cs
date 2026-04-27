@@ -1092,6 +1092,11 @@ namespace Server.Mobiles
                 return other.m_IsPlayerKiller;
             }
 
+            // Any non-PlayerBot target that's actively in combat is a threat worth engaging
+            BaseCreature bc = target as BaseCreature;
+            if ( bc != null && bc.Combatant != null )
+                return true;
+
             // Crafters don't hunt; Adventurers do
             return m_Persona.Profile != PlayerBotPersona.PlayerBotProfile.Crafter;
         }

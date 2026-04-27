@@ -527,6 +527,11 @@ namespace Server.Mobiles
 			if ( !(m is BaseCreature) )
 				return true;
 
+			// Wild (uncontrolled, unsummoned) creatures treat PlayerBots as enemies,
+			// mirroring how they treat real players. Player-owned pets are excluded.
+			if ( m is PlayerBot && !m_bControled && !m_bSummoned )
+				return true;
+
 			BaseCreature c = (BaseCreature)m;
 
 			return ( m_iTeam != c.m_iTeam || ( (m_bSummoned || m_bControled) != (c.m_bSummoned || c.m_bControled) ) );
