@@ -101,6 +101,56 @@ namespace Server.Mobiles
             Add( "YewCemetery",      new Point3D(  724, 1138,  0 ), Map.Felucca, WaypointTag.Cemetery );
             Add( "JhelomCemetery",   new Point3D( 1296, 3719,  0 ), Map.Felucca, WaypointTag.Cemetery );
             Add( "MoonglewCemetery", new Point3D( 4546, 1338,  8 ), Map.Felucca, WaypointTag.Cemetery );
+        
+            // Moongates
+            // Moongates
+            Add( "MoongateBrit",      new Point3D( 1337, 1997,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateJhelom",    new Point3D( 1499, 3771,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateMagincia",  new Point3D( 3701, 2209, 20 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateMinoc",     new Point3D( 2701,  692,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateMoonglow",  new Point3D( 4467, 1283,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateSkara",     new Point3D(  643, 2067,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateTrinsic",   new Point3D( 1828, 2821,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateVesper",    new Point3D( 2957,  526,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MoongateYew",       new Point3D(  771,  753,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+
+            // Strategic Bridges & Crossroads
+            Add( "MinocVesperBridge", new Point3D( 2561,  610,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Mining );
+            Add( "BritTrinsicXroad",  new Point3D( 1421, 2307,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "YewPawPath",        new Point3D(  980, 1100,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "GreatNorthernRoad", new Point3D( 1500, 1100,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "MtKendallPass",     new Point3D( 2413, 1130,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+
+            // T2A Overworld Entrances
+            Add( "MarblePassage",     new Point3D( 1148, 1933,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
+            Add( "DeluciaPassage",    new Point3D( 1515, 2987,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
+            Add( "SnakePass",         new Point3D( 1745, 1545,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
+            Add( "FireIslandEntrance",new Point3D( 4596, 3591,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands ); // Marble teleporter
+            Add( "SerpentPillarS",    new Point3D( 1475, 2987,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
+
+            // Wilderness Landmarks
+            Add( "HedgeMaze",         new Point3D( 1108, 2300,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "IversVictory",      new Point3D( 3773, 2011,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness ); // Shipwreck
+            Add( "GreatWaterfall",    new Point3D(  178,  828,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "DesertCompassion",  new Point3D( 1888, 1004,  0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.PKHub );
+            Add( "StoneCircleYew",    new Point3D(  640,  710,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "ValorsEnd",         new Point3D( 2390, 3175,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness ); // Jungle ruins
+
+            // Ruins & Minor Camps
+            Add( "OldHavenRuins",     new Point3D( 3640, 2528,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "GazerIsland",       new Point3D( 4200, 3600,  0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.PKHub );
+            Add( "HiddenValley",      new Point3D( 1675, 2950,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "SavageCampT2A",     new Point3D( 5240, 3350,  0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.LostLands );
+
+            // Woodcutting & Specialized Mining
+            Add( "YewLumberRegion",   new Point3D(  600, 1000,  0 ), Map.Felucca, WaypointTag.Mining ); // Lumbering
+            Add( "BigMountainMine",   new Point3D( 2420, 1370,  0 ), Map.Felucca, WaypointTag.Mining );
+            Add( "VesperMine",        new Point3D( 2900,  900,  0 ), Map.Felucca, WaypointTag.Mining );
+            Add( "OclloMines",        new Point3D( 3660, 2600,  0 ), Map.Felucca, WaypointTag.Mining | WaypointTag.Town );
+
+            // More Cemeteries
+            Add( "TrinsicCemetery",   new Point3D( 1823, 2883,  0 ), Map.Felucca, WaypointTag.Cemetery );
+            Add( "NujelmCemetery",    new Point3D( 3557, 1262,  0 ), Map.Felucca, WaypointTag.Cemetery );
         }
 
         private static void Add( string name, Point3D loc, Map map )
