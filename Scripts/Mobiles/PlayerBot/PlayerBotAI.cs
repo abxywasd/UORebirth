@@ -16,6 +16,11 @@ namespace Server.Mobiles
         private DateTime m_NextTargetScanTime;
         private int      m_CombatTick;
 
+        // Attack order stickiness: suppress "assist master" override for this many seconds
+        // after the master manually orders the bot to attack a specific target.
+        private DateTime m_AttackOrderIssuedTime;
+        private const double AttackOrderGracePeriod = 8.0;
+
         // AI timer interval for running activities — matches player-like run cadence
         private const double BotRunSpeed = 0.15;
 
@@ -128,28 +133,67 @@ namespace Server.Mobiles
 
             EnsureRunSpeed();
 
-            // Attack order: fight the designated target directly
-            if ( m_Mobile.ControlOrder == OrderType.Attack )
+            switch ( m_Mobile.ControlOrder )
             {
-                Mobile ct = m_Mobile.ControlTarget;
-                if ( ct != null && !ct.Deleted && ct.Alive && ct.Map == m_Mobile.Map )
+                case OrderType.Attack:
                 {
-                    m_Mobile.Combatant = ct;
-                    m_Mobile.Warmode   = true;
-                    bot.ActivityState.SetActivity( BotActivity.Combat );
-                    return DoActivityCombat( bot );
+                    Mobile ct = m_Mobile.ControlTarget;
+                    if ( ct != null && !ct.Deleted && ct.Alive && ct.Map == m_Mobile.Map )
+                    {
+                        m_Mobile.Combatant      = ct;
+                        m_Mobile.Warmode        = true;
+                        m_AttackOrderIssuedTime = DateTime.Now;
+                        bot.ActivityState.SetActivity( BotActivity.Combat );
+                        return DoActivityCombat( bot );
+                    }
+                    // ct != null but dead/gone — clear the stale order
+                    // ct == null means the targeting cursor hasn't been resolved yet; keep order pending
+                    if ( ct != null )
+                    {
+                        m_Mobile.ControlTarget = null;
+                        m_Mobile.ControlOrder  = OrderType.None;
+                    }
+                    break;
                 }
-                // ct != null but dead/gone — clear the stale order
-                // ct == null means the targeting cursor hasn't been resolved yet; keep order pending
-                if ( ct != null )
+
+                case OrderType.Stop:
+                case OrderType.Stay:
+                    m_Mobile.Combatant = null;
+                    m_Mobile.Warmode   = false;
+                    bot.ActivityState.SetActivity( BotActivity.Wandering );
+                    return true;
+
+                case OrderType.Come:
+                    m_Mobile.Combatant = null;
+                    m_Mobile.Warmode   = false;
+                    bot.ActivityState.SetActivity( BotActivity.Wandering );
+                    if ( !m_Mobile.InRange( master, 2 ) )
+                        FollowRunning( master, 2 );
+                    return true;
+
+                case OrderType.Follow:
                 {
-                    m_Mobile.ControlTarget = null;
-                    m_Mobile.ControlOrder  = OrderType.None;
+                    Mobile followTarget = m_Mobile.ControlTarget ?? master;
+                    m_Mobile.Combatant  = null;
+                    m_Mobile.Warmode    = false;
+                    bot.ActivityState.SetActivity( BotActivity.Wandering );
+                    if ( !m_Mobile.InRange( followTarget, 2 ) )
+                        FollowRunning( followTarget, 2 );
+                    return true;
                 }
+
+                case OrderType.Guard:
+                    // Guard = follow master + react to his aggressors; handled by the assist block below.
+                    break;
             }
 
-            // Assist master when they are in combat
-            if ( master.Alive && master.Combatant != null
+            // Assist master when they are in combat.
+            // Suppressed for AttackOrderGracePeriod seconds after a manual attack order
+            // so the player's explicit targeting intent is not overridden on the very next tick.
+            bool recentManualOrder = (DateTime.Now - m_AttackOrderIssuedTime).TotalSeconds < AttackOrderGracePeriod;
+
+            if ( !recentManualOrder
+                 && master.Alive && master.Combatant != null
                  && !master.Combatant.Deleted && master.Combatant.Alive )
             {
                 m_Mobile.Combatant = master.Combatant;
@@ -606,7 +650,11 @@ namespace Server.Mobiles
             Mobile master = m_Mobile.ControlMaster;
             if ( master == null || master.Deleted || !master.Alive ) return false;
             if ( !m_Mobile.InRange( master, 12 ) ) return false;
-            if ( !master.Poisoned && master.Hits >= master.HitsMax - 10 ) return false;
+
+            bool forced = bot.ForceMasterHeal;
+            bot.ForceMasterHeal = false;
+
+            if ( !forced && !master.Poisoned && master.Hits >= master.HitsMax - 10 ) return false;
             if ( !PlayerBotCombatHelper.HasHealSpellReadyFor( bot, master ) ) return false;
 
             StashWeaponsForCasting();

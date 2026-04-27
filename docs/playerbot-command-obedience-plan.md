@@ -427,6 +427,7 @@ private bool CheckMasterHeal(PlayerBot bot)
 | `[name] kill` / `[name] attack` | Named bot attacks a target (cursor) | BaseAI (per-bot) |
 | `[name] guard` | Named bot guards master | BaseAI (per-bot) |
 | `status` / `manage` (near bot) | Opens the management gump for this bot | Existing |
+| `all move` | Same behavior as `%name% move`, makes all bots move in order to make way for their owner | 
 
 > **Note on "all follow me" vs "all follow":**
 > - `all follow me` (keyword 0x16C) → each bot sets `ControlTarget = master, ControlOrder = Follow` via BaseAI. Works correctly.

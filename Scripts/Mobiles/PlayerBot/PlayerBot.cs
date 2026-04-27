@@ -72,6 +72,9 @@ namespace Server.Mobiles
         [NonSerialized]
         public bool InConversation;
 
+        [NonSerialized]
+        public bool ForceMasterHeal;
+
         // ── Properties ─────────────────────────────────────────────────────────
         [CommandProperty(AccessLevel.GameMaster)]
         public PlayerBotPersona.PlayerBotProfile PlayerBotProfile
@@ -1221,9 +1224,57 @@ namespace Server.Mobiles
 
         public override void OnSpeech( SpeechEventArgs e )
         {
+            // ── Intercept "all" commands from master ──────────────────────────────
+            // Must run before base.OnSpeech, which calls BaseAI.OnSpeech and would
+            // open one targeting cursor per bot for "all kill" / "all attack".
+            if ( !e.Handled
+                 && e.Mobile.Alive
+                 && this.Controled
+                 && this.ControlMaster == e.Mobile
+                 && e.Mobile.InRange( this, 14 ) )
+            {
+                int[] keywords = e.Keywords;
+                for ( int i = 0; i < keywords.Length; i++ )
+                {
+                    switch ( keywords[i] )
+                    {
+                        case 0x168: // all kill
+                        case 0x169: // all attack
+                            // Single coordinator opens exactly one cursor for the master.
+                            PlayerBotAllCommandHandler.TryBeginAllAttack( e.Mobile );
+                            // Suppress per-bot BaseAI handling to prevent N cursors.
+                            return;
+                    }
+                }
+
+                // Custom text commands (no UO keyword IDs)
+                string allCmd = e.Speech.ToLower().Trim();
+
+                if ( allCmd == "all status" || allCmd == "all report" )
+                {
+                    PlayerBotAllCommandHandler.BroadcastStatusReport( e.Mobile );
+                    e.Handled = true;
+                    return;
+                }
+
+                if ( allCmd == "all heal me" || allCmd == "all heal" )
+                {
+                    PlayerBotAllCommandHandler.BroadcastHealMaster( e.Mobile );
+                    e.Handled = true;
+                    return;
+                }
+
+                if ( allCmd == "all release" || allCmd == "release all" )
+                {
+                    e.Mobile.SendMessage( "Use the bot management gump to release bots." );
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            // ── Owner management trigger: "status" or "manage" ────────────────────
             if ( !e.Handled && e.Mobile.InRange( this, 6 ) )
             {
-                // Owner management trigger: "status" or "manage"
                 string speech = e.Speech.ToLower();
                 if ( speech.Contains( "status" ) || speech.Contains( "manage" ) )
                 {
