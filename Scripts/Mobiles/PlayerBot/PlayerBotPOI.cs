@@ -97,9 +97,9 @@ namespace Server.Mobiles
             return count;
         }
 
-        public static Point3D RandomSpawnPoint( BotPOI poi )
+        public static Point3D? RandomSpawnPoint( BotPOI poi )
         {
-            for ( int tries = 0; tries < 10; tries++ )
+            for ( int tries = 0; tries < 15; tries++ )
             {
                 int x = poi.Location.X + Utility.RandomMinMax( -poi.SpawnRadius, poi.SpawnRadius );
                 int y = poi.Location.Y + Utility.RandomMinMax( -poi.SpawnRadius, poi.SpawnRadius );
@@ -109,8 +109,10 @@ namespace Server.Mobiles
                     return p;
             }
 
+            // Last resort: try the POI center itself
             int fz = poi.Map.GetAverageZ( poi.Location.X, poi.Location.Y );
-            return new Point3D( poi.Location.X, poi.Location.Y, fz );
+            Point3D center = new Point3D( poi.Location.X, poi.Location.Y, fz );
+            return poi.Map.CanSpawnMobile( center ) ? center : (Point3D?)null;
         }
     }
 }

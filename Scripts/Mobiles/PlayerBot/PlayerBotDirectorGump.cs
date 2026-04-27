@@ -833,14 +833,15 @@ namespace Server.Mobiles
                         for ( int i = 0; i < m_SpawnCount; i++ )
                         {
                             BotPOI poi = pois[Utility.Random( pois.Count )];
-                            Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                            Point3D? loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                            if ( !loc.HasValue ) continue;
                             PlayerBotPersona.PlayerBotProfile p = m_SpawnPersona >= 0
                                 ? (PlayerBotPersona.PlayerBotProfile)m_SpawnPersona
                                 : (PlayerBotPersona.PlayerBotProfile)Utility.Random( 3 );
                             PlayerBotPersona.PlayerBotExperience x = m_SpawnXP >= 0
                                 ? (PlayerBotPersona.PlayerBotExperience)m_SpawnXP
                                 : (PlayerBotPersona.PlayerBotExperience)Utility.Random( 4 );
-                            m_Director.SpawnOneBot( loc, p, x );
+                            m_Director.SpawnOneBot( loc.Value, p, x );
                         }
                         m_From.SendMessage( "Spawned {0} bot{1} at POI locations.", m_SpawnCount, m_SpawnCount == 1 ? "" : "s" );
                         break;
@@ -896,9 +897,14 @@ namespace Server.Mobiles
                     if ( idx < all.Count )
                     {
                         BotPOI poi = all[idx];
-                        Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
-                        m_Director.SpawnOneBot( loc );
-                        m_From.SendMessage( "Spawned one bot at {0}.", poi.Name );
+                        Point3D? loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                        if ( !loc.HasValue )
+                            m_From.SendMessage( "No walkable tile found near {0}.", poi.Name );
+                        else
+                        {
+                            m_Director.SpawnOneBot( loc.Value );
+                            m_From.SendMessage( "Spawned one bot at {0}.", poi.Name );
+                        }
                     }
                 }
                 else if ( btn >= 430 && btn <= 444 ) // Clear bots near POI

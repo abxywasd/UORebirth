@@ -262,8 +262,10 @@ namespace Server.Mobiles
                 if ( underpopulated.Count > 0 )
                 {
                     BotPOI poi = underpopulated[i % underpopulated.Count];
-                    Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
-                    bool isGuarded = Region.Find( loc, poi.Map ) is GuardedRegion;
+                    Point3D? loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                    if ( !loc.HasValue )
+                        continue;
+                    bool isGuarded = Region.Find( loc.Value, poi.Map ) is GuardedRegion;
                     if ( isGuarded && Utility.Random( 3 ) == 0 )
                         continue;
                     PlayerBot bot = new PlayerBot();
@@ -272,8 +274,8 @@ namespace Server.Mobiles
                         bot.Delete();
                         continue;
                     }
-                    bot.MoveToWorld( loc, poi.Map );
-                    bot.Home      = loc;
+                    bot.MoveToWorld( loc.Value, poi.Map );
+                    bot.Home      = loc.Value;
                     bot.RangeHome = poi.SpawnRadius;
                     bot.MarkObserved();
                     RegisterBot( bot );
@@ -281,12 +283,10 @@ namespace Server.Mobiles
                 else
                 {
                     // Fallback: spawn near Britain, but never spawn a PK inside a guarded region
-                    Point3D fallbackLoc = new Point3D(
-                        1445 + Utility.RandomMinMax( -100, 100 ),
-                        1599 + Utility.RandomMinMax( -100, 100 ),
-                        0 );
-                    fallbackLoc = new Point3D( fallbackLoc.X, fallbackLoc.Y, Map.Felucca.GetAverageZ( fallbackLoc.X, fallbackLoc.Y ) );
-                    bool isGuardedFallback = Region.Find( fallbackLoc, Map.Felucca ) is GuardedRegion;
+                    Point3D? fallbackLoc = TryFindBritainFallbackPoint();
+                    if ( !fallbackLoc.HasValue )
+                        continue;
+                    bool isGuardedFallback = Region.Find( fallbackLoc.Value, Map.Felucca ) is GuardedRegion;
                     if ( isGuardedFallback && Utility.Random( 3 ) == 0 )
                         continue;
                     PlayerBot fallbackBot = new PlayerBot();
@@ -295,8 +295,8 @@ namespace Server.Mobiles
                         fallbackBot.Delete();
                         continue;
                     }
-                    fallbackBot.MoveToWorld( fallbackLoc, Map.Felucca );
-                    fallbackBot.Home      = fallbackLoc;
+                    fallbackBot.MoveToWorld( fallbackLoc.Value, Map.Felucca );
+                    fallbackBot.Home      = fallbackLoc.Value;
                     fallbackBot.RangeHome = 25;
                     RegisterBot( fallbackBot );
                 }
@@ -377,8 +377,10 @@ namespace Server.Mobiles
                 if ( spawned >= 3 ) break;
                 if ( GetRegularBotCount() >= m_TargetBotCount ) break;
 
-                Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
-                bool isGuarded = Region.Find( loc, poi.Map ) is GuardedRegion;
+                Point3D? loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                if ( !loc.HasValue )
+                    continue;
+                bool isGuarded = Region.Find( loc.Value, poi.Map ) is GuardedRegion;
                 if ( isGuarded && Utility.Random( 3 ) == 0 )
                     continue;
                 PlayerBot bot = new PlayerBot();
@@ -387,8 +389,8 @@ namespace Server.Mobiles
                     bot.Delete();
                     continue;
                 }
-                bot.MoveToWorld( loc, poi.Map );
-                bot.Home      = loc;
+                bot.MoveToWorld( loc.Value, poi.Map );
+                bot.Home      = loc.Value;
                 bot.RangeHome = poi.SpawnRadius;
                 bot.MarkObserved();
                 RegisterBot( bot );
@@ -477,21 +479,38 @@ namespace Server.Mobiles
         }
 
         // ── Bot management ─────────────────────────────────────────────────────
+
+        private static Point3D? TryFindBritainFallbackPoint()
+        {
+            for ( int tries = 0; tries < 20; tries++ )
+            {
+                int x = 1445 + Utility.RandomMinMax( -100, 100 );
+                int y = 1599 + Utility.RandomMinMax( -100, 100 );
+                int z = Map.Felucca.GetAverageZ( x, y );
+                Point3D p = new Point3D( x, y, z );
+                if ( Map.Felucca.CanSpawnMobile( p ) )
+                    return p;
+            }
+            return null;
+        }
+
         public PlayerBot SpawnOneBot( Point3D? location )
         {
-            // Default spawn area: Britain surroundings
-            Point3D loc = location.HasValue
-                ? location.Value
-                : new Point3D(
-                    1445 + Utility.RandomMinMax( -100, 100 ),
-                    1599 + Utility.RandomMinMax( -100, 100 ),
-                    0 );
-
             Map map = Map.Felucca;
+            Point3D loc;
 
-            // Make sure location is valid (walk up/down a little if needed)
-            int z = map.GetAverageZ( loc.X, loc.Y );
-            loc = new Point3D( loc.X, loc.Y, z );
+            if ( location.HasValue )
+            {
+                int z = map.GetAverageZ( location.Value.X, location.Value.Y );
+                loc = new Point3D( location.Value.X, location.Value.Y, z );
+            }
+            else
+            {
+                Point3D? found = TryFindBritainFallbackPoint();
+                if ( !found.HasValue )
+                    return null;
+                loc = found.Value;
+            }
 
             PlayerBot bot = new PlayerBot();
             bot.MoveToWorld( loc, map );
@@ -605,16 +624,21 @@ namespace Server.Mobiles
 
         public PlayerBot SpawnOneBot( Point3D? location, PlayerBotPersona.PlayerBotProfile profile, PlayerBotPersona.PlayerBotExperience xp )
         {
-            Point3D loc = location.HasValue
-                ? location.Value
-                : new Point3D(
-                    1445 + Utility.RandomMinMax( -100, 100 ),
-                    1599 + Utility.RandomMinMax( -100, 100 ),
-                    0 );
-
             Map map = Map.Felucca;
-            int z   = map.GetAverageZ( loc.X, loc.Y );
-            loc = new Point3D( loc.X, loc.Y, z );
+            Point3D loc;
+
+            if ( location.HasValue )
+            {
+                int z = map.GetAverageZ( location.Value.X, location.Value.Y );
+                loc = new Point3D( location.Value.X, location.Value.Y, z );
+            }
+            else
+            {
+                Point3D? found = TryFindBritainFallbackPoint();
+                if ( !found.HasValue )
+                    return null;
+                loc = found.Value;
+            }
 
             PlayerBot bot = new PlayerBot( profile, xp );
             bot.MoveToWorld( loc, map );
