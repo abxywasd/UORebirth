@@ -3,8 +3,108 @@ using Server;
 
 namespace Server.Mobiles
 {
+    public enum CommandAckType { Attack, Stop, Stay, Come, Follow, Guard, Heal, Move }
+
     public static class PlayerBotSpeaker
     {
+        // ── Command acknowledgment pools ───────────────────────────────────────
+
+        private static readonly string[] s_AckAttack = new string[]
+        {
+            "On it!",
+            "With pleasure.",
+            "Consider it done.",
+            "Target acquired.",
+            "Charging!",
+            "As you wish.",
+            "Gladly.",
+        };
+
+        private static readonly string[] s_AckStop = new string[]
+        {
+            "Aye.",
+            "Understood.",
+            "Holding.",
+            "Standing by.",
+            "Stopping.",
+            "As you say.",
+        };
+
+        private static readonly string[] s_AckStay = new string[]
+        {
+            "I'll wait here.",
+            "Staying put.",
+            "Won't move.",
+            "Understood.",
+            "Holding position.",
+        };
+
+        private static readonly string[] s_AckCome = new string[]
+        {
+            "On my way.",
+            "Coming!",
+            "Right behind you.",
+            "At once.",
+            "Moving to you.",
+        };
+
+        private static readonly string[] s_AckFollow = new string[]
+        {
+            "Following.",
+            "Right behind you.",
+            "On your heels.",
+            "With you.",
+            "I'm with you.",
+            "Lead on.",
+        };
+
+        private static readonly string[] s_AckGuard = new string[]
+        {
+            "Guarding.",
+            "I've got your back.",
+            "Eyes open.",
+            "None shall harm you.",
+            "Watching your flanks.",
+            "Stay close.",
+        };
+
+        private static readonly string[] s_AckHeal = new string[]
+        {
+            "Casting now.",
+            "Hold still.",
+            "On it.",
+            "Healing you.",
+            "One moment.",
+        };
+
+        private static readonly string[] s_AckMove = new string[]
+        {
+            "Excuse me.",
+            "Pardon me.",
+            "Making way.",
+            "*steps aside*",
+            "Out of the way.",
+        };
+
+        public static void SayCommandAck( PlayerBot bot, CommandAckType ack )
+        {
+            string[] pool;
+            switch ( ack )
+            {
+                case CommandAckType.Attack: pool = s_AckAttack; break;
+                case CommandAckType.Stop:   pool = s_AckStop;   break;
+                case CommandAckType.Stay:   pool = s_AckStay;   break;
+                case CommandAckType.Come:   pool = s_AckCome;   break;
+                case CommandAckType.Follow: pool = s_AckFollow; break;
+                case CommandAckType.Guard:  pool = s_AckGuard;  break;
+                case CommandAckType.Heal:   pool = s_AckHeal;   break;
+                case CommandAckType.Move:   pool = s_AckMove;   break;
+                default: return;
+            }
+
+            bot.Say( pool[Utility.Random( pool.Length )] );
+        }
+
         private static readonly string[] s_PKLines = new string[]
         {
             "I smell blood.",
