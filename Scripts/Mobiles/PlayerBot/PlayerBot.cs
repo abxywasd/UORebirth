@@ -238,6 +238,24 @@ namespace Server.Mobiles
             }
 
             StartSkillTimer();
+            Timer.DelayCall( TimeSpan.FromSeconds( 2.0 ), new TimerCallback( ReEquipWeaponIfNeeded ) );
+        }
+
+        private void ReEquipWeaponIfNeeded()
+        {
+            if ( Deleted || Map == Map.Internal ) return;
+            if ( FindItemOnLayer( Layer.OneHanded ) != null || FindItemOnLayer( Layer.TwoHanded ) != null ) return;
+            if ( Backpack == null ) return;
+
+            for ( int j = 0; j < Backpack.Items.Count; j++ )
+            {
+                Item item = Backpack.Items[j];
+                if ( item is BaseWeapon )
+                {
+                    EquipItem( item );
+                    break;
+                }
+            }
         }
 
         // ── Init helpers ────────────────────────────────────────────────────────

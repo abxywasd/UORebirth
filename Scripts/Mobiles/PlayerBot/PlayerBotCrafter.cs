@@ -52,8 +52,10 @@ namespace Server.Mobiles
             if ( Utility.RandomDouble() < chance )
             {
                 Item made = PickCraftOutput( bot );
-                bot.AddToBackpack( made );
-                bot.Say( "*pounds the anvil*" );
+                if ( !bot.AddToBackpack( made ) )
+                    made.Delete();
+                else
+                    bot.Say( "*pounds the anvil*" );
             }
 
             // Skill gain regardless of success (mirrors real crafting)

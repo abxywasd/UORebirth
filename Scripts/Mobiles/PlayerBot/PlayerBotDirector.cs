@@ -158,8 +158,11 @@ namespace Server.Mobiles
                 {
                     BotPOI poi = underpopulated[i % underpopulated.Count];
                     Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                    bool isGuarded = Region.Find( poi.Location, poi.Map ) is GuardedRegion;
+                    if ( isGuarded && Utility.Random( 3 ) == 0 )
+                        continue;
                     PlayerBot bot = new PlayerBot();
-                    if ( (Region.Find( poi.Location, poi.Map ) is GuardedRegion) && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    if ( isGuarded && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                     {
                         bot.Delete();
                         continue;
@@ -178,8 +181,11 @@ namespace Server.Mobiles
                         1599 + Utility.RandomMinMax( -100, 100 ),
                         0 );
                     fallbackLoc = new Point3D( fallbackLoc.X, fallbackLoc.Y, Map.Felucca.GetAverageZ( fallbackLoc.X, fallbackLoc.Y ) );
+                    bool isGuardedFallback = Region.Find( fallbackLoc, Map.Felucca ) is GuardedRegion;
+                    if ( isGuardedFallback && Utility.Random( 3 ) == 0 )
+                        continue;
                     PlayerBot fallbackBot = new PlayerBot();
-                    if ( (Region.Find( fallbackLoc, Map.Felucca ) is GuardedRegion) && fallbackBot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    if ( isGuardedFallback && fallbackBot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                     {
                         fallbackBot.Delete();
                         continue;
@@ -197,12 +203,14 @@ namespace Server.Mobiles
         {
             if ( !m_Enabled || Deleted ) return;
 
-            // Prune stale serials
+            // Prune stale serials and remove ghost bots (alive but stranded on Map.Internal)
             for ( int i = m_BotSerials.Count - 1; i >= 0; i-- )
             {
-                Mobile m = World.FindMobile( m_BotSerials[i] );
-                if ( m == null || m.Deleted )
+                PlayerBot bot = World.FindMobile( m_BotSerials[i] ) as PlayerBot;
+                if ( bot == null || bot.Deleted )
                     m_BotSerials.RemoveAt( i );
+                else if ( bot.Map == Map.Internal )
+                    bot.Delete(); // ghost bot — OnDelete() removes it from m_BotSerials
             }
 
             // Refresh observation timestamps; collect unobserved bots for despawn.
@@ -265,8 +273,11 @@ namespace Server.Mobiles
                 if ( GetRegularBotCount() >= m_TargetBotCount ) break;
 
                 Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
+                bool isGuarded = Region.Find( poi.Location, poi.Map ) is GuardedRegion;
+                if ( isGuarded && Utility.Random( 3 ) == 0 )
+                    continue;
                 PlayerBot bot = new PlayerBot();
-                if ( (Region.Find( poi.Location, poi.Map ) is GuardedRegion) && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                if ( isGuarded && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                 {
                     bot.Delete();
                     continue;
@@ -318,6 +329,8 @@ namespace Server.Mobiles
                 if ( i > 0 && !Map.Felucca.CanSpawnMobile( loc ) )
                     loc = spawnPt.Value;
 
+                if ( inTown && Utility.Random( 3 ) == 0 )
+                    continue;
                 PlayerBot bot = new PlayerBot();
                 if ( inTown && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                 {
