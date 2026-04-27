@@ -263,7 +263,7 @@ namespace Server.Mobiles
                 {
                     BotPOI poi = underpopulated[i % underpopulated.Count];
                     Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
-                    bool isGuarded = Region.Find( poi.Location, poi.Map ) is GuardedRegion;
+                    bool isGuarded = Region.Find( loc, poi.Map ) is GuardedRegion;
                     if ( isGuarded && Utility.Random( 3 ) == 0 )
                         continue;
                     PlayerBot bot = new PlayerBot();
@@ -378,7 +378,7 @@ namespace Server.Mobiles
                 if ( GetRegularBotCount() >= m_TargetBotCount ) break;
 
                 Point3D loc = PlayerBotPOI.RandomSpawnPoint( poi );
-                bool isGuarded = Region.Find( poi.Location, poi.Map ) is GuardedRegion;
+                bool isGuarded = Region.Find( loc, poi.Map ) is GuardedRegion;
                 if ( isGuarded && Utility.Random( 3 ) == 0 )
                     continue;
                 PlayerBot bot = new PlayerBot();
@@ -421,7 +421,8 @@ namespace Server.Mobiles
             Point3D? spawnPt = FindEncounterSpawnPoint( player );
             if ( !spawnPt.HasValue ) return;
 
-            bool inTown = Region.Find( spawnPt.Value, player.Map ) is GuardedRegion;
+            bool inTown       = Region.Find( spawnPt.Value,  player.Map ) is GuardedRegion;
+            bool playerInTown = Region.Find( player.Location, player.Map ) is GuardedRegion;
 
             int count = 1 + Utility.Random( 3 ); // 1-3 bots per encounter
             for ( int i = 0; i < count; i++ )
@@ -436,7 +437,7 @@ namespace Server.Mobiles
                 if ( inTown && Utility.Random( 3 ) == 0 )
                     continue;
                 PlayerBot bot = new PlayerBot();
-                if ( inTown && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                if ( (inTown || playerInTown) && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                 {
                     bot.Delete();
                     continue;

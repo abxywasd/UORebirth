@@ -368,7 +368,8 @@ namespace Server.Mobiles
                 return true;
             }
 
-            WalkRandomInHome( 1, 2, 2 );
+            Action = ActionType.Wander;
+            WalkRandomInHome( 2, 5, 15 );
             MaybeSpeak( bot );
 
             // Give up hunting after a while with no targets
@@ -396,8 +397,12 @@ namespace Server.Mobiles
                     return true;
                 }
 
-                bot.ActivityState.SetActivity( BotActivity.Hunting );
                 m_Mobile.Warmode = false;
+                Action = ActionType.Wander;
+                if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    bot.ChooseNextActivity();
+                else
+                    bot.ActivityState.SetActivity( BotActivity.Hunting );
                 return true;
             }
 

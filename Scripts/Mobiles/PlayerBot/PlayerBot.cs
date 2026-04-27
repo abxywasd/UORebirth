@@ -299,12 +299,11 @@ namespace Server.Mobiles
             }
             else
             {
-                switch ( Utility.Random( 3 ) )
-                {
-                    case 0: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.PlayerKiller; break;
-                    case 1: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Crafter;      break;
-                    case 2: m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Adventurer;   break;
-                }
+                // 1/6 PK, 2/6 Crafter, 3/6 Adventurer — reds are rare and fearsome
+                int profileRoll = Utility.Random( 6 );
+                if      ( profileRoll == 0 )      m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.PlayerKiller;
+                else if ( profileRoll <= 2 )      m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Crafter;
+                else                              m_Persona.Profile = PlayerBotPersona.PlayerBotProfile.Adventurer;
             }
 
             if ( xpOverride.HasValue )
@@ -1011,9 +1010,8 @@ namespace Server.Mobiles
                     break;
 
                 case PlayerBotPersona.PlayerBotProfile.PlayerKiller:
-                    if ( roll < 4 )      TravelToRandom( BotActivity.Hunting );
-                    else if ( roll < 6 ) ActivityState.SetActivity( BotActivity.Hunting );
-                    else if ( roll < 8 ) TravelToRandom( BotActivity.TownVisit );
+                    if ( roll < 6 )      TravelToRandom( BotActivity.Hunting );
+                    else if ( roll < 9 ) ActivityState.SetActivity( BotActivity.Hunting );
                     else                 ActivityState.SetActivity( BotActivity.Wandering );
                     break;
 
