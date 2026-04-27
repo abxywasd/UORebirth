@@ -52,10 +52,6 @@ namespace Server.Mobiles
             if ( bot.UsesMagic )
                 MaybeRestoreWeapons();
 
-            // Uncontrolled mage bots self-heal between fights
-            if ( !m_Mobile.Controled && CheckSelfHeal( bot ) )
-                return true;
-
             // Handle pending spell target first (MageAI pattern)
             Target targ = m_Mobile.Target;
             if ( targ != null )
@@ -68,8 +64,13 @@ namespace Server.Mobiles
             if ( m_Mobile.Controled && m_Mobile.ControlMaster != null )
                 return DoControlledThink( bot );
 
-            // Uncontrolled: self-defense runs before any activity
+            // Uncontrolled: self-defense before healing so aggressors set Combatant
+            // and the melee engine starts swinging even while we cast a heal
             if ( CheckSelfDefense( bot ) )
+                return true;
+
+            // Uncontrolled mage bots self-heal between fights
+            if ( !m_Mobile.Controled && CheckSelfHeal( bot ) )
                 return true;
 
             switch ( bot.CurrentActivity )
@@ -208,6 +209,10 @@ namespace Server.Mobiles
         private bool DoActivityWander( PlayerBot bot )
         {
             bot.ActivityState.ActivityTimer++;
+
+            // PKs patrol at run speed — they look for prey, not a stroll
+            if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                EnsureRunSpeed();
 
             // Periodically decide on a new activity
             if ( DateTime.Now >= m_NextActivityChange )
@@ -351,6 +356,8 @@ namespace Server.Mobiles
         // ── Activity: Hunt ────────────────────────────────────────────────────
         private bool DoActivityHunt( PlayerBot bot )
         {
+            EnsureRunSpeed();
+
             if ( m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive )
             {
                 bot.ActivityState.SetActivity( BotActivity.Combat );
@@ -708,7 +715,8 @@ namespace Server.Mobiles
                 Mobile aggr = ((AggressorInfo)list[i]).Attacker;
                 if ( aggr != null && !aggr.Deleted && aggr.Alive
                      && aggr.Map == m_Mobile.Map
-                     && m_Mobile.InRange( aggr.Location, m_Mobile.RangePerception ) )
+                     && m_Mobile.InRange( aggr.Location, m_Mobile.RangePerception )
+                     && bot.ShouldAttack( aggr ) )
                 {
                     m_Mobile.Combatant = aggr;
                     m_Mobile.FocusMob  = aggr;

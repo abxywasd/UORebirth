@@ -1071,9 +1071,15 @@ namespace Server.Mobiles
                  && m_Group.Members.Contains( (PlayerBot)target ) )
                 return false;
 
-            // PKs attack everything else
+            // PKs attack everything — except other PK bots (they're fellow reds)
+            // Targeting another PK causes the bot to freeze in combat pose because
+            // CanBeHarmful blocks swings between two AlwaysMurderer mobiles
             if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+            {
+                if ( target is PlayerBot && ((PlayerBot)target).m_IsPlayerKiller )
+                    return false;
                 return true;
+            }
 
             // Don't fight players unless they attacked first (handled by FightMode.Agressor)
             if ( target is PlayerMobile )
