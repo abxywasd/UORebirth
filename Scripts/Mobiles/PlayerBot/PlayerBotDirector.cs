@@ -265,7 +265,9 @@ namespace Server.Mobiles
                     Point3D? loc = PlayerBotPOI.RandomSpawnPoint( poi );
                     if ( !loc.HasValue )
                         continue;
-                    bool isGuarded = Region.Find( loc.Value, poi.Map ) is GuardedRegion;
+                    // Town POIs: treat entire POI as guarded — a PK spawned at the radius edge
+                    // still has RangeHome = SpawnRadius and can wander back into the guard zone.
+                    bool isGuarded = poi.Type == BotPOIType.Town || (Region.Find( loc.Value, poi.Map ) is GuardedRegion);
                     if ( isGuarded && Utility.Random( 3 ) == 0 )
                         continue;
                     PlayerBot bot = new PlayerBot();
@@ -282,15 +284,15 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    // Fallback: spawn near Britain, but never spawn a PK inside a guarded region
+                    // Fallback: always near Britain (a town) — never spawn PKs here regardless of
+                    // whether the specific point is technically inside the guard zone boundary.
                     Point3D? fallbackLoc = TryFindBritainFallbackPoint();
                     if ( !fallbackLoc.HasValue )
                         continue;
-                    bool isGuardedFallback = Region.Find( fallbackLoc.Value, Map.Felucca ) is GuardedRegion;
-                    if ( isGuardedFallback && Utility.Random( 3 ) == 0 )
+                    if ( Utility.Random( 3 ) == 0 )
                         continue;
                     PlayerBot fallbackBot = new PlayerBot();
-                    if ( isGuardedFallback && fallbackBot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                    if ( fallbackBot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                     {
                         fallbackBot.Delete();
                         continue;
@@ -380,7 +382,7 @@ namespace Server.Mobiles
                 Point3D? loc = PlayerBotPOI.RandomSpawnPoint( poi );
                 if ( !loc.HasValue )
                     continue;
-                bool isGuarded = Region.Find( loc.Value, poi.Map ) is GuardedRegion;
+                bool isGuarded = poi.Type == BotPOIType.Town || (Region.Find( loc.Value, poi.Map ) is GuardedRegion);
                 if ( isGuarded && Utility.Random( 3 ) == 0 )
                     continue;
                 PlayerBot bot = new PlayerBot();
