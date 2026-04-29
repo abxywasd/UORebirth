@@ -468,6 +468,28 @@ namespace Server.Misc
 
 		public static bool LowerFor( Mobile from, Stat stat )
 		{
+			if ( from is PlayerBot )
+			{
+				// Mirror player atrophy: lower one of the other two stats at random
+				Stat[] candidates = new Stat[2];
+				int count = 0;
+				for ( int i = 0; i < 3; i++ )
+				{
+					if ( (Stat)i != stat && CanLower( from, (Stat)i ) )
+						candidates[count++] = (Stat)i;
+				}
+				if ( count == 0 )
+					return false;
+				Stat toLower = candidates[Utility.Random( count )];
+				switch ( toLower )
+				{
+					case Stat.Str: from.RawStr--; break;
+					case Stat.Dex: from.RawDex--; break;
+					case Stat.Int: from.RawInt--; break;
+				}
+				return true;
+			}
+
 			if ( !( from is PlayerMobile ) )
 				return false;
 
