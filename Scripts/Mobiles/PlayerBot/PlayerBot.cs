@@ -771,7 +771,10 @@ namespace Server.Mobiles
             if ( m_PrefersMelee )
             {
                 if ( PreferedCombatSkill != SkillName.Wrestling )
+                {
                     AddItem( GenerateWeapon() );
+                    TryAddShield();
+                }
             }
             else
             {
@@ -982,6 +985,34 @@ namespace Server.Mobiles
                 return new Dagger();
 
             return pool[m_Rnd.Next( pool.Count )];
+        }
+
+        private void TryAddShield()
+        {
+            // Only equip a shield when carrying a 1H weapon
+            if ( FindItemOnLayer( Layer.OneHanded ) == null )
+                return;
+
+            // Higher chance if the bot has trained Parrying
+            bool hasParry = Skills[SkillName.Parry].Base >= 30.0;
+            if ( Utility.Random( 100 ) >= ( hasParry ? 75 : 40 ) )
+                return;
+
+            AddItem( GenerateShield() );
+        }
+
+        private static BaseShield GenerateShield()
+        {
+            switch ( Utility.Random( 7 ) )
+            {
+                case 0:  return new Buckler();
+                case 1:  return new BronzeShield();
+                case 2:  return new MetalShield();
+                case 3:  return new HeaterShield();
+                case 4:  return new WoodenShield();
+                case 5:  return new WoodenKiteShield();
+                default: return new MetalKiteShield();
+            }
         }
 
         private void StartSkillTimer()

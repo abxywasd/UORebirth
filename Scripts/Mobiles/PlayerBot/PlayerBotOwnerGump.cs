@@ -1054,11 +1054,19 @@ namespace Server.Mobiles
             // Clear occupied slot(s)
             ClearSlot( m_Bot, itemLayer );
 
-            // For 2H weapons, also clear OneHanded; for OneHanded items, also clear TwoHanded
+            // 2H weapons conflict with 1H weapons (and vice-versa), but shields
+            // (which also live on Layer.TwoHanded) can coexist with 1H weapons.
             if ( itemLayer == Layer.TwoHanded )
-                ClearSlot( m_Bot, Layer.OneHanded );
+            {
+                if ( !( item is BaseShield ) )
+                    ClearSlot( m_Bot, Layer.OneHanded );
+            }
             else if ( itemLayer == Layer.OneHanded )
-                ClearSlot( m_Bot, Layer.TwoHanded );
+            {
+                Item twoHanded = m_Bot.FindItemOnLayer( Layer.TwoHanded );
+                if ( twoHanded != null && !( twoHanded is BaseShield ) )
+                    ClearSlot( m_Bot, Layer.TwoHanded );
+            }
 
             // Move item from player's pack to bot
             from.Backpack.RemoveItem( item );
