@@ -1060,25 +1060,28 @@ namespace Server.Mobiles
 
         private void TravelToRandom( BotActivity afterArrival )
         {
-            BotWaypoint wp = PlayerBotNavigator.PickDestination( m_Persona.Profile );
-            if ( wp == null )
+            BotWaypoint dest = PlayerBotNavigator.PickDestination( m_Persona.Profile );
+            if ( dest == null )
             {
                 ActivityState.SetActivity( BotActivity.Wandering );
                 return;
             }
 
             // Don't travel to where we already are
-            if ( GetDistanceToSqrt( wp.Location ) <= 10 )
+            if ( GetDistanceToSqrt( dest.Location ) <= 10 )
             {
                 ActivityState.SetActivity( afterArrival );
                 return;
             }
 
-            ActivityState.TravelDestination = wp.Location;
-            ActivityState.TravelMap         = wp.Map;
-            m_AfterTravelActivity           = afterArrival;
-            m_TravelMapIndex                = (wp.Map == Map.Felucca) ? 0 : 1;
-            ActivityState.SetActivity( BotActivity.Traveling );
+            m_AfterTravelActivity = afterArrival;
+            m_TravelMapIndex      = (dest.Map == Map.Felucca) ? 0 : 1;
+
+            List<BotWaypoint> route = PlayerBotNavigator.ComputeRoute( Location, Map, dest );
+            if ( route != null && route.Count > 0 )
+                ActivityState.SetTravelRoute( dest, route );
+            else
+                ActivityState.SetTravelDirect( dest );
         }
 
         public void SetAfterTravelActivity( BotActivity act )

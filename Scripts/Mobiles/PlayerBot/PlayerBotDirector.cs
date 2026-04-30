@@ -454,10 +454,12 @@ namespace Server.Mobiles
                 BotWaypoint wp = PlayerBotNavigator.PickDestination( bot.PlayerBotProfile );
                 if ( wp != null )
                 {
-                    bot.ActivityState.TravelDestination = wp.Location;
-                    bot.ActivityState.TravelMap         = wp.Map;
                     bot.SetAfterTravelActivity( BotActivity.TownVisit );
-                    bot.ActivityState.SetActivity( BotActivity.Traveling );
+                    List<BotWaypoint> route = PlayerBotNavigator.ComputeRoute( bot.Location, bot.Map, wp );
+                    if ( route != null && route.Count > 0 )
+                        bot.ActivityState.SetTravelRoute( wp, route );
+                    else
+                        bot.ActivityState.SetTravelDirect( wp );
                 }
 
                 RegisterBot( bot );

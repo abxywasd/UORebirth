@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Server;
 using Server.Items;
 using Server.Misc;
@@ -31,11 +32,17 @@ namespace Server.Mobiles
                 BotWaypoint wp = PlayerBotNavigator.PickDestination( PlayerBotPersona.PlayerBotProfile.Crafter );
                 if ( wp != null )
                 {
-                    bot.ActivityState.TravelDestination = wp.Location;
-                    bot.ActivityState.TravelMap         = wp.Map;
                     bot.SetAfterTravelActivity( BotActivity.TownVisit );
+                    List<BotWaypoint> route = PlayerBotNavigator.ComputeRoute( bot.Location, bot.Map, wp );
+                    if ( route != null && route.Count > 0 )
+                        bot.ActivityState.SetTravelRoute( wp, route );
+                    else
+                        bot.ActivityState.SetTravelDirect( wp );
                 }
-                bot.ActivityState.SetActivity( BotActivity.Traveling );
+                else
+                {
+                    bot.ActivityState.SetActivity( BotActivity.Wandering );
+                }
                 return true;
             }
 

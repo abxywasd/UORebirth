@@ -682,3 +682,21 @@ Work through these in order. Each step is independently testable before moving t
 **Serialization:** `WaypointHops` is runtime-only — no serialization needed. If the server saves mid-journey, the bot re-calls `TravelToRandom()` on next AI tick and picks a new route.
 
 **Lost Lands access:** Bots rolled for Delucia/Papua still teleport when unobserved (correct — there's no walkable overworld connection). A future improvement could add T2A passage teleporter nodes as graph bridges between mainland and Lost Lands clusters.
+
+
+
+
+
+
+Adding a fresh node with no existing edge to split:
+
+
+[navbuild addnode <name> routing          ? plant at your feet
+[navbuild connect <name> <neighborA>      ? wire left end
+[navbuild connect <name> <neighborB>      ? wire right end
+Inserting a node between two already-connected nodes (the common case):
+[navbuild insert <name> <nodeA> <nodeB>
+That's it — one command. Removes the old direct edge, adds both new ones, reports the hop distances.
+
+If aStar still "sees" the old edge/connection even though intermediate nodes have been added
+[navbuild removeedge NodeA NodeB

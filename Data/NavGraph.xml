@@ -1,0 +1,287 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  UORebirth Navigation Graph
+  Nodes: existing PlayerBotNavigator hardcoded landmarks + routing-only nodes below.
+  Edges: bidirectional connections. Hops should stay ≤300 tiles for reliable PathFollower.
+  Run [navtest <from> <to> to check hop distances. Add intermediate nodes with [navbuild addnode.
+-->
+<NavGraph>
+  <Nodes>
+    <!-- Northern corridor routing nodes (Britain → Minoc) -->
+    <Node name="RoadNorthBrit1" x="1495" y="1350" z="10" map="Felucca" routing="true" />
+    <Node name="CompassionCrossroads" x="2059" y="803" z="0" map="Felucca" routing="true" />
+    <Node name="RoadCompassionEast" x="2169" y="809" z="0" map="Felucca" routing="true" />
+    <Node name="MtKendallApproach" x="2314" y="985" z="0" map="Felucca" routing="true" />
+    <Node name="MtKendallSouth" x="2442" y="1005" z="0" map="Felucca" routing="true" />
+    <Node name="MinocSouthRoad" x="2575" y="622" z="0" map="Felucca" routing="true" />
+    <!-- Cove approach -->
+    <Node name="RoadCoveMid" x="2080" y="1120" z="0" map="Felucca" routing="true" />
+    <!-- Vesper approach (bridge → town) -->
+    <Node name="RoadVesperApproach" x="2720" y="700" z="0" map="Felucca" routing="true" />
+    <!-- Britain → Trinsic south road -->
+    <Node name="RoadSouth1" x="1475" y="1900" z="0" map="Felucca" routing="true" />
+    <Node name="RoadSouth2" x="1450" y="2080" z="0" map="Felucca" routing="true" />
+    <Node name="RoadBritTrinsic1" x="1650" y="2450" z="0" map="Felucca" routing="true" />
+    <Node name="RoadBritTrinsic2" x="1810" y="2620" z="0" map="Felucca" routing="true" />
+    <!-- Trinsic → Serpent's Hold -->
+    <Node name="RoadTrinsicSouth1" x="2100" y="2900" z="0" map="Felucca" routing="true" />
+    <Node name="RoadTrinsicMid" x="2300" y="3000" z="0" map="Felucca" routing="true" />
+    <Node name="RoadTrinsicSouth2" x="2500" y="3100" z="0" map="Felucca" routing="true" />
+    <Node name="RoadTrinsicSerpent" x="2750" y="3300" z="0" map="Felucca" routing="true" />
+    <!-- Britain → Yew west road -->
+    <Node name="RoadWest1" x="1200" y="1550" z="0" map="Felucca" routing="true" />
+    <Node name="RoadWest2" x="950" y="1450" z="0" map="Felucca" routing="true" />
+    <Node name="RoadWest3" x="700" y="1350" z="0" map="Felucca" routing="true" />
+    <Node name="RoadWestYew1" x="660" y="1100" z="0" map="Felucca" routing="true" />
+    <!-- Britain → Skara Brae -->
+    <Node name="RoadSkara2" x="1200" y="1750" z="0" map="Felucca" routing="true" />
+    <Node name="RoadSkaraBrit1" x="900" y="1850" z="0" map="Felucca" routing="true" />
+    <Node name="RoadSkaraMid" x="700" y="2100" z="0" map="Felucca" routing="true" />
+    <!-- Island: Magincia → Ocllo road -->
+    <Node name="RoadMaginciaOcllo" x="3680" y="2380" z="0" map="Felucca" routing="true" />
+    <Node name="RoadNorthBritlMid" x="1352" y="1228" z="0" map="Felucca" routing="true" />
+    <Node name="RoadNorthBrit1Mid2" x="1424" y="1109" z="0" map="Felucca" routing="true" />
+    <Node name="NorthernRoadXRoadsMid" x="1865" y="730" z="0" map="Felucca" routing="true" />
+    <Node name="NorthernRoadX2" x="1679" y="801" z="0" map="Felucca" routing="true" />
+    <Node name="VesperMinocXroad" x="2584" y="989" z="0" map="Felucca" routing="true" />
+    <Node name="MinocSouth" x="2663" y="880" z="0" map="Felucca" routing="true" />
+    <Node name="MinocSouth2" x="2663" y="743" z="0" map="Felucca" routing="true" />
+    <Node name="MinocBank" x="2503" y="562" z="0" map="Felucca" routing="true" />
+  </Nodes>
+  <Edges>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BRITAIN LOCAL CLUSTER
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="Britain" b="BlackthornCastle" />
+    <!-- 195 tiles -->
+    <Edge a="Britain" b="BritishCastle" />
+    <!-- 76 tiles -->
+    <Edge a="Britain" b="BritainCemetery" />
+    <!-- 173 tiles -->
+    <Edge a="Britain" b="BritSmithGuild" />
+    <!-- 184 tiles -->
+    <Edge a="Britain" b="SnakePass" />
+    <!-- 288 tiles -->
+    <Edge a="Britain" b="RoadNorthBrit1" />
+    <!-- 296 tiles -->
+    <Edge a="Britain" b="RoadSouth1" />
+    <!-- 255 tiles -->
+    <Edge a="Britain" b="RoadWest1" />
+    <!-- 291 tiles -->
+    <Edge a="Britain" b="RoadSkara2" />
+    <!-- 294 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         NORTHERN CORRIDOR: Britain → Compassion Desert → Minoc
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="RoadNorthBrit1" b="BlackthornCastle" />
+    <!-- 110 tiles -->
+    <Edge a="RoadNorthBrit1" b="BritainCemetery" />
+    <!-- 172 tiles -->
+    <Edge a="RoadNorthBrit1" b="RoadNorthBritlMid" />
+    <Edge a="RoadNorthBritlMid" b="RoadNorthBrit1Mid2" />
+    <Edge a="RoadNorthBrit1Mid2" b="GreatNorthernRoad" />
+    <!-- 262 tiles -->
+    <Edge a="GreatNorthernRoad" b="ShrineChaos" />
+    <!-- 262 tiles -->
+    <Edge a="GreatNorthernRoad" b="Despise" />
+    <!-- 203 tiles -->
+    <Edge a="CompassionCrossroads" b="ShrineCompassion" />
+    <!-- 182 tiles -->
+    <Edge a="CompassionCrossroads" b="DesertCompassion" />
+    <!-- 139 tiles -->
+    <Edge a="CompassionCrossroads" b="RoadCompassionEast" />
+    <!-- 241 tiles -->
+    <Edge a="DesertCompassion" b="RoadCoveMid" />
+    <!-- 224 tiles -->
+    <Edge a="RoadCoveMid" b="Cove" />
+    <!-- 217 tiles -->
+    <Edge a="Cove" b="OrcFortCove" />
+    <!-- 163 tiles -->
+    <Edge a="RoadCompassionEast" b="MtKendallApproach" />
+    <!-- 235 tiles -->
+    <Edge a="MtKendallApproach" b="MtKendallPass" />
+    <!-- 209 tiles -->
+    <Edge a="MtKendallPass" b="MtKendallSouth" />
+    <!-- 182 tiles -->
+    <!-- 300 tiles -->
+    <!-- 234 tiles -->
+    <Edge a="MinocSouthRoad" b="Covetous" />
+    <!-- 273 tiles -->
+    <Edge a="MinocSouthRoad" b="MinocVesperBridge" />
+    <!-- 118 tiles -->
+    <Edge a="ShrineChaos" b="ShrineJustice" />
+    <!-- 258 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         MINOC LOCAL CLUSTER
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- 211 tiles -->
+    <Edge a="Minoc" b="MinocMiningCamp" />
+    <!-- 155 tiles -->
+    <Edge a="Minoc" b="EastMines" />
+    <!-- 135 tiles -->
+    <Edge a="Minoc" b="MinocGypsyCamp" />
+    <!-- 243 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         VESPER CORRIDOR: Minoc bridge → Vesper → Deceit area
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="MinocVesperBridge" b="RoadVesperApproach" />
+    <!-- 183 tiles -->
+    <Edge a="RoadVesperApproach" b="Vesper" />
+    <!-- 184 tiles -->
+    <Edge a="Vesper" b="VesperCemetery" />
+    <!-- 124 tiles -->
+    <Edge a="Vesper" b="MoongateVesper" />
+    <!-- 272 tiles -->
+    <Edge a="Vesper" b="VesperMine" />
+    <!-- 56 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BRITAIN → TRINSIC SOUTH ROAD
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="RoadSouth1" b="RoadSouth2" />
+    <!-- 182 tiles -->
+    <Edge a="RoadSouth2" b="BritTrinsicXroad" />
+    <!-- 226 tiles -->
+    <Edge a="BritTrinsicXroad" b="ShrineSpirituality" />
+    <!-- 253 tiles -->
+    <Edge a="BritTrinsicXroad" b="RoadBritTrinsic1" />
+    <!-- 270 tiles -->
+    <Edge a="BritTrinsicXroad" b="MoongateBrit" />
+    <!-- 318 tiles (slightly over — split if bots get stuck) -->
+    <Edge a="RoadBritTrinsic1" b="RoadBritTrinsic2" />
+    <!-- 233 tiles -->
+    <Edge a="RoadBritTrinsic2" b="Trinsic" />
+    <!-- 197 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TRINSIC LOCAL CLUSTER
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="Trinsic" b="TrinsicCemetery" />
+    <!-- 147 tiles -->
+    <Edge a="Trinsic" b="MoongateTrinsic" />
+    <!-- 107 tiles -->
+    <Edge a="Trinsic" b="RoadTrinsicSouth1" />
+    <!-- 211 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         TRINSIC → SERPENT'S HOLD
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="RoadTrinsicSouth1" b="RoadTrinsicMid" />
+    <!-- 224 tiles -->
+    <Edge a="RoadTrinsicMid" b="RoadTrinsicSouth2" />
+    <!-- 224 tiles -->
+    <Edge a="RoadTrinsicSouth2" b="RoadTrinsicSerpent" />
+    <!-- 320 tiles (slightly over) -->
+    <Edge a="RoadTrinsicSerpent" b="SerpentsHold" />
+    <!-- 338 tiles (slightly over — use [navbuild to split) -->
+    <Edge a="SerpentsHold" b="ShrineValor" />
+    <!-- large gap — placeholder for future routing -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BRITAIN → YEW WEST ROAD
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="RoadWest1" b="RoadSkara2" />
+    <!-- 200 tiles -->
+    <Edge a="RoadWest1" b="RoadWest2" />
+    <!-- 269 tiles -->
+    <Edge a="RoadWest2" b="OrcCave" />
+    <!-- 72 tiles -->
+    <Edge a="RoadWest2" b="RoadWest3" />
+    <!-- 269 tiles -->
+    <Edge a="RoadWest3" b="OrcFortYew" />
+    <!-- 163 tiles -->
+    <Edge a="RoadWest3" b="RoadWestYew1" />
+    <!-- 253 tiles -->
+    <Edge a="RoadWestYew1" b="EmpathAbbey" />
+    <!-- 241 tiles -->
+    <Edge a="EmpathAbbey" b="Yew" />
+    <!-- 166 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         YEW LOCAL CLUSTER
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="Yew" b="YewCemetery" />
+    <!-- 239 tiles -->
+    <Edge a="Yew" b="YewLumberRegion" />
+    <!-- 66 tiles -->
+    <Edge a="Yew" b="StoneCircleYew" />
+    <!-- 301 tiles (at limit) -->
+    <Edge a="Yew" b="MoongateYew" />
+    <!-- 336 tiles (over — split with [navbuild) -->
+    <Edge a="Yew" b="YewPawPath" />
+    <!-- 222 tiles -->
+    <Edge a="Yew" b="Shame" />
+    <!-- 569 tiles (WARN — placeholder, needs intermediate) -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         BRITAIN → SKARA BRAE WEST ROAD
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="RoadSkara2" b="RoadSkaraBrit1" />
+    <!-- 316 tiles (slightly over) -->
+    <Edge a="RoadSkaraBrit1" b="RoadSkaraMid" />
+    <!-- 320 tiles (slightly over) -->
+    <Edge a="RoadSkaraMid" b="SkaraBrae" />
+    <!-- 159 tiles -->
+    <Edge a="RoadSkaraMid" b="MoongateSkara" />
+    <!-- 66 tiles -->
+    <Edge a="SkaraBrae" b="MoongateSkara" />
+    <!-- 149 tiles -->
+    <Edge a="BrigandCamp" b="RoadWest2" />
+    <!-- 254 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         ISLAND CLUSTERS (disconnected from mainland — ComputeRoute returns null,
+         falls back to unobserved teleport)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <!-- Moonglow island -->
+    <Edge a="Moonglow" b="MoongateMoonglow" />
+    <!-- 167 tiles -->
+    <Edge a="Moonglow" b="MoonglewCemetery" />
+    <!-- 218 tiles -->
+    <Edge a="Moonglow" b="Lycaeum" />
+    <!-- 173 tiles -->
+    <Edge a="Moonglow" b="ShrineHonesty" />
+    <!-- 246 tiles -->
+    <!-- Nujel'm island -->
+    <Edge a="NujelM" b="NujelmCemetery" />
+    <!-- 106 tiles -->
+    <!-- Magincia / Ocllo island -->
+    <Edge a="Magincia" b="MoongateMagincia" />
+    <!-- 37 tiles -->
+    <Edge a="Magincia" b="RoadMaginciaOcllo" />
+    <!-- 155 tiles -->
+    <Edge a="RoadMaginciaOcllo" b="Ocllo" />
+    <!-- 153 tiles -->
+    <Edge a="Ocllo" b="OclloMines" />
+    <!-- 102 tiles -->
+    <Edge a="Ocllo" b="OldHavenRuins" />
+    <!-- 132 tiles -->
+    <!-- Jhelom island -->
+    <Edge a="Jhelom" b="MoongateJhelom" />
+    <!-- 116 tiles -->
+    <Edge a="Jhelom" b="JhelomCemetery" />
+    <!-- 98 tiles -->
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         LOST LANDS CLUSTER (no mainland edges — falls back to teleport)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="Delucia" b="Papua" />
+    <Edge a="Delucia" b="SavageCampT2A" />
+    <Edge a="Papua" b="TerathanKeep" />
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         MISCELLANEOUS OVERWORLD LINKS
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <Edge a="HedgeMaze" b="RoadBritTrinsic1" />
+    <!-- 303 tiles (at limit) -->
+    <Edge a="ValorsEnd" b="RoadTrinsicSouth1" />
+    <!-- 188 tiles -->
+    <Edge a="BigMountainMine" b="MtKendallApproach" />
+    <!-- 191 tiles -->
+    <Edge a="YewFortDamned" b="RoadWestYew1" />
+    <!-- 290 tiles (needs verify) -->
+    <Edge a="RoadNorthBrit1" b="RoadNorthBritlMid" />
+    <Edge a="RoadNorthBritlMid" b="RoadNorthBrit1Mid2" />
+    <Edge a="RoadNorthBrit1Mid2" b="GreatNorthernRoad" />
+    <Edge a="NorthernRoadXRoadsMid" b="CompassionCrossroads" />
+    <Edge a="GreatNorthernRoad" b="NorthernRoadX2" />
+    <Edge a="NorthernRoadX2" b="NorthernRoadXRoadsMid" />
+    <Edge a="VesperMinocXroad" b="MtKendallSouth" />
+    <Edge a="VesperMinocXroad" b="MinocSouth" />
+    <Edge a="MinocSouth" b="MinocSouth2" />
+    <Edge a="MinocSouth2" b="MinocSouthRoad" />
+    <Edge a="Minoc" b="MinocBank" />
+    <Edge a="MinocBank" b="MinocSouthRoad" />
+  </Edges>
+</NavGraph>

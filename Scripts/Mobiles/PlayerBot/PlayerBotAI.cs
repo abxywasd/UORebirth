@@ -314,8 +314,8 @@ namespace Server.Mobiles
         // ── Activity: Travel ──────────────────────────────────────────────────
         private bool DoActivityTravel( PlayerBot bot )
         {
-            Point3D dest  = bot.ActivityState.TravelDestination;
-            Map     dMap  = bot.ActivityState.TravelMap;
+            Point3D dest = bot.ActivityState.TravelDestination;
+            Map     dMap = bot.ActivityState.TravelMap;
 
             if ( dMap == null || dMap == Map.Internal )
             {
@@ -325,19 +325,105 @@ namespace Server.Mobiles
 
             EnsureRunSpeed();
 
-            // Interrupt travel: PKs scan for any target; others react to aggressors only
-            if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller
-                 && DateTime.Now >= m_NextTargetScanTime )
+            // Combat interrupt: PKs scan for targets, others react to aggressors
+            if ( CheckTravelCombatInterrupt( bot ) )
+                return true;
+
+            // Unobserved: teleport to current hop target, then advance queue
+            if ( !AnyPlayersInRange( 18 ) )
             {
-                m_NextTargetScanTime = DateTime.Now + TimeSpan.FromSeconds( 2.0 );
-                Mobile target = ScanForTarget( bot, m_Mobile.RangePerception );
-                if ( target != null )
+                int z = dMap.GetAverageZ( dest.X, dest.Y );
+                m_Mobile.MoveToWorld( new Point3D( dest.X, dest.Y, z ), dMap );
+                m_StuckTicks = 0;
+                m_Path       = null;
+                AdvanceHop( bot );
+                return true;
+            }
+
+            // Stuck detection
+            if ( m_Mobile.Location == m_LastTravelPos )
+            {
+                m_StuckTicks++;
+
+                if ( m_StuckTicks >= 40 )
                 {
-                    m_Mobile.Combatant = target;
-                    m_Mobile.FocusMob  = target;
-                    bot.ActivityState.SetActivity( BotActivity.Combat );
-                    m_Mobile.Warmode = true;
+                    m_StuckTicks = 0;
+                    m_Path       = null;
+
+                    var hops = bot.ActivityState.WaypointHops;
+                    if ( hops != null && hops.Count > 0 )
+                        AdvanceHop( bot ); // skip stuck hop, keep traveling
+                    else
+                        bot.ActivityState.SetActivity( BotActivity.Wandering );
+
                     return true;
+                }
+
+                if ( m_StuckTicks % 10 == 0 )
+                {
+                    m_Path = null;
+                    DoMove( (Direction)Utility.Random( 8 ) | Direction.Running );
+                }
+            }
+            else
+            {
+                m_StuckTicks = 0;
+            }
+
+            m_LastTravelPos = m_Mobile.Location;
+
+            if ( PlayerBotNavigator.Advance( this, bot, dest, dMap ) )
+            {
+                m_StuckTicks = 0;
+                m_Path       = null;
+                AdvanceHop( bot );
+            }
+
+            return true;
+        }
+
+        // Dequeue the current hop and point TravelDestination at the next one,
+        // or call OnArrived when the queue is empty.
+        private void AdvanceHop( PlayerBot bot )
+        {
+            var hops = bot.ActivityState.WaypointHops;
+
+            if ( hops != null && hops.Count > 0 )
+            {
+                hops.Dequeue();
+                if ( hops.Count > 0 )
+                {
+                    bot.ActivityState.TravelDestination = hops.Peek().Location;
+                    m_LastTravelPos = Point3D.Zero; // reset stuck detection for the new hop
+                }
+                else
+                {
+                    bot.OnArrived();
+                }
+            }
+            else
+            {
+                bot.OnArrived();
+            }
+        }
+
+        // Returns true if the bot switched to combat (caller should return immediately).
+        private bool CheckTravelCombatInterrupt( PlayerBot bot )
+        {
+            if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+            {
+                if ( DateTime.Now >= m_NextTargetScanTime )
+                {
+                    m_NextTargetScanTime = DateTime.Now + TimeSpan.FromSeconds( 2.0 );
+                    Mobile target = ScanForTarget( bot, m_Mobile.RangePerception );
+                    if ( target != null )
+                    {
+                        m_Mobile.Combatant = target;
+                        m_Mobile.FocusMob  = target;
+                        bot.ActivityState.SetActivity( BotActivity.Combat );
+                        m_Mobile.Warmode = true;
+                        return true;
+                    }
                 }
             }
             else if ( AquireFocusMob( m_Mobile.RangePerception, FightMode.Agressor, false, false, true ) )
@@ -351,55 +437,7 @@ namespace Server.Mobiles
                 }
             }
 
-            // Instant travel when no player is watching — eliminates water/obstacle pathfinding failures
-            if ( !AnyPlayersInRange( 18 ) )
-            {
-                int z = dMap.GetAverageZ( dest.X, dest.Y );
-                m_Mobile.MoveToWorld( new Point3D( dest.X, dest.Y, z ), dMap );
-                m_StuckTicks = 0;
-                m_Path = null;
-                bot.OnArrived();
-                return true;
-            }
-
-            // Stuck detection: if position hasn't changed in 10 ticks, force repath;
-            // if still stuck after 40 ticks total, give up and wander.
-            if ( m_Mobile.Location == m_LastTravelPos )
-            {
-                m_StuckTicks++;
-
-                if ( m_StuckTicks >= 40 )
-                {
-                    // Completely lost — abandon travel
-                    m_StuckTicks = 0;
-                    m_Path = null;
-                    bot.ActivityState.SetActivity( BotActivity.Wandering );
-                    return true;
-                }
-
-                if ( m_StuckTicks % 10 == 0 )
-                {
-                    // Force repath and nudge in a random walkable direction
-                    m_Path = null;
-                    Direction nudge = (Direction)Utility.Random( 8 );
-                    DoMove( nudge | Direction.Running );
-                }
-            }
-            else
-            {
-                m_StuckTicks = 0;
-            }
-
-            m_LastTravelPos = m_Mobile.Location;
-
-            bool arrived = PlayerBotNavigator.Advance( this, bot, dest, dMap );
-            if ( arrived )
-            {
-                m_StuckTicks = 0;
-                bot.OnArrived();
-            }
-
-            return true;
+            return false;
         }
 
         // ── Activity: Hunt ────────────────────────────────────────────────────

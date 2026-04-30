@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 using Server;
 
 namespace Server.Mobiles
@@ -25,12 +27,25 @@ namespace Server.Mobiles
         public Map        Map;
         public string     Name;
         public WaypointTag Tags;
+        public bool       RoutingOnly; // graph hop only, never a bot destination
+        public bool       FromXml;     // loaded from NavGraph.xml (cleared on rebuild)
     }
 
     public static class PlayerBotNavigator
     {
         private static readonly Dictionary<string, BotWaypoint> s_Landmarks
             = new Dictionary<string, BotWaypoint>( StringComparer.OrdinalIgnoreCase );
+
+        private static readonly Dictionary<string, List<string>> s_Edges
+            = new Dictionary<string, List<string>>( StringComparer.OrdinalIgnoreCase );
+
+        // Names of nodes that came from NavGraph.xml (cleared each BuildGraph call)
+        private static readonly List<string> s_XmlNodes
+            = new List<string>();
+
+        // Public read-only views for NavBuildCommand
+        public static Dictionary<string, BotWaypoint> Landmarks { get { return s_Landmarks; } }
+        public static Dictionary<string, List<string>> Edges     { get { return s_Edges; } }
 
         public static void Initialize()
         {
@@ -101,8 +116,7 @@ namespace Server.Mobiles
             Add( "YewCemetery",      new Point3D(  724, 1138,  0 ), Map.Felucca, WaypointTag.Cemetery );
             Add( "JhelomCemetery",   new Point3D( 1296, 3719,  0 ), Map.Felucca, WaypointTag.Cemetery );
             Add( "MoonglewCemetery", new Point3D( 4546, 1338,  8 ), Map.Felucca, WaypointTag.Cemetery );
-        
-            // Moongates
+
             // Moongates
             Add( "MoongateBrit",      new Point3D( 1337, 1997,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "MoongateJhelom",    new Point3D( 1499, 3771,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
@@ -118,23 +132,23 @@ namespace Server.Mobiles
             Add( "MinocVesperBridge", new Point3D( 2561,  610,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Mining );
             Add( "BritTrinsicXroad",  new Point3D( 1421, 2307,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "YewPawPath",        new Point3D(  980, 1100,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
-            Add( "GreatNorthernRoad", new Point3D( 1500, 1100,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "GreatNorthernRoad", new Point3D( 1529, 873,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "MtKendallPass",     new Point3D( 2413, 1130,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
 
             // T2A Overworld Entrances
             Add( "MarblePassage",     new Point3D( 1148, 1933,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
             Add( "DeluciaPassage",    new Point3D( 1515, 2987,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
             Add( "SnakePass",         new Point3D( 1745, 1545,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
-            Add( "FireIslandEntrance",new Point3D( 4596, 3591,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands ); // Marble teleporter
+            Add( "FireIslandEntrance",new Point3D( 4596, 3591,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
             Add( "SerpentPillarS",    new Point3D( 1475, 2987,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
 
             // Wilderness Landmarks
             Add( "HedgeMaze",         new Point3D( 1108, 2300,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
-            Add( "IversVictory",      new Point3D( 3773, 2011,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness ); // Shipwreck
+            Add( "IversVictory",      new Point3D( 3773, 2011,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "GreatWaterfall",    new Point3D(  178,  828,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "DesertCompassion",  new Point3D( 1888, 1004,  0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.PKHub );
             Add( "StoneCircleYew",    new Point3D(  640,  710,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
-            Add( "ValorsEnd",         new Point3D( 2390, 3175,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness ); // Jungle ruins
+            Add( "ValorsEnd",         new Point3D( 2390, 3175,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
 
             // Ruins & Minor Camps
             Add( "OldHavenRuins",     new Point3D( 3640, 2528,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
@@ -143,7 +157,7 @@ namespace Server.Mobiles
             Add( "SavageCampT2A",     new Point3D( 5240, 3350,  0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.LostLands );
 
             // Woodcutting & Specialized Mining
-            Add( "YewLumberRegion",   new Point3D(  600, 1000,  0 ), Map.Felucca, WaypointTag.Mining ); // Lumbering
+            Add( "YewLumberRegion",   new Point3D(  600, 1000,  0 ), Map.Felucca, WaypointTag.Mining );
             Add( "BigMountainMine",   new Point3D( 2420, 1370,  0 ), Map.Felucca, WaypointTag.Mining );
             Add( "VesperMine",        new Point3D( 2900,  900,  0 ), Map.Felucca, WaypointTag.Mining );
             Add( "OclloMines",        new Point3D( 3660, 2600,  0 ), Map.Felucca, WaypointTag.Mining | WaypointTag.Town );
@@ -151,7 +165,240 @@ namespace Server.Mobiles
             // More Cemeteries
             Add( "TrinsicCemetery",   new Point3D( 1823, 2883,  0 ), Map.Felucca, WaypointTag.Cemetery );
             Add( "NujelmCemetery",    new Point3D( 3557, 1262,  0 ), Map.Felucca, WaypointTag.Cemetery );
+
+            BuildGraph();
         }
+
+        // ── Graph building ────────────────────────────────────────────────────────
+
+        public static void BuildGraph()
+        {
+            // Remove nodes that were loaded from XML in a previous call
+            foreach ( string name in s_XmlNodes )
+                s_Landmarks.Remove( name );
+            s_XmlNodes.Clear();
+            s_Edges.Clear();
+
+            string path = Path.Combine( Core.BaseDirectory, "Data", "NavGraph.xml" );
+            if ( !File.Exists( path ) )
+            {
+                Console.WriteLine( "NavGraph: Data/NavGraph.xml not found — graph has no edges." );
+                return;
+            }
+
+            try
+            {
+                var doc = new XmlDocument();
+                doc.Load( path );
+
+                // Load routing nodes from XML (skip any that conflict with hardcoded names)
+                XmlNodeList nodes = doc.SelectNodes( "NavGraph/Nodes/Node" );
+                if ( nodes != null )
+                {
+                    foreach ( XmlElement el in nodes )
+                    {
+                        string name = el.GetAttribute( "name" );
+                        if ( string.IsNullOrEmpty( name ) ) continue;
+                        if ( s_Landmarks.ContainsKey( name ) ) continue; // hardcoded wins
+
+                        int x = int.Parse( el.GetAttribute( "x" ) );
+                        int y = int.Parse( el.GetAttribute( "y" ) );
+                        int z = int.Parse( el.GetAttribute( "z" ) );
+
+                        string mapStr = el.GetAttribute( "map" );
+                        Map map = string.Equals( mapStr, "Trammel", StringComparison.OrdinalIgnoreCase )
+                            ? Map.Trammel : Map.Felucca;
+
+                        string tagStr   = el.GetAttribute( "tags" );
+                        WaypointTag tags = WaypointTag.None;
+                        if ( !string.IsNullOrEmpty( tagStr ) )
+                            tags = ParseTags( tagStr );
+
+                        bool routing = string.Equals( el.GetAttribute( "routing" ), "true",
+                            StringComparison.OrdinalIgnoreCase );
+
+                        s_Landmarks[name] = new BotWaypoint
+                        {
+                            Location    = new Point3D( x, y, z ),
+                            Map         = map,
+                            Name        = name,
+                            Tags        = tags,
+                            RoutingOnly = routing,
+                            FromXml     = true
+                        };
+                        s_XmlNodes.Add( name );
+                    }
+                }
+
+                // Load edges (bidirectional)
+                XmlNodeList edges = doc.SelectNodes( "NavGraph/Edges/Edge" );
+                if ( edges != null )
+                {
+                    foreach ( XmlElement el in edges )
+                    {
+                        string a = el.GetAttribute( "a" );
+                        string b = el.GetAttribute( "b" );
+                        if ( string.IsNullOrEmpty( a ) || string.IsNullOrEmpty( b ) ) continue;
+                        AddEdge( a, b );
+                    }
+                }
+
+                Console.WriteLine( "NavGraph: Loaded {0} nodes ({1} routing), {2} edge entries from NavGraph.xml",
+                    s_Landmarks.Count, s_XmlNodes.Count, s_Edges.Count );
+            }
+            catch ( Exception ex )
+            {
+                Console.WriteLine( "NavGraph: Failed to load NavGraph.xml: {0}", ex.Message );
+            }
+        }
+
+        private static void AddEdge( string a, string b )
+        {
+            List<string> listA;
+            if ( !s_Edges.TryGetValue( a, out listA ) )
+                s_Edges[a] = listA = new List<string>();
+            if ( !listA.Contains( b ) )
+                listA.Add( b );
+
+            List<string> listB;
+            if ( !s_Edges.TryGetValue( b, out listB ) )
+                s_Edges[b] = listB = new List<string>();
+            if ( !listB.Contains( a ) )
+                listB.Add( a );
+        }
+
+        private static WaypointTag ParseTags( string tagStr )
+        {
+            WaypointTag result = WaypointTag.None;
+            foreach ( string part in tagStr.Split( ',' ) )
+            {
+                try
+                {
+                    WaypointTag t = (WaypointTag)Enum.Parse( typeof( WaypointTag ), part.Trim(), true );
+                    result |= t;
+                }
+                catch { }
+            }
+            return result;
+        }
+
+        // ── A* Route computation ──────────────────────────────────────────────────
+
+        // Returns ordered hop list ending at destination.
+        // Returns null if no graph path exists — caller uses SetTravelDirect().
+        public static List<BotWaypoint> ComputeRoute( Point3D start, Map map, BotWaypoint destination )
+        {
+            if ( destination == null ) return null;
+
+            BotWaypoint startNode = NearestNode( start, map, 600.0 * 600.0 );
+            if ( startNode == null ) return null;
+
+            // Already at or adjacent to the destination node
+            if ( string.Equals( startNode.Name, destination.Name, StringComparison.OrdinalIgnoreCase ) )
+                return new List<BotWaypoint> { destination };
+
+            var open     = new List<string> { startNode.Name };
+            var cameFrom = new Dictionary<string, string>( StringComparer.OrdinalIgnoreCase );
+            var gScore   = new Dictionary<string, double>( StringComparer.OrdinalIgnoreCase ) { { startNode.Name, 0.0 } };
+            var fScore   = new Dictionary<string, double>( StringComparer.OrdinalIgnoreCase )
+                { { startNode.Name, Heuristic( startNode, destination ) } };
+
+            while ( open.Count > 0 )
+            {
+                string current = LowestF( open, fScore );
+
+                if ( string.Equals( current, destination.Name, StringComparison.OrdinalIgnoreCase ) )
+                    return ReconstructPath( cameFrom, current );
+
+                open.Remove( current );
+
+                List<string> neighbors;
+                if ( !s_Edges.TryGetValue( current, out neighbors ) )
+                    continue;
+
+                BotWaypoint curWp = GetLandmark( current );
+                if ( curWp == null ) continue;
+
+                foreach ( string neighborName in neighbors )
+                {
+                    BotWaypoint nb = GetLandmark( neighborName );
+                    if ( nb == null ) continue;
+                    if ( nb.Map != map ) continue;
+
+                    double tentG = gScore[current] + Heuristic( curWp, nb );
+
+                    double existingG;
+                    if ( !gScore.TryGetValue( neighborName, out existingG ) || tentG < existingG )
+                    {
+                        cameFrom[neighborName] = current;
+                        gScore[neighborName]   = tentG;
+                        fScore[neighborName]   = tentG + Heuristic( nb, destination );
+                        if ( !open.Contains( neighborName ) )
+                            open.Add( neighborName );
+                    }
+                }
+            }
+
+            return null; // no path — caller falls back to direct travel
+        }
+
+        private static BotWaypoint NearestNode( Point3D pos, Map map, double maxDistSq )
+        {
+            BotWaypoint best    = null;
+            double      bestDsq = maxDistSq;
+
+            foreach ( BotWaypoint wp in s_Landmarks.Values )
+            {
+                if ( wp.Map != map ) continue;
+                double dx  = wp.Location.X - pos.X;
+                double dy  = wp.Location.Y - pos.Y;
+                double dsq = dx*dx + dy*dy;
+                if ( dsq < bestDsq ) { bestDsq = dsq; best = wp; }
+            }
+
+            return best;
+        }
+
+        private static double Heuristic( BotWaypoint a, BotWaypoint b )
+        {
+            double dx = a.Location.X - b.Location.X;
+            double dy = a.Location.Y - b.Location.Y;
+            return Math.Sqrt( dx*dx + dy*dy );
+        }
+
+        private static string LowestF( List<string> open, Dictionary<string, double> fScore )
+        {
+            string best  = open[0];
+            double bestF = fScore.ContainsKey( best ) ? fScore[best] : double.MaxValue;
+            for ( int i = 1; i < open.Count; i++ )
+            {
+                string n = open[i];
+                double f = fScore.ContainsKey( n ) ? fScore[n] : double.MaxValue;
+                if ( f < bestF ) { bestF = f; best = n; }
+            }
+            return best;
+        }
+
+        private static List<BotWaypoint> ReconstructPath( Dictionary<string, string> cameFrom, string current )
+        {
+            var names = new List<string> { current };
+            while ( cameFrom.ContainsKey( current ) )
+            {
+                current = cameFrom[current];
+                names.Insert( 0, current );
+            }
+
+            // Drop index 0 (startNode — bot is already there), convert rest to BotWaypoint
+            var result = new List<BotWaypoint>();
+            for ( int i = 1; i < names.Count; i++ )
+            {
+                BotWaypoint wp = GetLandmark( names[i] );
+                if ( wp != null ) result.Add( wp );
+            }
+            return result;
+        }
+
+        // ── Helpers ───────────────────────────────────────────────────────────────
 
         private static void Add( string name, Point3D loc, Map map )
         {
@@ -174,7 +421,7 @@ namespace Server.Mobiles
         public static BotWaypoint PickByTag( WaypointTag mask )
         {
             var matches = new List<BotWaypoint>();
-            foreach ( var wp in s_Landmarks.Values )
+            foreach ( BotWaypoint wp in s_Landmarks.Values )
                 if ( (wp.Tags & mask) != WaypointTag.None )
                     matches.Add( wp );
             return matches.Count > 0 ? matches[Utility.Random( matches.Count )] : null;
@@ -194,8 +441,6 @@ namespace Server.Mobiles
         }
 
         // Pick a travel destination appropriate for the bot's profile.
-        // Lost Lands waypoints are gated by a per-profile probability roll;
-        // up to 10 re-picks are attempted before accepting the result.
         public static BotWaypoint PickDestination( PlayerBotPersona.PlayerBotProfile profile )
         {
             BotWaypoint result;
@@ -232,7 +477,6 @@ namespace Server.Mobiles
             {
                 case PlayerBotPersona.PlayerBotProfile.PlayerKiller:
                 {
-                    // 70% primary hunting/PK grounds, 30% social hub
                     string[] primary = { "Deceit", "Despise", "Wrong", "Covetous", "Shame", "Destard",
                                          "OrcFortYew", "OrcFortCove", "BrigandCamp", "YewFortDamned",
                                          "OrcCave", "FireBrit", "IceBrit" };
@@ -245,7 +489,6 @@ namespace Server.Mobiles
 
                 case PlayerBotPersona.PlayerBotProfile.Crafter:
                 {
-                    // 60% workshop/supply runs, 40% town browsing
                     string[] workshop = { "MinocMiningCamp", "MinocNorth", "MinocGypsyCamp", "EastMines",
                                           "BritSmithGuild", "Britain", "Minoc", "Vesper", "Yew", "Trinsic" };
                     string[] browse   = { "Britain", "Vesper", "Magincia", "Moonglow", "SkaraBrae",
@@ -258,7 +501,6 @@ namespace Server.Mobiles
 
                 default: // Adventurer
                 {
-                    // 40% dungeon, 35% overland, 15% shrine pilgrimage, 10% town
                     string[] dungeon  = { "Deceit", "Despise", "Destard", "Covetous", "Shame", "Wrong",
                                           "Hythloth", "OrcCave", "FireBrit", "IceBrit", "TerathanKeep" };
                     string[] overland = { "EmpathAbbey", "BlackthornCastle", "BrigandCamp", "SerpentsHold",
@@ -267,15 +509,21 @@ namespace Server.Mobiles
                                           "ShrineSpirituality", "ShrineValor", "ShrineHumility", "ShrineHonor", "ShrineChaos" };
                     string[] town     = { "Britain", "Moonglow", "Vesper", "Jhelom", "SerpentsHold", "SkaraBrae" };
                     int roll = Utility.Random( 20 );
-                    if      ( roll <  8 ) key = dungeon [Utility.Random( dungeon .Length )]; // 40%
-                    else if ( roll < 15 ) key = overland[Utility.Random( overland.Length )]; // 35%
-                    else if ( roll < 18 ) key = shrine  [Utility.Random( shrine  .Length )]; // 15%
-                    else                  key = town    [Utility.Random( town    .Length )]; // 10%
+                    if      ( roll <  8 ) key = dungeon [Utility.Random( dungeon .Length )];
+                    else if ( roll < 15 ) key = overland[Utility.Random( overland.Length )];
+                    else if ( roll < 18 ) key = shrine  [Utility.Random( shrine  .Length )];
+                    else                  key = town    [Utility.Random( town    .Length )];
                     break;
                 }
             }
 
-            return GetLandmark( key );
+            BotWaypoint wp = GetLandmark( key );
+
+            // Never return routing-only nodes as destinations
+            if ( wp != null && wp.RoutingOnly )
+                return null;
+
+            return wp;
         }
     }
 }
