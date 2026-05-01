@@ -30,7 +30,14 @@ namespace Server.Mobiles
         public bool       RoutingOnly; // graph hop only, never a bot destination
         public bool       FromXml;     // loaded from NavGraph.xml (cleared on rebuild)
     }
-
+    
+    //Controls where bots choose to go and how they route there.
+    //Used by the bot AI (PickDestination) to select a travel target, and by A* (ComputeRoute) to find a path to it.
+    //WaypointTag — fine-grained, combinable flags: Town | PKHub, Mining | Town, Dungeon | LostLands | PKHub, etc. Used to match bot persona to appropriate destinations.
+    //RoutingOnly flag — some nodes are pure infrastructure (never a destination).
+    //Every node is a precise coordinate, not a zone.
+    //~80+ entries: full world coverage — towns, dungeons, shrines, moongates, bridges, crossroads, cemeteries, mining camps, wilderness landmarks, T2A entrances.
+    //Extended at runtime by XML routing nodes from NavGraph.xml.
     public static class PlayerBotNavigator
     {
         private static readonly Dictionary<string, BotWaypoint> s_Landmarks

@@ -11,6 +11,13 @@ namespace Server.Mobiles
         Crossroads
     }
 
+    //Controls where bots are born and how many should exist there.
+    //Used by PlayerBotDirector to maintain population targets across the world.
+    //MaxBots — population cap per location.
+    //SpawnRadius — bots can spawn anywhere within a circle around the center point; it's a zone, not a precise coordinate.
+    //BotPOIType — coarse: Town, DungeonEntrance, Crossroads. Not combinable.
+    //No routing or pathfinding role at all.
+    //Has active logic: GetUnderpopulated(), CountBotsNear(), RandomSpawnPoint().
     public class BotPOI
     {
         public string     Name;
