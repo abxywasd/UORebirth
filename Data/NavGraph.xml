@@ -1,287 +1,430 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
-  UORebirth Navigation Graph
-  Nodes: existing PlayerBotNavigator hardcoded landmarks + routing-only nodes below.
-  Edges: bidirectional connections. Hops should stay ≤300 tiles for reliable PathFollower.
-  Run [navtest <from> <to> to check hop distances. Add intermediate nodes with [navbuild addnode.
--->
 <NavGraph>
   <Nodes>
-    <!-- Northern corridor routing nodes (Britain → Minoc) -->
-    <Node name="RoadNorthBrit1" x="1495" y="1350" z="10" map="Felucca" routing="true" />
-    <Node name="CompassionCrossroads" x="2059" y="803" z="0" map="Felucca" routing="true" />
-    <Node name="RoadCompassionEast" x="2169" y="809" z="0" map="Felucca" routing="true" />
-    <Node name="MtKendallApproach" x="2314" y="985" z="0" map="Felucca" routing="true" />
-    <Node name="MtKendallSouth" x="2442" y="1005" z="0" map="Felucca" routing="true" />
-    <Node name="MinocSouthRoad" x="2575" y="622" z="0" map="Felucca" routing="true" />
-    <!-- Cove approach -->
-    <Node name="RoadCoveMid" x="2080" y="1120" z="0" map="Felucca" routing="true" />
-    <!-- Vesper approach (bridge → town) -->
-    <Node name="RoadVesperApproach" x="2720" y="700" z="0" map="Felucca" routing="true" />
-    <!-- Britain → Trinsic south road -->
-    <Node name="RoadSouth1" x="1475" y="1900" z="0" map="Felucca" routing="true" />
-    <Node name="RoadSouth2" x="1450" y="2080" z="0" map="Felucca" routing="true" />
-    <Node name="RoadBritTrinsic1" x="1650" y="2450" z="0" map="Felucca" routing="true" />
-    <Node name="RoadBritTrinsic2" x="1810" y="2620" z="0" map="Felucca" routing="true" />
-    <!-- Trinsic → Serpent's Hold -->
-    <Node name="RoadTrinsicSouth1" x="2100" y="2900" z="0" map="Felucca" routing="true" />
-    <Node name="RoadTrinsicMid" x="2300" y="3000" z="0" map="Felucca" routing="true" />
-    <Node name="RoadTrinsicSouth2" x="2500" y="3100" z="0" map="Felucca" routing="true" />
-    <Node name="RoadTrinsicSerpent" x="2750" y="3300" z="0" map="Felucca" routing="true" />
-    <!-- Britain → Yew west road -->
-    <Node name="RoadWest1" x="1200" y="1550" z="0" map="Felucca" routing="true" />
-    <Node name="RoadWest2" x="950" y="1450" z="0" map="Felucca" routing="true" />
-    <Node name="RoadWest3" x="700" y="1350" z="0" map="Felucca" routing="true" />
-    <Node name="RoadWestYew1" x="660" y="1100" z="0" map="Felucca" routing="true" />
-    <!-- Britain → Skara Brae -->
-    <Node name="RoadSkara2" x="1200" y="1750" z="0" map="Felucca" routing="true" />
-    <Node name="RoadSkaraBrit1" x="900" y="1850" z="0" map="Felucca" routing="true" />
-    <Node name="RoadSkaraMid" x="700" y="2100" z="0" map="Felucca" routing="true" />
-    <!-- Island: Magincia → Ocllo road -->
-    <Node name="RoadMaginciaOcllo" x="3680" y="2380" z="0" map="Felucca" routing="true" />
-    <Node name="RoadNorthBritlMid" x="1352" y="1228" z="0" map="Felucca" routing="true" />
-    <Node name="RoadNorthBrit1Mid2" x="1424" y="1109" z="0" map="Felucca" routing="true" />
-    <Node name="NorthernRoadXRoadsMid" x="1865" y="730" z="0" map="Felucca" routing="true" />
-    <Node name="NorthernRoadX2" x="1679" y="801" z="0" map="Felucca" routing="true" />
-    <Node name="VesperMinocXroad" x="2584" y="989" z="0" map="Felucca" routing="true" />
-    <Node name="MinocSouth" x="2663" y="880" z="0" map="Felucca" routing="true" />
-    <Node name="MinocSouth2" x="2663" y="743" z="0" map="Felucca" routing="true" />
-    <Node name="MinocBank" x="2503" y="562" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_01" x="1480" y="1645" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_02" x="1480" y="1638" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_03" x="1486" y="1627" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_04" x="1486" y="1618" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_05" x="1486" y="1608" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_06" x="1486" y="1600" z="14" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_07" x="1491" y="1593" z="17" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_08" x="1492" y="1587" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_09" x="1492" y="1577" z="30" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_10" x="1499" y="1577" z="30" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_11" x="1508" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_12" x="1516" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_13" x="1523" y="1579" z="30" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_14" x="1529" y="1579" z="30" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_15" x="1535" y="1579" z="30" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_16" x="1540" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_17" x="1547" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_18" x="1553" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_19" x="1559" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_20" x="1568" y="1579" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_21" x="1576" y="1574" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_22" x="1582" y="1574" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_23" x="1589" y="1574" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_24" x="1596" y="1574" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_25" x="1603" y="1574" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_26" x="1603" y="1564" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_27" x="1603" y="1557" z="20" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_28" x="1603" y="1549" z="22" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_29" x="1598" y="1545" z="29" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_30" x="1590" y="1545" z="30" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_31" x="1586" y="1532" z="33" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_32" x="1602" y="1529" z="40" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_33" x="1619" y="1529" z="40" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_34" x="1629" y="1525" z="40" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_35" x="1639" y="1524" z="36" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_36" x="1646" y="1524" z="35" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_37" x="1656" y="1514" z="21" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_38" x="1662" y="1498" z="5" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_39" x="1662" y="1489" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_40" x="1662" y="1479" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_41" x="1658" y="1472" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_42" x="1653" y="1462" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_43" x="1653" y="1453" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_44" x="1660" y="1446" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_45" x="1664" y="1439" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_46" x="1675" y="1437" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_47" x="1684" y="1437" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_48" x="1692" y="1437" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_49" x="1699" y="1441" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_50" x="1709" y="1437" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_51" x="1709" y="1427" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_52" x="1709" y="1418" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_53" x="1717" y="1410" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_54" x="1724" y="1406" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_55" x="1735" y="1395" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_56" x="1745" y="1389" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_57" x="1750" y="1379" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_58" x="1758" y="1366" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_59" x="1763" y="1353" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_60" x="1768" y="1336" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_61" x="1772" y="1323" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_62" x="1775" y="1311" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_63" x="1778" y="1302" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_64" x="1783" y="1291" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_65" x="1790" y="1283" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_66" x="1798" y="1282" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_67" x="1810" y="1277" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_68" x="1816" y="1267" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_69" x="1830" y="1257" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_70" x="1844" y="1256" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_71" x="1861" y="1252" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_72" x="1867" y="1251" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_73" x="1876" y="1246" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_74" x="1887" y="1235" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_75" x="1888" y="1225" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_76" x="1884" y="1209" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_77" x="1905" y="1204" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_78" x="1930" y="1193" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_79" x="1942" y="1183" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_80" x="1940" y="1170" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_81" x="1931" y="1149" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_82" x="1923" y="1139" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_83" x="1925" y="1122" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_84" x="1935" y="1116" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_85" x="1951" y="1113" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_86" x="1966" y="1107" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_87" x="1981" y="1098" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_88" x="1990" y="1089" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_89" x="1992" y="1074" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_90" x="2000" y="1063" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_91" x="2000" y="1047" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_92" x="1998" y="1031" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_93" x="1998" y="1014" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_94" x="1998" y="999" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_95" x="1998" y="983" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_96" x="1998" y="973" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_97" x="2005" y="955" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_98" x="2007" y="940" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_99" x="2017" y="924" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_100" x="2032" y="900" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_101" x="2043" y="889" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_102" x="2053" y="889" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_103" x="2059" y="878" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_104" x="2062" y="867" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_105" x="2058" y="857" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_106" x="2054" y="844" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_107" x="2058" y="837" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_108" x="2055" y="822" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_109" x="2060" y="804" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_110" x="2078" y="800" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_111" x="2091" y="790" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_112" x="2103" y="791" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_113" x="2108" y="803" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_114" x="2121" y="811" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_115" x="2131" y="816" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_116" x="2142" y="812" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_117" x="2157" y="808" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_118" x="2170" y="808" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_119" x="2182" y="820" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_120" x="2194" y="820" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_121" x="2203" y="828" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_122" x="2215" y="829" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_123" x="2227" y="829" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_124" x="2238" y="839" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_125" x="2253" y="847" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_126" x="2266" y="856" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_127" x="2269" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_128" x="2272" y="893" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_129" x="2289" y="907" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_130" x="2290" y="919" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_131" x="2284" y="937" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_132" x="2283" y="959" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_133" x="2297" y="976" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_134" x="2315" y="985" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_135" x="2329" y="992" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_136" x="2339" y="980" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_137" x="2349" y="965" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_138" x="2362" y="968" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_139" x="2368" y="984" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_140" x="2374" y="998" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_141" x="2389" y="1000" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_142" x="2398" y="992" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_143" x="2425" y="995" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_144" x="2440" y="1005" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_145" x="2448" y="1005" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_146" x="2454" y="989" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_147" x="2468" y="983" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_148" x="2482" y="980" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_149" x="2497" y="980" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_150" x="2510" y="980" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_151" x="2516" y="987" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_152" x="2528" y="998" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_153" x="2534" y="1008" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_154" x="2549" y="1005" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_155" x="2561" y="1002" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_156" x="2572" y="999" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_157" x="2580" y="992" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_158" x="2604" y="987" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_159" x="2618" y="970" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_160" x="2618" y="957" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_161" x="2623" y="949" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_162" x="2624" y="940" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_163" x="2635" y="937" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_164" x="2645" y="934" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_165" x="2657" y="932" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_166" x="2665" y="929" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_167" x="2671" y="917" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_168" x="2669" y="905" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_169" x="2666" y="894" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_170" x="2666" y="883" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_171" x="2663" y="874" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_172" x="2670" y="866" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_173" x="2674" y="855" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_174" x="2681" y="850" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_175" x="2691" y="845" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_176" x="2686" y="835" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_177" x="2672" y="827" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_178" x="2671" y="818" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_179" x="2662" y="806" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_180" x="2664" y="791" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_181" x="2675" y="783" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_182" x="2679" y="775" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_183" x="2674" y="762" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_184" x="2667" y="745" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_185" x="2655" y="733" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_186" x="2643" y="728" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_187" x="2629" y="717" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_188" x="2614" y="711" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_189" x="2604" y="705" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_190" x="2600" y="690" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_191" x="2609" y="681" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_192" x="2599" y="659" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_193" x="2599" y="644" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_194" x="2587" y="642" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_195" x="2583" y="624" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_196" x="2567" y="611" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_197" x="2556" y="597" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_198" x="2540" y="585" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_199" x="2540" y="562" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_200" x="2525" y="561" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_201" x="2517" y="538" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_202" x="2509" y="527" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_203" x="2502" y="518" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_204" x="2490" y="515" z="0" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_205" x="2489" y="494" z="15" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_206" x="2491" y="483" z="15" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_207" x="2500" y="477" z="15" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_208" x="2500" y="467" z="15" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_209" x="2500" y="443" z="15" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_210" x="2490" y="442" z="15" map="Felucca" routing="true" />
+    <Node name="Britain2Minoc_211" x="2490" y="418" z="15" map="Felucca" routing="true" />
   </Nodes>
   <Edges>
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         BRITAIN LOCAL CLUSTER
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="Britain" b="BlackthornCastle" />
-    <!-- 195 tiles -->
-    <Edge a="Britain" b="BritishCastle" />
-    <!-- 76 tiles -->
-    <Edge a="Britain" b="BritainCemetery" />
-    <!-- 173 tiles -->
-    <Edge a="Britain" b="BritSmithGuild" />
-    <!-- 184 tiles -->
-    <Edge a="Britain" b="SnakePass" />
-    <!-- 288 tiles -->
-    <Edge a="Britain" b="RoadNorthBrit1" />
-    <!-- 296 tiles -->
-    <Edge a="Britain" b="RoadSouth1" />
-    <!-- 255 tiles -->
-    <Edge a="Britain" b="RoadWest1" />
-    <!-- 291 tiles -->
-    <Edge a="Britain" b="RoadSkara2" />
-    <!-- 294 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         NORTHERN CORRIDOR: Britain → Compassion Desert → Minoc
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="RoadNorthBrit1" b="BlackthornCastle" />
-    <!-- 110 tiles -->
-    <Edge a="RoadNorthBrit1" b="BritainCemetery" />
-    <!-- 172 tiles -->
-    <Edge a="RoadNorthBrit1" b="RoadNorthBritlMid" />
-    <Edge a="RoadNorthBritlMid" b="RoadNorthBrit1Mid2" />
-    <Edge a="RoadNorthBrit1Mid2" b="GreatNorthernRoad" />
-    <!-- 262 tiles -->
-    <Edge a="GreatNorthernRoad" b="ShrineChaos" />
-    <!-- 262 tiles -->
-    <Edge a="GreatNorthernRoad" b="Despise" />
-    <!-- 203 tiles -->
-    <Edge a="CompassionCrossroads" b="ShrineCompassion" />
-    <!-- 182 tiles -->
-    <Edge a="CompassionCrossroads" b="DesertCompassion" />
-    <!-- 139 tiles -->
-    <Edge a="CompassionCrossroads" b="RoadCompassionEast" />
-    <!-- 241 tiles -->
-    <Edge a="DesertCompassion" b="RoadCoveMid" />
-    <!-- 224 tiles -->
-    <Edge a="RoadCoveMid" b="Cove" />
-    <!-- 217 tiles -->
-    <Edge a="Cove" b="OrcFortCove" />
-    <!-- 163 tiles -->
-    <Edge a="RoadCompassionEast" b="MtKendallApproach" />
-    <!-- 235 tiles -->
-    <Edge a="MtKendallApproach" b="MtKendallPass" />
-    <!-- 209 tiles -->
-    <Edge a="MtKendallPass" b="MtKendallSouth" />
-    <!-- 182 tiles -->
-    <!-- 300 tiles -->
-    <!-- 234 tiles -->
-    <Edge a="MinocSouthRoad" b="Covetous" />
-    <!-- 273 tiles -->
-    <Edge a="MinocSouthRoad" b="MinocVesperBridge" />
-    <!-- 118 tiles -->
-    <Edge a="ShrineChaos" b="ShrineJustice" />
-    <!-- 258 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         MINOC LOCAL CLUSTER
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <!-- 211 tiles -->
-    <Edge a="Minoc" b="MinocMiningCamp" />
-    <!-- 155 tiles -->
-    <Edge a="Minoc" b="EastMines" />
-    <!-- 135 tiles -->
-    <Edge a="Minoc" b="MinocGypsyCamp" />
-    <!-- 243 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         VESPER CORRIDOR: Minoc bridge → Vesper → Deceit area
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="MinocVesperBridge" b="RoadVesperApproach" />
-    <!-- 183 tiles -->
-    <Edge a="RoadVesperApproach" b="Vesper" />
-    <!-- 184 tiles -->
-    <Edge a="Vesper" b="VesperCemetery" />
-    <!-- 124 tiles -->
-    <Edge a="Vesper" b="MoongateVesper" />
-    <!-- 272 tiles -->
-    <Edge a="Vesper" b="VesperMine" />
-    <!-- 56 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         BRITAIN → TRINSIC SOUTH ROAD
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="RoadSouth1" b="RoadSouth2" />
-    <!-- 182 tiles -->
-    <Edge a="RoadSouth2" b="BritTrinsicXroad" />
-    <!-- 226 tiles -->
-    <Edge a="BritTrinsicXroad" b="ShrineSpirituality" />
-    <!-- 253 tiles -->
-    <Edge a="BritTrinsicXroad" b="RoadBritTrinsic1" />
-    <!-- 270 tiles -->
-    <Edge a="BritTrinsicXroad" b="MoongateBrit" />
-    <!-- 318 tiles (slightly over — split if bots get stuck) -->
-    <Edge a="RoadBritTrinsic1" b="RoadBritTrinsic2" />
-    <!-- 233 tiles -->
-    <Edge a="RoadBritTrinsic2" b="Trinsic" />
-    <!-- 197 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         TRINSIC LOCAL CLUSTER
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="Trinsic" b="TrinsicCemetery" />
-    <!-- 147 tiles -->
-    <Edge a="Trinsic" b="MoongateTrinsic" />
-    <!-- 107 tiles -->
-    <Edge a="Trinsic" b="RoadTrinsicSouth1" />
-    <!-- 211 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         TRINSIC → SERPENT'S HOLD
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="RoadTrinsicSouth1" b="RoadTrinsicMid" />
-    <!-- 224 tiles -->
-    <Edge a="RoadTrinsicMid" b="RoadTrinsicSouth2" />
-    <!-- 224 tiles -->
-    <Edge a="RoadTrinsicSouth2" b="RoadTrinsicSerpent" />
-    <!-- 320 tiles (slightly over) -->
-    <Edge a="RoadTrinsicSerpent" b="SerpentsHold" />
-    <!-- 338 tiles (slightly over — use [navbuild to split) -->
-    <Edge a="SerpentsHold" b="ShrineValor" />
-    <!-- large gap — placeholder for future routing -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         BRITAIN → YEW WEST ROAD
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="RoadWest1" b="RoadSkara2" />
-    <!-- 200 tiles -->
-    <Edge a="RoadWest1" b="RoadWest2" />
-    <!-- 269 tiles -->
-    <Edge a="RoadWest2" b="OrcCave" />
-    <!-- 72 tiles -->
-    <Edge a="RoadWest2" b="RoadWest3" />
-    <!-- 269 tiles -->
-    <Edge a="RoadWest3" b="OrcFortYew" />
-    <!-- 163 tiles -->
-    <Edge a="RoadWest3" b="RoadWestYew1" />
-    <!-- 253 tiles -->
-    <Edge a="RoadWestYew1" b="EmpathAbbey" />
-    <!-- 241 tiles -->
-    <Edge a="EmpathAbbey" b="Yew" />
-    <!-- 166 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         YEW LOCAL CLUSTER
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="Yew" b="YewCemetery" />
-    <!-- 239 tiles -->
-    <Edge a="Yew" b="YewLumberRegion" />
-    <!-- 66 tiles -->
-    <Edge a="Yew" b="StoneCircleYew" />
-    <!-- 301 tiles (at limit) -->
-    <Edge a="Yew" b="MoongateYew" />
-    <!-- 336 tiles (over — split with [navbuild) -->
-    <Edge a="Yew" b="YewPawPath" />
-    <!-- 222 tiles -->
-    <Edge a="Yew" b="Shame" />
-    <!-- 569 tiles (WARN — placeholder, needs intermediate) -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         BRITAIN → SKARA BRAE WEST ROAD
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="RoadSkara2" b="RoadSkaraBrit1" />
-    <!-- 316 tiles (slightly over) -->
-    <Edge a="RoadSkaraBrit1" b="RoadSkaraMid" />
-    <!-- 320 tiles (slightly over) -->
-    <Edge a="RoadSkaraMid" b="SkaraBrae" />
-    <!-- 159 tiles -->
-    <Edge a="RoadSkaraMid" b="MoongateSkara" />
-    <!-- 66 tiles -->
-    <Edge a="SkaraBrae" b="MoongateSkara" />
-    <!-- 149 tiles -->
-    <Edge a="BrigandCamp" b="RoadWest2" />
-    <!-- 254 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         ISLAND CLUSTERS (disconnected from mainland — ComputeRoute returns null,
-         falls back to unobserved teleport)
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <!-- Moonglow island -->
-    <Edge a="Moonglow" b="MoongateMoonglow" />
-    <!-- 167 tiles -->
-    <Edge a="Moonglow" b="MoonglewCemetery" />
-    <!-- 218 tiles -->
-    <Edge a="Moonglow" b="Lycaeum" />
-    <!-- 173 tiles -->
-    <Edge a="Moonglow" b="ShrineHonesty" />
-    <!-- 246 tiles -->
-    <!-- Nujel'm island -->
-    <Edge a="NujelM" b="NujelmCemetery" />
-    <!-- 106 tiles -->
-    <!-- Magincia / Ocllo island -->
-    <Edge a="Magincia" b="MoongateMagincia" />
-    <!-- 37 tiles -->
-    <Edge a="Magincia" b="RoadMaginciaOcllo" />
-    <!-- 155 tiles -->
-    <Edge a="RoadMaginciaOcllo" b="Ocllo" />
-    <!-- 153 tiles -->
-    <Edge a="Ocllo" b="OclloMines" />
-    <!-- 102 tiles -->
-    <Edge a="Ocllo" b="OldHavenRuins" />
-    <!-- 132 tiles -->
-    <!-- Jhelom island -->
-    <Edge a="Jhelom" b="MoongateJhelom" />
-    <!-- 116 tiles -->
-    <Edge a="Jhelom" b="JhelomCemetery" />
-    <!-- 98 tiles -->
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         LOST LANDS CLUSTER (no mainland edges — falls back to teleport)
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="Delucia" b="Papua" />
-    <Edge a="Delucia" b="SavageCampT2A" />
-    <Edge a="Papua" b="TerathanKeep" />
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         MISCELLANEOUS OVERWORLD LINKS
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <Edge a="HedgeMaze" b="RoadBritTrinsic1" />
-    <!-- 303 tiles (at limit) -->
-    <Edge a="ValorsEnd" b="RoadTrinsicSouth1" />
-    <!-- 188 tiles -->
-    <Edge a="BigMountainMine" b="MtKendallApproach" />
-    <!-- 191 tiles -->
-    <Edge a="YewFortDamned" b="RoadWestYew1" />
-    <!-- 290 tiles (needs verify) -->
-    <Edge a="RoadNorthBrit1" b="RoadNorthBritlMid" />
-    <Edge a="RoadNorthBritlMid" b="RoadNorthBrit1Mid2" />
-    <Edge a="RoadNorthBrit1Mid2" b="GreatNorthernRoad" />
-    <Edge a="NorthernRoadXRoadsMid" b="CompassionCrossroads" />
-    <Edge a="GreatNorthernRoad" b="NorthernRoadX2" />
-    <Edge a="NorthernRoadX2" b="NorthernRoadXRoadsMid" />
-    <Edge a="VesperMinocXroad" b="MtKendallSouth" />
-    <Edge a="VesperMinocXroad" b="MinocSouth" />
-    <Edge a="MinocSouth" b="MinocSouth2" />
-    <Edge a="MinocSouth2" b="MinocSouthRoad" />
-    <Edge a="Minoc" b="MinocBank" />
-    <Edge a="MinocBank" b="MinocSouthRoad" />
+    <Edge a="Britain" b="Britain2Minoc_01" />
+    <Edge a="Britain2Minoc_01" b="Britain2Minoc_02" />
+    <Edge a="Britain2Minoc_02" b="Britain2Minoc_03" />
+    <Edge a="Britain2Minoc_03" b="Britain2Minoc_04" />
+    <Edge a="Britain2Minoc_04" b="Britain2Minoc_05" />
+    <Edge a="Britain2Minoc_05" b="Britain2Minoc_06" />
+    <Edge a="Britain2Minoc_06" b="Britain2Minoc_07" />
+    <Edge a="Britain2Minoc_07" b="Britain2Minoc_08" />
+    <Edge a="Britain2Minoc_08" b="Britain2Minoc_09" />
+    <Edge a="Britain2Minoc_09" b="Britain2Minoc_10" />
+    <Edge a="Britain2Minoc_10" b="Britain2Minoc_11" />
+    <Edge a="Britain2Minoc_11" b="Britain2Minoc_12" />
+    <Edge a="Britain2Minoc_12" b="Britain2Minoc_13" />
+    <Edge a="Britain2Minoc_13" b="Britain2Minoc_14" />
+    <Edge a="Britain2Minoc_14" b="Britain2Minoc_15" />
+    <Edge a="Britain2Minoc_15" b="Britain2Minoc_16" />
+    <Edge a="Britain2Minoc_16" b="Britain2Minoc_17" />
+    <Edge a="Britain2Minoc_17" b="Britain2Minoc_18" />
+    <Edge a="Britain2Minoc_18" b="Britain2Minoc_19" />
+    <Edge a="Britain2Minoc_19" b="Britain2Minoc_20" />
+    <Edge a="Britain2Minoc_20" b="Britain2Minoc_21" />
+    <Edge a="Britain2Minoc_21" b="Britain2Minoc_22" />
+    <Edge a="Britain2Minoc_22" b="Britain2Minoc_23" />
+    <Edge a="Britain2Minoc_23" b="Britain2Minoc_24" />
+    <Edge a="Britain2Minoc_24" b="Britain2Minoc_25" />
+    <Edge a="Britain2Minoc_25" b="Britain2Minoc_26" />
+    <Edge a="Britain2Minoc_26" b="Britain2Minoc_27" />
+    <Edge a="Britain2Minoc_27" b="Britain2Minoc_28" />
+    <Edge a="Britain2Minoc_28" b="Britain2Minoc_29" />
+    <Edge a="Britain2Minoc_29" b="Britain2Minoc_30" />
+    <Edge a="Britain2Minoc_30" b="Britain2Minoc_31" />
+    <Edge a="Britain2Minoc_31" b="Britain2Minoc_32" />
+    <Edge a="Britain2Minoc_32" b="Britain2Minoc_33" />
+    <Edge a="Britain2Minoc_33" b="Britain2Minoc_34" />
+    <Edge a="Britain2Minoc_34" b="Britain2Minoc_35" />
+    <Edge a="Britain2Minoc_35" b="Britain2Minoc_36" />
+    <Edge a="Britain2Minoc_36" b="Britain2Minoc_37" />
+    <Edge a="Britain2Minoc_37" b="Britain2Minoc_38" />
+    <Edge a="Britain2Minoc_38" b="Britain2Minoc_39" />
+    <Edge a="Britain2Minoc_39" b="Britain2Minoc_40" />
+    <Edge a="Britain2Minoc_40" b="Britain2Minoc_41" />
+    <Edge a="Britain2Minoc_41" b="Britain2Minoc_42" />
+    <Edge a="Britain2Minoc_42" b="Britain2Minoc_43" />
+    <Edge a="Britain2Minoc_43" b="Britain2Minoc_44" />
+    <Edge a="Britain2Minoc_44" b="Britain2Minoc_45" />
+    <Edge a="Britain2Minoc_45" b="Britain2Minoc_46" />
+    <Edge a="Britain2Minoc_46" b="Britain2Minoc_47" />
+    <Edge a="Britain2Minoc_47" b="Britain2Minoc_48" />
+    <Edge a="Britain2Minoc_48" b="Britain2Minoc_49" />
+    <Edge a="Britain2Minoc_49" b="Britain2Minoc_50" />
+    <Edge a="Britain2Minoc_50" b="Britain2Minoc_51" />
+    <Edge a="Britain2Minoc_51" b="Britain2Minoc_52" />
+    <Edge a="Britain2Minoc_52" b="Britain2Minoc_53" />
+    <Edge a="Britain2Minoc_53" b="Britain2Minoc_54" />
+    <Edge a="Britain2Minoc_54" b="Britain2Minoc_55" />
+    <Edge a="Britain2Minoc_55" b="Britain2Minoc_56" />
+    <Edge a="Britain2Minoc_56" b="Britain2Minoc_57" />
+    <Edge a="Britain2Minoc_57" b="Britain2Minoc_58" />
+    <Edge a="Britain2Minoc_58" b="Britain2Minoc_59" />
+    <Edge a="Britain2Minoc_59" b="Britain2Minoc_60" />
+    <Edge a="Britain2Minoc_60" b="Britain2Minoc_61" />
+    <Edge a="Britain2Minoc_61" b="Britain2Minoc_62" />
+    <Edge a="Britain2Minoc_62" b="Britain2Minoc_63" />
+    <Edge a="Britain2Minoc_63" b="Britain2Minoc_64" />
+    <Edge a="Britain2Minoc_64" b="Britain2Minoc_65" />
+    <Edge a="Britain2Minoc_65" b="Britain2Minoc_66" />
+    <Edge a="Britain2Minoc_66" b="Britain2Minoc_67" />
+    <Edge a="Britain2Minoc_67" b="Britain2Minoc_68" />
+    <Edge a="Britain2Minoc_68" b="Britain2Minoc_69" />
+    <Edge a="Britain2Minoc_69" b="Britain2Minoc_70" />
+    <Edge a="Britain2Minoc_70" b="Britain2Minoc_71" />
+    <Edge a="Britain2Minoc_71" b="Britain2Minoc_72" />
+    <Edge a="Britain2Minoc_72" b="Britain2Minoc_73" />
+    <Edge a="Britain2Minoc_73" b="Britain2Minoc_74" />
+    <Edge a="Britain2Minoc_74" b="Britain2Minoc_75" />
+    <Edge a="Britain2Minoc_75" b="Britain2Minoc_76" />
+    <Edge a="Britain2Minoc_76" b="Britain2Minoc_77" />
+    <Edge a="Britain2Minoc_77" b="Britain2Minoc_78" />
+    <Edge a="Britain2Minoc_78" b="Britain2Minoc_79" />
+    <Edge a="Britain2Minoc_79" b="Britain2Minoc_80" />
+    <Edge a="Britain2Minoc_80" b="Britain2Minoc_81" />
+    <Edge a="Britain2Minoc_81" b="Britain2Minoc_82" />
+    <Edge a="Britain2Minoc_82" b="Britain2Minoc_83" />
+    <Edge a="Britain2Minoc_83" b="Britain2Minoc_84" />
+    <Edge a="Britain2Minoc_84" b="Britain2Minoc_85" />
+    <Edge a="Britain2Minoc_85" b="Britain2Minoc_86" />
+    <Edge a="Britain2Minoc_86" b="Britain2Minoc_87" />
+    <Edge a="Britain2Minoc_87" b="Britain2Minoc_88" />
+    <Edge a="Britain2Minoc_88" b="Britain2Minoc_89" />
+    <Edge a="Britain2Minoc_89" b="Britain2Minoc_90" />
+    <Edge a="Britain2Minoc_90" b="Britain2Minoc_91" />
+    <Edge a="Britain2Minoc_91" b="Britain2Minoc_92" />
+    <Edge a="Britain2Minoc_92" b="Britain2Minoc_93" />
+    <Edge a="Britain2Minoc_93" b="Britain2Minoc_94" />
+    <Edge a="Britain2Minoc_94" b="Britain2Minoc_95" />
+    <Edge a="Britain2Minoc_95" b="Britain2Minoc_96" />
+    <Edge a="Britain2Minoc_96" b="Britain2Minoc_97" />
+    <Edge a="Britain2Minoc_97" b="Britain2Minoc_98" />
+    <Edge a="Britain2Minoc_98" b="Britain2Minoc_99" />
+    <Edge a="Britain2Minoc_99" b="Britain2Minoc_100" />
+    <Edge a="Britain2Minoc_100" b="Britain2Minoc_101" />
+    <Edge a="Britain2Minoc_101" b="Britain2Minoc_102" />
+    <Edge a="Britain2Minoc_102" b="Britain2Minoc_103" />
+    <Edge a="Britain2Minoc_103" b="Britain2Minoc_104" />
+    <Edge a="Britain2Minoc_104" b="Britain2Minoc_105" />
+    <Edge a="Britain2Minoc_105" b="Britain2Minoc_106" />
+    <Edge a="Britain2Minoc_106" b="Britain2Minoc_107" />
+    <Edge a="Britain2Minoc_107" b="Britain2Minoc_108" />
+    <Edge a="Britain2Minoc_108" b="Britain2Minoc_109" />
+    <Edge a="Britain2Minoc_109" b="Britain2Minoc_110" />
+    <Edge a="Britain2Minoc_110" b="Britain2Minoc_111" />
+    <Edge a="Britain2Minoc_111" b="Britain2Minoc_112" />
+    <Edge a="Britain2Minoc_112" b="Britain2Minoc_113" />
+    <Edge a="Britain2Minoc_113" b="Britain2Minoc_114" />
+    <Edge a="Britain2Minoc_114" b="Britain2Minoc_115" />
+    <Edge a="Britain2Minoc_115" b="Britain2Minoc_116" />
+    <Edge a="Britain2Minoc_116" b="Britain2Minoc_117" />
+    <Edge a="Britain2Minoc_117" b="Britain2Minoc_118" />
+    <Edge a="Britain2Minoc_118" b="Britain2Minoc_119" />
+    <Edge a="Britain2Minoc_119" b="Britain2Minoc_120" />
+    <Edge a="Britain2Minoc_120" b="Britain2Minoc_121" />
+    <Edge a="Britain2Minoc_121" b="Britain2Minoc_122" />
+    <Edge a="Britain2Minoc_122" b="Britain2Minoc_123" />
+    <Edge a="Britain2Minoc_123" b="Britain2Minoc_124" />
+    <Edge a="Britain2Minoc_124" b="Britain2Minoc_125" />
+    <Edge a="Britain2Minoc_125" b="Britain2Minoc_126" />
+    <Edge a="Britain2Minoc_126" b="Britain2Minoc_127" />
+    <Edge a="Britain2Minoc_127" b="Britain2Minoc_128" />
+    <Edge a="Britain2Minoc_128" b="Britain2Minoc_129" />
+    <Edge a="Britain2Minoc_129" b="Britain2Minoc_130" />
+    <Edge a="Britain2Minoc_130" b="Britain2Minoc_131" />
+    <Edge a="Britain2Minoc_131" b="Britain2Minoc_132" />
+    <Edge a="Britain2Minoc_132" b="Britain2Minoc_133" />
+    <Edge a="Britain2Minoc_133" b="Britain2Minoc_134" />
+    <Edge a="Britain2Minoc_134" b="Britain2Minoc_135" />
+    <Edge a="Britain2Minoc_135" b="Britain2Minoc_136" />
+    <Edge a="Britain2Minoc_136" b="Britain2Minoc_137" />
+    <Edge a="Britain2Minoc_137" b="Britain2Minoc_138" />
+    <Edge a="Britain2Minoc_138" b="Britain2Minoc_139" />
+    <Edge a="Britain2Minoc_139" b="Britain2Minoc_140" />
+    <Edge a="Britain2Minoc_140" b="Britain2Minoc_141" />
+    <Edge a="Britain2Minoc_141" b="Britain2Minoc_142" />
+    <Edge a="Britain2Minoc_142" b="Britain2Minoc_143" />
+    <Edge a="Britain2Minoc_143" b="Britain2Minoc_144" />
+    <Edge a="Britain2Minoc_144" b="Britain2Minoc_145" />
+    <Edge a="Britain2Minoc_145" b="Britain2Minoc_146" />
+    <Edge a="Britain2Minoc_146" b="Britain2Minoc_147" />
+    <Edge a="Britain2Minoc_147" b="Britain2Minoc_148" />
+    <Edge a="Britain2Minoc_148" b="Britain2Minoc_149" />
+    <Edge a="Britain2Minoc_149" b="Britain2Minoc_150" />
+    <Edge a="Britain2Minoc_150" b="Britain2Minoc_151" />
+    <Edge a="Britain2Minoc_151" b="Britain2Minoc_152" />
+    <Edge a="Britain2Minoc_152" b="Britain2Minoc_153" />
+    <Edge a="Britain2Minoc_153" b="Britain2Minoc_154" />
+    <Edge a="Britain2Minoc_154" b="Britain2Minoc_155" />
+    <Edge a="Britain2Minoc_155" b="Britain2Minoc_156" />
+    <Edge a="Britain2Minoc_156" b="Britain2Minoc_157" />
+    <Edge a="Britain2Minoc_157" b="Britain2Minoc_158" />
+    <Edge a="Britain2Minoc_158" b="Britain2Minoc_159" />
+    <Edge a="Britain2Minoc_159" b="Britain2Minoc_160" />
+    <Edge a="Britain2Minoc_160" b="Britain2Minoc_161" />
+    <Edge a="Britain2Minoc_161" b="Britain2Minoc_162" />
+    <Edge a="Britain2Minoc_162" b="Britain2Minoc_163" />
+    <Edge a="Britain2Minoc_163" b="Britain2Minoc_164" />
+    <Edge a="Britain2Minoc_164" b="Britain2Minoc_165" />
+    <Edge a="Britain2Minoc_165" b="Britain2Minoc_166" />
+    <Edge a="Britain2Minoc_166" b="Britain2Minoc_167" />
+    <Edge a="Britain2Minoc_167" b="Britain2Minoc_168" />
+    <Edge a="Britain2Minoc_168" b="Britain2Minoc_169" />
+    <Edge a="Britain2Minoc_169" b="Britain2Minoc_170" />
+    <Edge a="Britain2Minoc_170" b="Britain2Minoc_171" />
+    <Edge a="Britain2Minoc_171" b="Britain2Minoc_172" />
+    <Edge a="Britain2Minoc_172" b="Britain2Minoc_173" />
+    <Edge a="Britain2Minoc_173" b="Britain2Minoc_174" />
+    <Edge a="Britain2Minoc_174" b="Britain2Minoc_175" />
+    <Edge a="Britain2Minoc_175" b="Britain2Minoc_176" />
+    <Edge a="Britain2Minoc_176" b="Britain2Minoc_177" />
+    <Edge a="Britain2Minoc_177" b="Britain2Minoc_178" />
+    <Edge a="Britain2Minoc_178" b="Britain2Minoc_179" />
+    <Edge a="Britain2Minoc_179" b="Britain2Minoc_180" />
+    <Edge a="Britain2Minoc_180" b="Britain2Minoc_181" />
+    <Edge a="Britain2Minoc_181" b="Britain2Minoc_182" />
+    <Edge a="Britain2Minoc_182" b="Britain2Minoc_183" />
+    <Edge a="Britain2Minoc_183" b="Britain2Minoc_184" />
+    <Edge a="Britain2Minoc_184" b="Britain2Minoc_185" />
+    <Edge a="Britain2Minoc_185" b="Britain2Minoc_186" />
+    <Edge a="Britain2Minoc_186" b="Britain2Minoc_187" />
+    <Edge a="Britain2Minoc_187" b="Britain2Minoc_188" />
+    <Edge a="Britain2Minoc_188" b="Britain2Minoc_189" />
+    <Edge a="Britain2Minoc_189" b="Britain2Minoc_190" />
+    <Edge a="Britain2Minoc_190" b="Britain2Minoc_191" />
+    <Edge a="Britain2Minoc_191" b="Britain2Minoc_192" />
+    <Edge a="Britain2Minoc_192" b="Britain2Minoc_193" />
+    <Edge a="Britain2Minoc_193" b="Britain2Minoc_194" />
+    <Edge a="Britain2Minoc_194" b="Britain2Minoc_195" />
+    <Edge a="Britain2Minoc_195" b="Britain2Minoc_196" />
+    <Edge a="Britain2Minoc_196" b="Britain2Minoc_197" />
+    <Edge a="Britain2Minoc_197" b="Britain2Minoc_198" />
+    <Edge a="Britain2Minoc_198" b="Britain2Minoc_199" />
+    <Edge a="Britain2Minoc_199" b="Britain2Minoc_200" />
+    <Edge a="Britain2Minoc_200" b="Britain2Minoc_201" />
+    <Edge a="Britain2Minoc_201" b="Britain2Minoc_202" />
+    <Edge a="Britain2Minoc_202" b="Britain2Minoc_203" />
+    <Edge a="Britain2Minoc_203" b="Britain2Minoc_204" />
+    <Edge a="Britain2Minoc_204" b="Britain2Minoc_205" />
+    <Edge a="Britain2Minoc_205" b="Britain2Minoc_206" />
+    <Edge a="Britain2Minoc_206" b="Britain2Minoc_207" />
+    <Edge a="Britain2Minoc_207" b="Britain2Minoc_208" />
+    <Edge a="Britain2Minoc_208" b="Britain2Minoc_209" />
+    <Edge a="Britain2Minoc_209" b="Britain2Minoc_210" />
+    <Edge a="Britain2Minoc_210" b="Britain2Minoc_211" />
+    <Edge a="Britain2Minoc_211" b="Minoc" />
   </Edges>
 </NavGraph>

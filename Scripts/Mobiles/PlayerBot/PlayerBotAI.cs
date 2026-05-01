@@ -53,6 +53,9 @@ namespace Server.Mobiles
             if ( bot == null )
                 return base.Think();
 
+            if ( bot.IsPaused )
+                return true;
+
             // Restore stashed weapons whenever not actively casting or awaiting target
             if ( bot.UsesMagic )
                 MaybeRestoreWeapons();
@@ -110,6 +113,9 @@ namespace Server.Mobiles
             PlayerBot bot = m_Mobile as PlayerBot;
             if ( bot == null )
                 return base.Obey();
+
+            if ( bot.IsPaused )
+                return true;
 
             if ( bot.UsesMagic )
                 MaybeRestoreWeapons();

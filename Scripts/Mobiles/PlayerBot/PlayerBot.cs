@@ -75,6 +75,9 @@ namespace Server.Mobiles
         [NonSerialized]
         public bool ForceMasterHeal;
 
+        [NonSerialized]
+        public bool IsPaused;
+
         // ── Properties ─────────────────────────────────────────────────────────
         [CommandProperty(AccessLevel.GameMaster)]
         public PlayerBotPersona.PlayerBotProfile PlayerBotProfile

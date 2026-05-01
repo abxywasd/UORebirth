@@ -24,6 +24,8 @@ namespace Server.Scripts.Commands
             CommandSystem.Register( "navtest",  AccessLevel.GameMaster, new CommandEventHandler( NavTest_OnCommand ) );
             CommandSystem.Register( "navshow",  AccessLevel.GameMaster, new CommandEventHandler( NavShow_OnCommand ) );
             CommandSystem.Register( "navbot",   AccessLevel.GameMaster, new CommandEventHandler( NavBot_OnCommand ) );
+            CommandSystem.Register( "navdrop",   AccessLevel.GameMaster, new CommandEventHandler( NavDrop_OnCommand ) );
+            CommandSystem.Register( "navnearest", AccessLevel.GameMaster, new CommandEventHandler( NavNearest_OnCommand ) );
         }
 
         // ── [navbuild ─────────────────────────────────────────────────────────────
@@ -33,7 +35,7 @@ namespace Server.Scripts.Commands
         {
             if ( e.Length < 1 )
             {
-                e.Mobile.SendMessage( "Usage: [navbuild <addnode|insert|connect|removeedge|edges|remove|show|rebuild|export|goto|move>" );
+                e.Mobile.SendMessage( "Usage: [navbuild <addnode|insert|connect|removeedge|edges|remove|show|rebuild|export|goto|move|trail>" );
                 return;
             }
 
@@ -52,8 +54,11 @@ namespace Server.Scripts.Commands
                 case "export":     DoExport( e );     break;
                 case "goto":       DoGoto( e );       break;
                 case "move":       DoMove( e );       break;
+                case "trail":      DoTrail( e );      break;
+                case "nearest":    DoNearest( e );    break;
+                case "isolated":   DoIsolated( e );   break;
                 default:
-                    e.Mobile.SendMessage( "Unknown subcommand '{0}'. Valid: addnode insert connect removeedge edges remove show rebuild export goto move", sub );
+                    e.Mobile.SendMessage( "Unknown subcommand '{0}'. Valid: addnode insert connect removeedge edges remove show rebuild export goto move trail nearest isolated", sub );
                     break;
             }
         }
@@ -659,6 +664,462 @@ namespace Server.Scripts.Commands
 
             from.SendMessage( 0x55, "Moved node \"{0}\" from ({1},{2},{3}) to ({4},{5},{6}). Graph rebuilt.",
                 name, oldPos.X, oldPos.Y, oldPos.Z, newPos.X, newPos.Y, newPos.Z );
+        }
+
+        // ── nearest ── closest N nodes by distance ────────────────────────────────
+        private static void DoNearest( CommandEventArgs e )
+        {
+            int count = e.Length >= 2 ? e.GetInt32( 1 ) : 10;
+            if ( count < 1 ) count = 1;
+            if ( count > 50 ) count = 50;
+            PrintNearest( e.Mobile, count );
+        }
+
+        [Usage( "navnearest [count]" )]
+        [Description( "Lists the closest nav nodes to your position, sorted by distance." )]
+        private static void NavNearest_OnCommand( CommandEventArgs e )
+        {
+            int count = e.Length >= 1 ? e.GetInt32( 0 ) : 10;
+            if ( count < 1 ) count = 1;
+            if ( count > 50 ) count = 50;
+            PrintNearest( e.Mobile, count );
+        }
+
+        private static void PrintNearest( Mobile from, int count )
+        {
+            var candidates = new List<KeyValuePair<double, BotWaypoint>>();
+
+            foreach ( BotWaypoint wp in PlayerBotNavigator.Landmarks.Values )
+            {
+                if ( wp.Map != from.Map ) continue;
+                double dx   = wp.Location.X - from.X;
+                double dy   = wp.Location.Y - from.Y;
+                double dist = Math.Sqrt( dx * dx + dy * dy );
+                candidates.Add( new KeyValuePair<double, BotWaypoint>( dist, wp ) );
+            }
+
+            candidates.Sort( ( a, b ) => a.Key.CompareTo( b.Key ) );
+
+            int shown = Math.Min( count, candidates.Count );
+            from.SendMessage( 0x55, "Closest {0} node(s) to ({1},{2}):", shown, from.X, from.Y );
+
+            for ( int i = 0; i < shown; i++ )
+            {
+                double      dist = candidates[i].Key;
+                BotWaypoint wp   = candidates[i].Value;
+
+                List<string> neighbors;
+                PlayerBotNavigator.Edges.TryGetValue( wp.Name, out neighbors );
+                int edgeCount = neighbors != null ? neighbors.Count : 0;
+
+                string edgeDesc = edgeCount == 0
+                    ? "isolated"
+                    : string.Join( ", ", neighbors.ToArray() );
+
+                string routing = wp.RoutingOnly ? " [routing]" : "";
+                from.SendMessage( 0x55,
+                    "  {0}. {1}{2} — {3:F0} tiles ({4},{5},{6}) | {7} edge(s): {8}",
+                    i + 1, wp.Name, routing,
+                    dist, wp.Location.X, wp.Location.Y, wp.Location.Z,
+                    edgeCount, edgeDesc );
+            }
+
+            if ( candidates.Count == 0 )
+                from.SendMessage( 0x55, "  No nodes on this map." );
+        }
+
+        // ── isolated ── hardcoded landmarks with no edges ─────────────────────────
+        private static void DoIsolated( CommandEventArgs e )
+        {
+            Mobile from      = e.Mobile;
+            bool   showAll   = e.Length >= 2 && e.GetString( 1 ).ToLower() == "all";
+
+            var isolated = new List<BotWaypoint>();
+
+            foreach ( BotWaypoint wp in PlayerBotNavigator.Landmarks.Values )
+            {
+                if ( !showAll && wp.FromXml ) continue; // default: hardcoded only
+
+                List<string> neighbors;
+                if ( !PlayerBotNavigator.Edges.TryGetValue( wp.Name, out neighbors ) || neighbors.Count == 0 )
+                    isolated.Add( wp );
+            }
+
+            // Sort: non-routing (destinations) first, then by tag, then by name
+            isolated.Sort( ( a, b ) =>
+            {
+                int r = a.RoutingOnly.CompareTo( b.RoutingOnly );
+                if ( r != 0 ) return r;
+                r = a.Tags.CompareTo( b.Tags );
+                if ( r != 0 ) return r;
+                return string.Compare( a.Name, b.Name, StringComparison.OrdinalIgnoreCase );
+            } );
+
+            string scope = showAll ? "nodes" : "hardcoded landmarks";
+            if ( isolated.Count == 0 )
+            {
+                from.SendMessage( 0x55, "All {0} are connected.", scope );
+                return;
+            }
+
+            from.SendMessage( 0x55, "{0} isolated {1} (no edges):", isolated.Count, scope );
+
+            WaypointTag lastTag = (WaypointTag)(-1);
+            foreach ( BotWaypoint wp in isolated )
+            {
+                // Print a section header when the tag group changes
+                if ( wp.Tags != lastTag && !wp.RoutingOnly )
+                {
+                    lastTag = wp.Tags;
+                    from.SendMessage( 0x55, "  -- {0} --", wp.Tags == WaypointTag.None ? "Untagged" : wp.Tags.ToString() );
+                }
+
+                string suffix = wp.RoutingOnly ? " [routing orphan]" : "";
+                from.SendMessage( 0x55, "    {0}{1} ({2},{3},{4}) {5}",
+                    wp.Name, suffix,
+                    wp.Location.X, wp.Location.Y, wp.Location.Z,
+                    wp.Map );
+            }
+
+            from.SendMessage( 0x55, "Use [navbuild goto <name> to jump to any of these." );
+        }
+
+        // ── Trail mode ────────────────────────────────────────────────────────────
+        private static TrailSession s_ActiveTrail = null;
+
+        private class TrailSession
+        {
+            public string       Prefix;
+            public int          Counter;
+            public double       MinDist;       // minimum tiles between drops (default 30, lower for cities)
+            public string       AnchorNode;    // optional node trail was anchored from
+            public string       LastNodeName;  // last connected node (anchor or dropped)
+            public List<string> DroppedNodes;  // names added this session (for cancel rollback)
+        }
+
+        private static void DoTrail( CommandEventArgs e )
+        {
+            if ( e.Length < 2 )
+            {
+                e.Mobile.SendMessage( "Usage: [navbuild trail <start|drop|end|cancel|status> [args]" );
+                return;
+            }
+
+            string sub = e.GetString( 1 ).ToLower();
+            switch ( sub )
+            {
+                case "start":  DoTrailStart( e );        break;
+                case "drop":   DoTrailDrop( e.Mobile );  break;
+                case "end":    DoTrailEnd( e );           break;
+                case "cancel": DoTrailCancel( e.Mobile ); break;
+                case "status": DoTrailStatus( e.Mobile ); break;
+                default:
+                    e.Mobile.SendMessage( "Unknown trail subcommand. Valid: start drop end cancel status" );
+                    break;
+            }
+        }
+
+        private static void DoTrailStart( CommandEventArgs e )
+        {
+            Mobile from = e.Mobile;
+
+            if ( s_ActiveTrail != null )
+            {
+                from.SendMessage( 0x22,
+                    "A trail is already active (prefix: {0}, {1} drop(s)). Use [navbuild trail cancel first.",
+                    s_ActiveTrail.Prefix, s_ActiveTrail.DroppedNodes.Count );
+                DoTrailStatus( from );
+                return;
+            }
+
+            if ( e.Length < 3 )
+            {
+                from.SendMessage( "Usage: [navbuild trail start <prefix> [fromNode]" );
+                return;
+            }
+
+            string prefix   = e.GetString( 2 );
+            string fromNode = null;
+            double minDist  = 30.0;
+
+            // Parse remaining optional args: node name and/or min spacing distance.
+            // A purely numeric arg is treated as minDist; anything else is treated as fromNode.
+            for ( int i = 3; i < e.Length; i++ )
+            {
+                string arg = e.GetString( i );
+                double parsed;
+                if ( double.TryParse( arg, out parsed ) )
+                    minDist = Math.Max( 1.0, parsed );
+                else
+                    fromNode = arg;
+            }
+
+            if ( fromNode != null && PlayerBotNavigator.GetLandmark( fromNode ) == null )
+            {
+                from.SendMessage( 0x22, "Anchor node '{0}' not found.", fromNode );
+                return;
+            }
+
+            s_ActiveTrail = new TrailSession
+            {
+                Prefix       = prefix,
+                Counter      = 1,
+                MinDist      = minDist,
+                AnchorNode   = fromNode,
+                LastNodeName = fromNode,
+                DroppedNodes = new List<string>()
+            };
+
+            string modeDesc = minDist < 15.0 ? " [DENSE mode]" : "";
+            if ( fromNode != null )
+            {
+                BotWaypoint anchor = PlayerBotNavigator.GetLandmark( fromNode );
+                from.SendMessage( 0x55,
+                    "Trail started{0}. Prefix: {1}. Min spacing: {2:F0} tiles. Anchored from: {3} ({4},{5}).",
+                    modeDesc, prefix, minDist, fromNode, anchor.Location.X, anchor.Location.Y );
+            }
+            else
+            {
+                from.SendMessage( 0x55,
+                    "Trail started{0}. Prefix: {1}. Min spacing: {2:F0} tiles. No anchor — first drop will be standalone.",
+                    modeDesc, prefix, minDist );
+            }
+        }
+
+        private static void DoTrailDrop( Mobile from )
+        {
+            if ( s_ActiveTrail == null )
+            {
+                from.SendMessage( 0x22, "No active trail. Use [navbuild trail start <prefix> first." );
+                return;
+            }
+
+            Point3D pos    = from.Location;
+            Map     map    = from.Map;
+            string  mapStr = (map == Map.Trammel) ? "Trammel" : "Felucca";
+
+            // Distance check from last node
+            double      lastDist = -1;
+            BotWaypoint lastWp   = s_ActiveTrail.LastNodeName != null
+                ? PlayerBotNavigator.GetLandmark( s_ActiveTrail.LastNodeName )
+                : null;
+
+            if ( lastWp != null )
+            {
+                double dx = pos.X - lastWp.Location.X;
+                double dy = pos.Y - lastWp.Location.Y;
+                lastDist  = Math.Sqrt( dx * dx + dy * dy );
+
+                if ( lastDist < s_ActiveTrail.MinDist )
+                {
+                    from.SendMessage( 0x22,
+                        "Too close to {0} ({1:F0} tiles, min {2:F0}) — move further before dropping.",
+                        s_ActiveTrail.LastNodeName, lastDist, s_ActiveTrail.MinDist );
+                    return;
+                }
+            }
+
+            // Auto-name: advance counter until we find an unused slot
+            string nodeName;
+            int    counter = s_ActiveTrail.Counter;
+            do
+            {
+                nodeName = string.Format( "{0}_{1:D2}", s_ActiveTrail.Prefix, counter++ );
+            }
+            while ( PlayerBotNavigator.GetLandmark( nodeName ) != null );
+            s_ActiveTrail.Counter = counter;
+
+            // Write node to XML
+            XmlDocument doc     = LoadOrCreateXml();
+            XmlElement  nodesEl = (XmlElement)doc.SelectSingleNode( "NavGraph/Nodes" );
+            if ( nodesEl == null ) { from.SendMessage( 0x22, "NavGraph.xml malformed." ); return; }
+
+            XmlElement nodeEl = doc.CreateElement( "Node" );
+            nodeEl.SetAttribute( "name",    nodeName );
+            nodeEl.SetAttribute( "x",       pos.X.ToString() );
+            nodeEl.SetAttribute( "y",       pos.Y.ToString() );
+            nodeEl.SetAttribute( "z",       pos.Z.ToString() );
+            nodeEl.SetAttribute( "map",     mapStr );
+            nodeEl.SetAttribute( "routing", "true" );
+            nodesEl.AppendChild( nodeEl );
+
+            // Wire edge from previous node
+            string prevNodeName = s_ActiveTrail.LastNodeName;
+            if ( prevNodeName != null )
+            {
+                XmlElement edgesEl = (XmlElement)doc.SelectSingleNode( "NavGraph/Edges" );
+                if ( edgesEl != null )
+                {
+                    XmlElement edgeEl = doc.CreateElement( "Edge" );
+                    edgeEl.SetAttribute( "a", prevNodeName );
+                    edgeEl.SetAttribute( "b", nodeName );
+                    edgesEl.AppendChild( edgeEl );
+                }
+            }
+
+            SaveXml( doc );
+            PlayerBotNavigator.BuildGraph();
+
+            s_ActiveTrail.DroppedNodes.Add( nodeName );
+            s_ActiveTrail.LastNodeName = nodeName;
+
+            NavNodeMarker marker = new NavNodeMarker( nodeName );
+            marker.MoveToWorld( pos, map );
+
+            if ( prevNodeName != null && lastDist >= 0 )
+            {
+                string warn = lastDist > 300 ? " [WARN: large gap]" : "";
+                from.SendMessage( 0x55,
+                    "Dropped {0} at ({1},{2},{3}). {4} <-> {5}: {6:F0} tiles{7}",
+                    nodeName, pos.X, pos.Y, pos.Z, prevNodeName, nodeName, lastDist, warn );
+            }
+            else
+            {
+                from.SendMessage( 0x55,
+                    "Dropped {0} at ({1},{2},{3}). (standalone — no previous node)",
+                    nodeName, pos.X, pos.Y, pos.Z );
+            }
+        }
+
+        private static void DoTrailEnd( CommandEventArgs e )
+        {
+            Mobile from = e.Mobile;
+
+            if ( s_ActiveTrail == null )
+            {
+                from.SendMessage( 0x22, "No active trail to end." );
+                return;
+            }
+
+            if ( s_ActiveTrail.DroppedNodes.Count == 0 )
+            {
+                from.SendMessage( 0x22,
+                    "No nodes dropped this session. Use [navbuild trail cancel to discard." );
+                return;
+            }
+
+            string toNode = e.Length >= 3 ? e.GetString( 2 ) : null;
+
+            if ( toNode != null )
+            {
+                BotWaypoint toWp = PlayerBotNavigator.GetLandmark( toNode );
+                if ( toWp == null )
+                {
+                    from.SendMessage( 0x22, "End anchor '{0}' not found.", toNode );
+                    return;
+                }
+
+                XmlDocument doc     = LoadOrCreateXml();
+                XmlElement  edgesEl = (XmlElement)doc.SelectSingleNode( "NavGraph/Edges" );
+                if ( edgesEl != null )
+                {
+                    XmlElement edgeEl = doc.CreateElement( "Edge" );
+                    edgeEl.SetAttribute( "a", s_ActiveTrail.LastNodeName );
+                    edgeEl.SetAttribute( "b", toNode );
+                    edgesEl.AppendChild( edgeEl );
+                    SaveXml( doc );
+                }
+
+                PlayerBotNavigator.BuildGraph();
+
+                double      dist   = 0;
+                BotWaypoint lastWp = PlayerBotNavigator.GetLandmark( s_ActiveTrail.LastNodeName );
+                if ( lastWp != null )
+                {
+                    double dx = toWp.Location.X - lastWp.Location.X;
+                    double dy = toWp.Location.Y - lastWp.Location.Y;
+                    dist      = Math.Sqrt( dx * dx + dy * dy );
+                }
+
+                from.SendMessage( 0x55,
+                    "Connected: {0} <-> {1} ({2:F0} tiles). Trail saved. {3} node(s) dropped.",
+                    s_ActiveTrail.LastNodeName, toNode, dist, s_ActiveTrail.DroppedNodes.Count );
+            }
+            else
+            {
+                from.SendMessage( 0x55,
+                    "Trail saved. {0} node(s) dropped.", s_ActiveTrail.DroppedNodes.Count );
+            }
+
+            var parts = new List<string>();
+            if ( s_ActiveTrail.AnchorNode != null ) parts.Add( s_ActiveTrail.AnchorNode );
+            parts.AddRange( s_ActiveTrail.DroppedNodes );
+            if ( toNode != null ) parts.Add( toNode );
+            from.SendMessage( 0x55, "Route: {0}", string.Join( " -> ", parts.ToArray() ) );
+
+            s_ActiveTrail = null;
+        }
+
+        private static void DoTrailCancel( Mobile from )
+        {
+            if ( s_ActiveTrail == null )
+            {
+                from.SendMessage( 0x22, "No active trail to cancel." );
+                return;
+            }
+
+            int removed = 0;
+            if ( s_ActiveTrail.DroppedNodes.Count > 0 )
+            {
+                XmlDocument doc = LoadOrCreateXml();
+
+                foreach ( string name in s_ActiveTrail.DroppedNodes )
+                {
+                    XmlNode nodeEl = doc.SelectSingleNode(
+                        string.Format( "NavGraph/Nodes/Node[@name='{0}']", name ) );
+                    if ( nodeEl != null ) { nodeEl.ParentNode.RemoveChild( nodeEl ); removed++; }
+
+                    XmlNodeList edges = doc.SelectNodes(
+                        string.Format( "NavGraph/Edges/Edge[@a='{0}' or @b='{0}']", name ) );
+                    if ( edges != null )
+                        foreach ( XmlNode edge in edges )
+                            edge.ParentNode.RemoveChild( edge );
+                }
+
+                SaveXml( doc );
+                PlayerBotNavigator.BuildGraph();
+            }
+
+            s_ActiveTrail = null;
+            from.SendMessage( 0x55, "Trail cancelled. Removed {0} node(s) from XML. Graph rebuilt.", removed );
+        }
+
+        private static void DoTrailStatus( Mobile from )
+        {
+            if ( s_ActiveTrail == null )
+            {
+                from.SendMessage( "No active trail." );
+                return;
+            }
+
+            from.SendMessage( 0x55,
+                "Trail active — Prefix: {0}, Drops: {1}, Last node: {2}, Min spacing: {3:F0} tiles",
+                s_ActiveTrail.Prefix,
+                s_ActiveTrail.DroppedNodes.Count,
+                s_ActiveTrail.LastNodeName ?? "(none)",
+                s_ActiveTrail.MinDist );
+
+            if ( s_ActiveTrail.LastNodeName != null )
+            {
+                BotWaypoint lastWp = PlayerBotNavigator.GetLandmark( s_ActiveTrail.LastNodeName );
+                if ( lastWp != null )
+                {
+                    double dx   = from.X - lastWp.Location.X;
+                    double dy   = from.Y - lastWp.Location.Y;
+                    double dist = Math.Sqrt( dx * dx + dy * dy );
+                    from.SendMessage( 0x55,
+                        "  Last node: ({0},{1},{2}) — {3:F0} tiles from you",
+                        lastWp.Location.X, lastWp.Location.Y, lastWp.Location.Z, dist );
+                }
+            }
+        }
+
+        // ── [navdrop ──────────────────────────────────────────────────────────────
+        [Usage( "navdrop" )]
+        [Description( "Spam command: drops a routing node at your feet during an active trail." )]
+        private static void NavDrop_OnCommand( CommandEventArgs e )
+        {
+            DoTrailDrop( e.Mobile );
         }
 
         // ── Targeting: connect by clicking NavNodeMarkers ─────────────────────────

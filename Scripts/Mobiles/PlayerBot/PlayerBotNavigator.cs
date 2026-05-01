@@ -145,6 +145,7 @@ namespace Server.Mobiles
             Add( "FireIslandEntrance",new Point3D( 2923, 3406,  8 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
             //Add( "SerpentPillarS",    new Point3D( 1475, 2987,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
 
+
             // Wilderness Landmarks
             Add( "HedgeMaze",         new Point3D( 1108, 2300,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "IversVictory",      new Point3D( 3720, 2072,  5 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
@@ -155,6 +156,8 @@ namespace Server.Mobiles
             //Add( "StoneCircleYew",    new Point3D(  640,  710,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             // Todo: investigate
             //Add( "ValorsEnd",         new Point3D( 2390, 3175,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "RuinedManor",        new Point3D( 854, 1544, 0), Map.Felucca, WaypointTag.Wilderness | WaypointTag.PKHub);
+
 
             // Ruins & Minor Camps
             Add( "Occllo",            new Point3D( 3640, 2528,  0 ), Map.Felucca, WaypointTag.Town );

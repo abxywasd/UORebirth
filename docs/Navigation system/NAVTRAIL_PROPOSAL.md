@@ -128,3 +128,140 @@ Changes required:
 - **`PlayerBotNavigator.cs`** — No changes needed.
 
 Estimated additions: ~150 lines of C#.
+
+---
+
+## Bot Follow Mode
+
+### Problem
+
+After laying nodes, you need to verify bots actually traverse them correctly. Watching a bot navigate from a distance is hard — they move at run speed, change direction, and may silently fall back to direct travel when the graph fails. Without sticking to a specific bot, it's impossible to observe subtle pathing failures (bridge stumbles, gap hang-ups, stuck loops).
+
+### Command
+
+```
+[botfollow <botName>
+```
+
+**Toggle.** First call starts following the named bot; second call (any arguments or none) stops it.
+
+- Finds the nearest `PlayerBot` whose `Name` matches `<botName>` (case-insensitive).
+- GM becomes hidden if not already (no footstep sounds, no overhead name — observer mode).
+- A server-side timer fires every **500 ms**, teleporting the GM to a fixed offset 3 tiles behind the bot at the same Z. The GM's client sees smooth movement because the offset is small and frequent.
+- Every **2 seconds**, a private system message is sent to the GM showing the bot's current nav state (see Display below).
+- Auto-detaches when the bot reaches its destination, dies, or is deleted.
+
+### State Display (while following)
+
+Every 2 seconds, the GM receives a private system message in this format:
+
+```
+[Kira] Travel → Minoc | Hop 4/7: NorthRoad_02 → NorthRoad_03 | 187 tiles
+[Kira] Combat — target: Orc #A3B1 | idle nav
+[Kira] Idle at Britain | no travel queued
+[Kira] STUCK — no movement for 8s | last hop: RoadNorthBrit1 → RoadNorthBritlMid
+```
+
+Fields:
+- Bot name
+- Current activity (`Travel`, `Combat`, `Idle`, `STUCK`)
+- For travel: `destination | Hop N/Total: currentNode → nextNode | distance to next node`
+- STUCK flag triggers after 8 seconds without coordinate change during travel
+
+### State Machine
+
+```csharp
+private static Dictionary<Mobile, BotFollowSession> s_ActiveFollows
+    = new Dictionary<Mobile, BotFollowSession>();
+
+private class BotFollowSession {
+    public PlayerBot  Target;
+    public Timer      FollowTimer;
+    public Point3D    LastPosition;   // for stuck detection
+    public DateTime   LastMoveTime;
+    public int        StatusTickCount; // fires status message every 4 ticks (2s at 500ms)
+}
+```
+
+Multiple GMs can follow different bots simultaneously. One GM follows one bot at a time — starting a new follow auto-stops the previous one.
+
+### Auto-detach Conditions
+
+| Condition | Behavior |
+|---|---|
+| Bot arrives at destination | Detach, notify GM: `[Kira] reached Minoc. Follow ended.` |
+| Bot deleted or killed | Detach, notify GM |
+| GM disconnects | Session cleaned up on next tick |
+| GM types `[botfollow` again (any args) | Detach immediately |
+| Bot stuck > 30 seconds | Detach with warning: `[Kira] stuck >30s — follow ended. Consider adding a node here.` |
+
+The stuck-30s detach is intentional: it flags a graph problem right at the failure point while the GM is physically present to drop a fix with `[navdrop`.
+
+---
+
+## Bot Inspection Commands
+
+Companion commands for diagnosing individual bots without needing to follow in real time.
+
+### `[botinfo <botName>`
+
+Prints a full snapshot of the bot's current state to the GM:
+
+```
+[botinfo Kira
+  Name:     Kira
+  Location: (1352, 1228, 0) Felucca
+  Activity: Travel
+  Destination: Minoc
+  Waypoint queue: RoadNorthBrit1 → NorthRoad_01 → NorthRoad_02 → GreatNorthernRoad → ... (7 hops)
+  Next hop:  NorthRoad_01 at (1352, 1228) — 123 tiles
+  Persona:   PlayerKiller (Veteran)
+  Target:    none
+```
+
+Useful for a quick check without committing to a follow session.
+
+### `[botpause <botName>`
+
+Suspends the bot's AI tick — it freezes in place. The bot does not wander, attack, or move. Useful to examine where exactly in a route the bot stopped, or to inspect its state without it running away mid-sentence.
+
+```
+[botpause Kira
+  Kira paused. Use [botresume Kira to continue.
+```
+
+### `[botresume <botName>`
+
+Resumes a paused bot.
+
+```
+[botresume Kira
+  Kira resumed.
+```
+
+---
+
+## Combined Workflow: Authoring + Verification Loop
+
+The trail and follow commands are designed to be used together in a tight loop:
+
+1. **Author a segment** using trail mode while walking the route yourself.
+2. **Find a bot** near the start of the segment and issue its travel command (or wait for it to naturally head that way).
+3. **Follow it** with `[botfollow <name>` — you teleport with it through every hop.
+4. **Spot a failure** — the bot hesitates at a gap, stumbles at a bridge, gets stuck.
+5. **Drop a fix** — while physically present at the failure point, type `[navdrop` (trail must be active) or `[navbuild connect` to wire in a missing edge.
+6. **Resume and re-verify** — `[botresume`, watch the bot re-attempt the fixed segment.
+
+---
+
+## Implementation Scope (Updated)
+
+| File | Changes |
+|---|---|
+| `Scripts/Commands/NavBuildCommand.cs` | Trail mode: `TrailSession` class, `DoTrailStart/Drop/End/Cancel/Status`. Register `[navdrop` alias. ~150 lines. |
+| `Scripts/Commands/BotFollowCommand.cs` | New file. `BotFollowSession` class, follow timer, state display, stuck detection. `[botfollow`, `[botinfo`, `[botpause`, `[botresume`. ~200 lines. |
+| `Scripts/Mobiles/PlayerBot/PlayerBotAI.cs` | Expose current activity, destination name, and hop queue as readable properties for `[botinfo` display. ~20 lines. |
+| `Data/NavGraph.xml` | No changes. |
+| `Scripts/Mobiles/PlayerBot/PlayerBotNavigator.cs` | No changes. |
+
+**Total estimated additions: ~370 lines of C#.**
