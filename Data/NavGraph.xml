@@ -864,6 +864,254 @@
     <Node name="CompassionBridge2NorthBrit_56" x="1789" y="1250" z="0" map="Felucca" routing="true" />
     <Node name="CompassionBridge2NorthBrit_57" x="1797" y="1258" z="0" map="Felucca" routing="true" />
     <Node name="CompassionBridge2NorthBrit_58" x="1803" y="1266" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_01" x="514" y="1569" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_02" x="513" y="1575" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_03" x="507" y="1580" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_04" x="501" y="1585" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_05" x="495" y="1591" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_06" x="492" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_07" x="486" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_08" x="476" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_09" x="470" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_10" x="464" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_11" x="457" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_12" x="451" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_13" x="445" y="1595" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_14" x="440" y="1593" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_15" x="435" y="1588" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_16" x="430" y="1584" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_17" x="426" y="1581" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_18" x="414" y="1573" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_19" x="405" y="1576" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_20" x="402" y="1570" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_21" x="395" y="1561" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_22" x="388" y="1559" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_23" x="381" y="1558" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_24" x="375" y="1555" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_25" x="367" y="1550" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_26" x="358" y="1550" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_27" x="350" y="1542" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_28" x="345" y="1534" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_29" x="342" y="1527" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_30" x="337" y="1520" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_31" x="333" y="1513" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_32" x="328" y="1505" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_33" x="321" y="1499" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_34" x="321" y="1489" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_35" x="321" y="1483" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_36" x="325" y="1478" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_37" x="332" y="1474" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_38" x="340" y="1472" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_39" x="348" y="1469" z="1" map="Felucca" routing="true" />
+    <Node name="Shame2Road_40" x="361" y="1469" z="2" map="Felucca" routing="true" />
+    <Node name="Shame2Road_41" x="372" y="1469" z="3" map="Felucca" routing="true" />
+    <Node name="Shame2Road_42" x="378" y="1462" z="3" map="Felucca" routing="true" />
+    <Node name="Shame2Road_43" x="393" y="1450" z="2" map="Felucca" routing="true" />
+    <Node name="Shame2Road_44" x="402" y="1445" z="1" map="Felucca" routing="true" />
+    <Node name="Shame2Road_45" x="410" y="1441" z="1" map="Felucca" routing="true" />
+    <Node name="Shame2Road_46" x="418" y="1439" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_47" x="427" y="1435" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_48" x="436" y="1426" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_49" x="441" y="1428" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_50" x="451" y="1423" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_51" x="459" y="1420" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_52" x="466" y="1414" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_53" x="471" y="1414" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_54" x="479" y="1416" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_55" x="486" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_56" x="498" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_57" x="509" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_58" x="526" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_59" x="537" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_60" x="553" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_61" x="574" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_62" x="591" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_63" x="606" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_64" x="619" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_65" x="635" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_66" x="649" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_67" x="661" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_68" x="674" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_69" x="688" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="Shame2Road_70" x="708" y="1417" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_01" x="1388" y="1903" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_02" x="1382" y="1914" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_03" x="1374" y="1921" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_04" x="1363" y="1923" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_05" x="1356" y="1929" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_06" x="1349" y="1936" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_07" x="1347" y="1948" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_08" x="1348" y="1955" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_09" x="1351" y="1964" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_10" x="1356" y="1971" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_11" x="1363" y="1976" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_12" x="1374" y="1987" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_13" x="1382" y="1995" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_14" x="1384" y="2004" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_15" x="1390" y="2011" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_16" x="1394" y="2029" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_17" x="1395" y="2046" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_18" x="1399" y="2054" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_19" x="1408" y="2063" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_20" x="1419" y="2064" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_21" x="1425" y="2059" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_22" x="1433" y="2061" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_23" x="1434" y="2067" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_24" x="1428" y="2074" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_25" x="1428" y="2082" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_26" x="1437" y="2090" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_27" x="1433" y="2102" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_28" x="1432" y="2110" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_29" x="1442" y="2112" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_30" x="1450" y="2118" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_31" x="1457" y="2128" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_32" x="1466" y="2126" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_33" x="1471" y="2135" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_34" x="1473" y="2146" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_35" x="1473" y="2156" z="6" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_36" x="1473" y="2161" z="6" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_37" x="1482" y="2161" z="6" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_38" x="1482" y="2167" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_39" x="1487" y="2172" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_40" x="1491" y="2177" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_41" x="1498" y="2175" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_42" x="1504" y="2178" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_43" x="1496" y="2190" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_44" x="1495" y="2199" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_45" x="1499" y="2207" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_46" x="1496" y="2216" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_47" x="1490" y="2224" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_48" x="1489" y="2235" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_49" x="1492" y="2243" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_50" x="1501" y="2245" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_51" x="1509" y="2242" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_52" x="1521" y="2244" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_53" x="1533" y="2246" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_54" x="1541" y="2250" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_55" x="1547" y="2257" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_56" x="1560" y="2261" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_57" x="1560" y="2274" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_58" x="1562" y="2285" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_59" x="1576" y="2287" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_60" x="1587" y="2286" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_61" x="1598" y="2277" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_62" x="1603" y="2266" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_63" x="1608" y="2259" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_64" x="1616" y="2268" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_65" x="1618" y="2278" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_66" x="1613" y="2287" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_67" x="1604" y="2300" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_68" x="1613" y="2313" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_69" x="1627" y="2315" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_70" x="1634" y="2325" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_71" x="1629" y="2336" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_72" x="1643" y="2351" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_73" x="1647" y="2363" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_74" x="1643" y="2370" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_75" x="1635" y="2373" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_76" x="1622" y="2369" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_77" x="1614" y="2370" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_78" x="1611" y="2378" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_79" x="1604" y="2388" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_80" x="1601" y="2401" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_81" x="1599" y="2409" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_82" x="1603" y="2417" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_83" x="1611" y="2422" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_84" x="1618" y="2426" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_85" x="1629" y="2434" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_86" x="1634" y="2446" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_87" x="1639" y="2456" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_88" x="1648" y="2460" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_89" x="1657" y="2464" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_90" x="1668" y="2470" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_91" x="1670" y="2481" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_92" x="1667" y="2489" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_93" x="1668" y="2497" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_94" x="1667" y="2502" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_95" x="1666" y="2514" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_96" x="1663" y="2522" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_97" x="1660" y="2530" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_98" x="1663" y="2541" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_99" x="1659" y="2552" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_100" x="1662" y="2560" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_101" x="1664" y="2573" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_102" x="1667" y="2585" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_103" x="1667" y="2600" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_104" x="1672" y="2613" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_105" x="1680" y="2624" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_106" x="1687" y="2635" z="2" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_107" x="1704" y="2646" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_108" x="1707" y="2659" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_109" x="1707" y="2668" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_110" x="1703" y="2677" z="7" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_111" x="1703" y="2690" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_112" x="1709" y="2700" z="7" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_113" x="1704" y="2710" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_114" x="1702" y="2719" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_115" x="1699" y="2727" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_116" x="1691" y="2740" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_117" x="1690" y="2749" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_118" x="1692" y="2758" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_119" x="1695" y="2764" z="8" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_120" x="1704" y="2773" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_121" x="1711" y="2778" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_122" x="1721" y="2782" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_123" x="1732" y="2785" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_124" x="1743" y="2787" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_125" x="1751" y="2790" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_126" x="1758" y="2790" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_127" x="1764" y="2796" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_128" x="1772" y="2797" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_129" x="1777" y="2794" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_130" x="1784" y="2787" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_131" x="1791" y="2786" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_132" x="1799" y="2783" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_133" x="1806" y="2781" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_134" x="1813" y="2781" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_135" x="1822" y="2781" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_136" x="1828" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_137" x="1837" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_138" x="1846" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_139" x="1855" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_140" x="1866" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_141" x="1876" y="2780" z="10" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_142" x="1886" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_143" x="1894" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_144" x="1905" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_145" x="1915" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Trinsic_146" x="1926" y="2780" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_01" x="1669" y="2947" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_02" x="1662" y="2937" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_03" x="1656" y="2932" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_04" x="1653" y="2922" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_05" x="1649" y="2911" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_06" x="1647" y="2903" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_07" x="1648" y="2894" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_08" x="1652" y="2891" z="-1" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_09" x="1652" y="2882" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_10" x="1655" y="2876" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_11" x="1659" y="2872" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_12" x="1671" y="2864" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_13" x="1679" y="2858" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_14" x="1691" y="2848" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_15" x="1707" y="2832" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_16" x="1721" y="2821" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_17" x="1731" y="2807" z="0" map="Felucca" routing="true" />
+    <Node name="HiddenValley2Trinsic_18" x="1747" y="2792" z="5" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_01" x="1386" y="1881" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_02" x="1379" y="1876" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_03" x="1374" y="1871" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_04" x="1368" y="1870" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_05" x="1362" y="1864" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_06" x="1360" y="1857" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_07" x="1360" y="1850" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_08" x="1359" y="1839" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_09" x="1363" y="1832" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_10" x="1366" y="1819" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_11" x="1373" y="1809" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_12" x="1375" y="1796" z="0" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_13" x="1372" y="1789" z="15" map="Felucca" routing="true" />
+    <Node name="BritTrinsicXroad2Brit_14" x="1364" y="1777" z="15" map="Felucca" routing="true" />
   </Nodes>
   <Edges>
     <Edge a="Britain" b="Britain2Minoc_01" />
@@ -1751,5 +1999,260 @@
     <Edge a="CompassionBridge2NorthBrit_56" b="CompassionBridge2NorthBrit_57" />
     <Edge a="CompassionBridge2NorthBrit_57" b="CompassionBridge2NorthBrit_58" />
     <Edge a="CompassionBridge2NorthBrit_58" b="Britain2Minoc_67" />
+    <Edge a="YewCemetery" b="Yew2Britain_26" />
+    <Edge a="Shame" b="Shame2Road_01" />
+    <Edge a="Shame2Road_01" b="Shame2Road_02" />
+    <Edge a="Shame2Road_02" b="Shame2Road_03" />
+    <Edge a="Shame2Road_03" b="Shame2Road_04" />
+    <Edge a="Shame2Road_04" b="Shame2Road_05" />
+    <Edge a="Shame2Road_05" b="Shame2Road_06" />
+    <Edge a="Shame2Road_06" b="Shame2Road_07" />
+    <Edge a="Shame2Road_07" b="Shame2Road_08" />
+    <Edge a="Shame2Road_08" b="Shame2Road_09" />
+    <Edge a="Shame2Road_09" b="Shame2Road_10" />
+    <Edge a="Shame2Road_10" b="Shame2Road_11" />
+    <Edge a="Shame2Road_11" b="Shame2Road_12" />
+    <Edge a="Shame2Road_12" b="Shame2Road_13" />
+    <Edge a="Shame2Road_13" b="Shame2Road_14" />
+    <Edge a="Shame2Road_14" b="Shame2Road_15" />
+    <Edge a="Shame2Road_15" b="Shame2Road_16" />
+    <Edge a="Shame2Road_16" b="Shame2Road_17" />
+    <Edge a="Shame2Road_17" b="Shame2Road_18" />
+    <Edge a="Shame2Road_18" b="Shame2Road_19" />
+    <Edge a="Shame2Road_19" b="Shame2Road_20" />
+    <Edge a="Shame2Road_20" b="Shame2Road_21" />
+    <Edge a="Shame2Road_21" b="Shame2Road_22" />
+    <Edge a="Shame2Road_22" b="Shame2Road_23" />
+    <Edge a="Shame2Road_23" b="Shame2Road_24" />
+    <Edge a="Shame2Road_24" b="Shame2Road_25" />
+    <Edge a="Shame2Road_25" b="Shame2Road_26" />
+    <Edge a="Shame2Road_26" b="Shame2Road_27" />
+    <Edge a="Shame2Road_27" b="Shame2Road_28" />
+    <Edge a="Shame2Road_28" b="Shame2Road_29" />
+    <Edge a="Shame2Road_29" b="Shame2Road_30" />
+    <Edge a="Shame2Road_30" b="Shame2Road_31" />
+    <Edge a="Shame2Road_31" b="Shame2Road_32" />
+    <Edge a="Shame2Road_32" b="Shame2Road_33" />
+    <Edge a="Shame2Road_33" b="Shame2Road_34" />
+    <Edge a="Shame2Road_34" b="Shame2Road_35" />
+    <Edge a="Shame2Road_35" b="Shame2Road_36" />
+    <Edge a="Shame2Road_36" b="Shame2Road_37" />
+    <Edge a="Shame2Road_37" b="Shame2Road_38" />
+    <Edge a="Shame2Road_38" b="Shame2Road_39" />
+    <Edge a="Shame2Road_39" b="Shame2Road_40" />
+    <Edge a="Shame2Road_40" b="Shame2Road_41" />
+    <Edge a="Shame2Road_41" b="Shame2Road_42" />
+    <Edge a="Shame2Road_42" b="Shame2Road_43" />
+    <Edge a="Shame2Road_43" b="Shame2Road_44" />
+    <Edge a="Shame2Road_44" b="Shame2Road_45" />
+    <Edge a="Shame2Road_45" b="Shame2Road_46" />
+    <Edge a="Shame2Road_46" b="Shame2Road_47" />
+    <Edge a="Shame2Road_47" b="Shame2Road_48" />
+    <Edge a="Shame2Road_48" b="Shame2Road_49" />
+    <Edge a="Shame2Road_49" b="Shame2Road_50" />
+    <Edge a="Shame2Road_50" b="Shame2Road_51" />
+    <Edge a="Shame2Road_51" b="Shame2Road_52" />
+    <Edge a="Shame2Road_52" b="Shame2Road_53" />
+    <Edge a="Shame2Road_53" b="Shame2Road_54" />
+    <Edge a="Shame2Road_54" b="Shame2Road_55" />
+    <Edge a="Shame2Road_55" b="Shame2Road_56" />
+    <Edge a="Shame2Road_56" b="Shame2Road_57" />
+    <Edge a="Shame2Road_57" b="Shame2Road_58" />
+    <Edge a="Shame2Road_58" b="Shame2Road_59" />
+    <Edge a="Shame2Road_59" b="Shame2Road_60" />
+    <Edge a="Shame2Road_60" b="Shame2Road_61" />
+    <Edge a="Shame2Road_61" b="Shame2Road_62" />
+    <Edge a="Shame2Road_62" b="Shame2Road_63" />
+    <Edge a="Shame2Road_63" b="Shame2Road_64" />
+    <Edge a="Shame2Road_64" b="Shame2Road_65" />
+    <Edge a="Shame2Road_65" b="Shame2Road_66" />
+    <Edge a="Shame2Road_66" b="Shame2Road_67" />
+    <Edge a="Shame2Road_67" b="Shame2Road_68" />
+    <Edge a="Shame2Road_68" b="Shame2Road_69" />
+    <Edge a="Shame2Road_69" b="Shame2Road_70" />
+    <Edge a="Shame2Road_70" b="Yew2Britain_78" />
+    <Edge a="EastMines" b="MinocMiningCamp2Minoc_06" />
+    <Edge a="Minoc" b="MinocNorth" />
+    <Edge a="BritTrinsicXroad" b="BritTrinsicXroad2Trinsic_01" />
+    <Edge a="BritTrinsicXroad2Trinsic_01" b="BritTrinsicXroad2Trinsic_02" />
+    <Edge a="BritTrinsicXroad2Trinsic_02" b="BritTrinsicXroad2Trinsic_03" />
+    <Edge a="BritTrinsicXroad2Trinsic_03" b="BritTrinsicXroad2Trinsic_04" />
+    <Edge a="BritTrinsicXroad2Trinsic_04" b="BritTrinsicXroad2Trinsic_05" />
+    <Edge a="BritTrinsicXroad2Trinsic_05" b="BritTrinsicXroad2Trinsic_06" />
+    <Edge a="BritTrinsicXroad2Trinsic_06" b="BritTrinsicXroad2Trinsic_07" />
+    <Edge a="BritTrinsicXroad2Trinsic_07" b="BritTrinsicXroad2Trinsic_08" />
+    <Edge a="BritTrinsicXroad2Trinsic_08" b="BritTrinsicXroad2Trinsic_09" />
+    <Edge a="BritTrinsicXroad2Trinsic_09" b="BritTrinsicXroad2Trinsic_10" />
+    <Edge a="BritTrinsicXroad2Trinsic_10" b="BritTrinsicXroad2Trinsic_11" />
+    <Edge a="BritTrinsicXroad2Trinsic_11" b="BritTrinsicXroad2Trinsic_12" />
+    <Edge a="BritTrinsicXroad2Trinsic_12" b="BritTrinsicXroad2Trinsic_13" />
+    <Edge a="BritTrinsicXroad2Trinsic_13" b="BritTrinsicXroad2Trinsic_14" />
+    <Edge a="BritTrinsicXroad2Trinsic_14" b="BritTrinsicXroad2Trinsic_15" />
+    <Edge a="BritTrinsicXroad2Trinsic_15" b="BritTrinsicXroad2Trinsic_16" />
+    <Edge a="BritTrinsicXroad2Trinsic_16" b="BritTrinsicXroad2Trinsic_17" />
+    <Edge a="BritTrinsicXroad2Trinsic_17" b="BritTrinsicXroad2Trinsic_18" />
+    <Edge a="BritTrinsicXroad2Trinsic_18" b="BritTrinsicXroad2Trinsic_19" />
+    <Edge a="BritTrinsicXroad2Trinsic_19" b="BritTrinsicXroad2Trinsic_20" />
+    <Edge a="BritTrinsicXroad2Trinsic_20" b="BritTrinsicXroad2Trinsic_21" />
+    <Edge a="BritTrinsicXroad2Trinsic_21" b="BritTrinsicXroad2Trinsic_22" />
+    <Edge a="BritTrinsicXroad2Trinsic_22" b="BritTrinsicXroad2Trinsic_23" />
+    <Edge a="BritTrinsicXroad2Trinsic_23" b="BritTrinsicXroad2Trinsic_24" />
+    <Edge a="BritTrinsicXroad2Trinsic_24" b="BritTrinsicXroad2Trinsic_25" />
+    <Edge a="BritTrinsicXroad2Trinsic_25" b="BritTrinsicXroad2Trinsic_26" />
+    <Edge a="BritTrinsicXroad2Trinsic_26" b="BritTrinsicXroad2Trinsic_27" />
+    <Edge a="BritTrinsicXroad2Trinsic_27" b="BritTrinsicXroad2Trinsic_28" />
+    <Edge a="BritTrinsicXroad2Trinsic_28" b="BritTrinsicXroad2Trinsic_29" />
+    <Edge a="BritTrinsicXroad2Trinsic_29" b="BritTrinsicXroad2Trinsic_30" />
+    <Edge a="BritTrinsicXroad2Trinsic_30" b="BritTrinsicXroad2Trinsic_31" />
+    <Edge a="BritTrinsicXroad2Trinsic_31" b="BritTrinsicXroad2Trinsic_32" />
+    <Edge a="BritTrinsicXroad2Trinsic_32" b="BritTrinsicXroad2Trinsic_33" />
+    <Edge a="BritTrinsicXroad2Trinsic_33" b="BritTrinsicXroad2Trinsic_34" />
+    <Edge a="BritTrinsicXroad2Trinsic_34" b="BritTrinsicXroad2Trinsic_35" />
+    <Edge a="BritTrinsicXroad2Trinsic_35" b="BritTrinsicXroad2Trinsic_36" />
+    <Edge a="BritTrinsicXroad2Trinsic_36" b="BritTrinsicXroad2Trinsic_37" />
+    <Edge a="BritTrinsicXroad2Trinsic_37" b="BritTrinsicXroad2Trinsic_38" />
+    <Edge a="BritTrinsicXroad2Trinsic_38" b="BritTrinsicXroad2Trinsic_39" />
+    <Edge a="BritTrinsicXroad2Trinsic_39" b="BritTrinsicXroad2Trinsic_40" />
+    <Edge a="BritTrinsicXroad2Trinsic_40" b="BritTrinsicXroad2Trinsic_41" />
+    <Edge a="BritTrinsicXroad2Trinsic_41" b="BritTrinsicXroad2Trinsic_42" />
+    <Edge a="BritTrinsicXroad2Trinsic_42" b="BritTrinsicXroad2Trinsic_43" />
+    <Edge a="BritTrinsicXroad2Trinsic_43" b="BritTrinsicXroad2Trinsic_44" />
+    <Edge a="BritTrinsicXroad2Trinsic_44" b="BritTrinsicXroad2Trinsic_45" />
+    <Edge a="BritTrinsicXroad2Trinsic_45" b="BritTrinsicXroad2Trinsic_46" />
+    <Edge a="BritTrinsicXroad2Trinsic_46" b="BritTrinsicXroad2Trinsic_47" />
+    <Edge a="BritTrinsicXroad2Trinsic_47" b="BritTrinsicXroad2Trinsic_48" />
+    <Edge a="BritTrinsicXroad2Trinsic_48" b="BritTrinsicXroad2Trinsic_49" />
+    <Edge a="BritTrinsicXroad2Trinsic_49" b="BritTrinsicXroad2Trinsic_50" />
+    <Edge a="BritTrinsicXroad2Trinsic_50" b="BritTrinsicXroad2Trinsic_51" />
+    <Edge a="BritTrinsicXroad2Trinsic_51" b="BritTrinsicXroad2Trinsic_52" />
+    <Edge a="BritTrinsicXroad2Trinsic_52" b="BritTrinsicXroad2Trinsic_53" />
+    <Edge a="BritTrinsicXroad2Trinsic_53" b="BritTrinsicXroad2Trinsic_54" />
+    <Edge a="BritTrinsicXroad2Trinsic_54" b="BritTrinsicXroad2Trinsic_55" />
+    <Edge a="BritTrinsicXroad2Trinsic_55" b="BritTrinsicXroad2Trinsic_56" />
+    <Edge a="BritTrinsicXroad2Trinsic_56" b="BritTrinsicXroad2Trinsic_57" />
+    <Edge a="BritTrinsicXroad2Trinsic_57" b="BritTrinsicXroad2Trinsic_58" />
+    <Edge a="BritTrinsicXroad2Trinsic_58" b="BritTrinsicXroad2Trinsic_59" />
+    <Edge a="BritTrinsicXroad2Trinsic_59" b="BritTrinsicXroad2Trinsic_60" />
+    <Edge a="BritTrinsicXroad2Trinsic_60" b="BritTrinsicXroad2Trinsic_61" />
+    <Edge a="BritTrinsicXroad2Trinsic_61" b="BritTrinsicXroad2Trinsic_62" />
+    <Edge a="BritTrinsicXroad2Trinsic_62" b="BritTrinsicXroad2Trinsic_63" />
+    <Edge a="BritTrinsicXroad2Trinsic_63" b="BritTrinsicXroad2Trinsic_64" />
+    <Edge a="BritTrinsicXroad2Trinsic_64" b="BritTrinsicXroad2Trinsic_65" />
+    <Edge a="BritTrinsicXroad2Trinsic_65" b="BritTrinsicXroad2Trinsic_66" />
+    <Edge a="BritTrinsicXroad2Trinsic_66" b="BritTrinsicXroad2Trinsic_67" />
+    <Edge a="BritTrinsicXroad2Trinsic_67" b="BritTrinsicXroad2Trinsic_68" />
+    <Edge a="BritTrinsicXroad2Trinsic_68" b="BritTrinsicXroad2Trinsic_69" />
+    <Edge a="BritTrinsicXroad2Trinsic_69" b="BritTrinsicXroad2Trinsic_70" />
+    <Edge a="BritTrinsicXroad2Trinsic_70" b="BritTrinsicXroad2Trinsic_71" />
+    <Edge a="BritTrinsicXroad2Trinsic_71" b="BritTrinsicXroad2Trinsic_72" />
+    <Edge a="BritTrinsicXroad2Trinsic_72" b="BritTrinsicXroad2Trinsic_73" />
+    <Edge a="BritTrinsicXroad2Trinsic_73" b="BritTrinsicXroad2Trinsic_74" />
+    <Edge a="BritTrinsicXroad2Trinsic_74" b="BritTrinsicXroad2Trinsic_75" />
+    <Edge a="BritTrinsicXroad2Trinsic_75" b="BritTrinsicXroad2Trinsic_76" />
+    <Edge a="BritTrinsicXroad2Trinsic_76" b="BritTrinsicXroad2Trinsic_77" />
+    <Edge a="BritTrinsicXroad2Trinsic_77" b="BritTrinsicXroad2Trinsic_78" />
+    <Edge a="BritTrinsicXroad2Trinsic_78" b="BritTrinsicXroad2Trinsic_79" />
+    <Edge a="BritTrinsicXroad2Trinsic_79" b="BritTrinsicXroad2Trinsic_80" />
+    <Edge a="BritTrinsicXroad2Trinsic_80" b="BritTrinsicXroad2Trinsic_81" />
+    <Edge a="BritTrinsicXroad2Trinsic_81" b="BritTrinsicXroad2Trinsic_82" />
+    <Edge a="BritTrinsicXroad2Trinsic_82" b="BritTrinsicXroad2Trinsic_83" />
+    <Edge a="BritTrinsicXroad2Trinsic_83" b="BritTrinsicXroad2Trinsic_84" />
+    <Edge a="BritTrinsicXroad2Trinsic_84" b="BritTrinsicXroad2Trinsic_85" />
+    <Edge a="BritTrinsicXroad2Trinsic_85" b="BritTrinsicXroad2Trinsic_86" />
+    <Edge a="BritTrinsicXroad2Trinsic_86" b="BritTrinsicXroad2Trinsic_87" />
+    <Edge a="BritTrinsicXroad2Trinsic_87" b="BritTrinsicXroad2Trinsic_88" />
+    <Edge a="BritTrinsicXroad2Trinsic_88" b="BritTrinsicXroad2Trinsic_89" />
+    <Edge a="BritTrinsicXroad2Trinsic_89" b="BritTrinsicXroad2Trinsic_90" />
+    <Edge a="BritTrinsicXroad2Trinsic_90" b="BritTrinsicXroad2Trinsic_91" />
+    <Edge a="BritTrinsicXroad2Trinsic_91" b="BritTrinsicXroad2Trinsic_92" />
+    <Edge a="BritTrinsicXroad2Trinsic_92" b="BritTrinsicXroad2Trinsic_93" />
+    <Edge a="BritTrinsicXroad2Trinsic_93" b="BritTrinsicXroad2Trinsic_94" />
+    <Edge a="BritTrinsicXroad2Trinsic_94" b="BritTrinsicXroad2Trinsic_95" />
+    <Edge a="BritTrinsicXroad2Trinsic_95" b="BritTrinsicXroad2Trinsic_96" />
+    <Edge a="BritTrinsicXroad2Trinsic_96" b="BritTrinsicXroad2Trinsic_97" />
+    <Edge a="BritTrinsicXroad2Trinsic_97" b="BritTrinsicXroad2Trinsic_98" />
+    <Edge a="BritTrinsicXroad2Trinsic_98" b="BritTrinsicXroad2Trinsic_99" />
+    <Edge a="BritTrinsicXroad2Trinsic_99" b="BritTrinsicXroad2Trinsic_100" />
+    <Edge a="BritTrinsicXroad2Trinsic_100" b="BritTrinsicXroad2Trinsic_101" />
+    <Edge a="BritTrinsicXroad2Trinsic_101" b="BritTrinsicXroad2Trinsic_102" />
+    <Edge a="BritTrinsicXroad2Trinsic_102" b="BritTrinsicXroad2Trinsic_103" />
+    <Edge a="BritTrinsicXroad2Trinsic_103" b="BritTrinsicXroad2Trinsic_104" />
+    <Edge a="BritTrinsicXroad2Trinsic_104" b="BritTrinsicXroad2Trinsic_105" />
+    <Edge a="BritTrinsicXroad2Trinsic_105" b="BritTrinsicXroad2Trinsic_106" />
+    <Edge a="BritTrinsicXroad2Trinsic_106" b="BritTrinsicXroad2Trinsic_107" />
+    <Edge a="BritTrinsicXroad2Trinsic_107" b="BritTrinsicXroad2Trinsic_108" />
+    <Edge a="BritTrinsicXroad2Trinsic_108" b="BritTrinsicXroad2Trinsic_109" />
+    <Edge a="BritTrinsicXroad2Trinsic_109" b="BritTrinsicXroad2Trinsic_110" />
+    <Edge a="BritTrinsicXroad2Trinsic_110" b="BritTrinsicXroad2Trinsic_111" />
+    <Edge a="BritTrinsicXroad2Trinsic_111" b="BritTrinsicXroad2Trinsic_112" />
+    <Edge a="BritTrinsicXroad2Trinsic_112" b="BritTrinsicXroad2Trinsic_113" />
+    <Edge a="BritTrinsicXroad2Trinsic_113" b="BritTrinsicXroad2Trinsic_114" />
+    <Edge a="BritTrinsicXroad2Trinsic_114" b="BritTrinsicXroad2Trinsic_115" />
+    <Edge a="BritTrinsicXroad2Trinsic_115" b="BritTrinsicXroad2Trinsic_116" />
+    <Edge a="BritTrinsicXroad2Trinsic_116" b="BritTrinsicXroad2Trinsic_117" />
+    <Edge a="BritTrinsicXroad2Trinsic_117" b="BritTrinsicXroad2Trinsic_118" />
+    <Edge a="BritTrinsicXroad2Trinsic_118" b="BritTrinsicXroad2Trinsic_119" />
+    <Edge a="BritTrinsicXroad2Trinsic_119" b="BritTrinsicXroad2Trinsic_120" />
+    <Edge a="BritTrinsicXroad2Trinsic_120" b="BritTrinsicXroad2Trinsic_121" />
+    <Edge a="BritTrinsicXroad2Trinsic_121" b="BritTrinsicXroad2Trinsic_122" />
+    <Edge a="BritTrinsicXroad2Trinsic_122" b="BritTrinsicXroad2Trinsic_123" />
+    <Edge a="BritTrinsicXroad2Trinsic_123" b="BritTrinsicXroad2Trinsic_124" />
+    <Edge a="BritTrinsicXroad2Trinsic_124" b="BritTrinsicXroad2Trinsic_125" />
+    <Edge a="BritTrinsicXroad2Trinsic_125" b="BritTrinsicXroad2Trinsic_126" />
+    <Edge a="BritTrinsicXroad2Trinsic_126" b="BritTrinsicXroad2Trinsic_127" />
+    <Edge a="BritTrinsicXroad2Trinsic_127" b="BritTrinsicXroad2Trinsic_128" />
+    <Edge a="BritTrinsicXroad2Trinsic_128" b="BritTrinsicXroad2Trinsic_129" />
+    <Edge a="BritTrinsicXroad2Trinsic_129" b="BritTrinsicXroad2Trinsic_130" />
+    <Edge a="BritTrinsicXroad2Trinsic_130" b="BritTrinsicXroad2Trinsic_131" />
+    <Edge a="BritTrinsicXroad2Trinsic_131" b="BritTrinsicXroad2Trinsic_132" />
+    <Edge a="BritTrinsicXroad2Trinsic_132" b="BritTrinsicXroad2Trinsic_133" />
+    <Edge a="BritTrinsicXroad2Trinsic_133" b="BritTrinsicXroad2Trinsic_134" />
+    <Edge a="BritTrinsicXroad2Trinsic_134" b="BritTrinsicXroad2Trinsic_135" />
+    <Edge a="BritTrinsicXroad2Trinsic_135" b="BritTrinsicXroad2Trinsic_136" />
+    <Edge a="BritTrinsicXroad2Trinsic_136" b="BritTrinsicXroad2Trinsic_137" />
+    <Edge a="BritTrinsicXroad2Trinsic_137" b="BritTrinsicXroad2Trinsic_138" />
+    <Edge a="BritTrinsicXroad2Trinsic_138" b="BritTrinsicXroad2Trinsic_139" />
+    <Edge a="BritTrinsicXroad2Trinsic_139" b="BritTrinsicXroad2Trinsic_140" />
+    <Edge a="BritTrinsicXroad2Trinsic_140" b="BritTrinsicXroad2Trinsic_141" />
+    <Edge a="BritTrinsicXroad2Trinsic_141" b="BritTrinsicXroad2Trinsic_142" />
+    <Edge a="BritTrinsicXroad2Trinsic_142" b="BritTrinsicXroad2Trinsic_143" />
+    <Edge a="BritTrinsicXroad2Trinsic_143" b="BritTrinsicXroad2Trinsic_144" />
+    <Edge a="BritTrinsicXroad2Trinsic_144" b="BritTrinsicXroad2Trinsic_145" />
+    <Edge a="BritTrinsicXroad2Trinsic_145" b="BritTrinsicXroad2Trinsic_146" />
+    <Edge a="BritTrinsicXroad2Trinsic_146" b="Trinsic" />
+    <Edge a="HiddenValley" b="HiddenValley2Trinsic_01" />
+    <Edge a="HiddenValley2Trinsic_01" b="HiddenValley2Trinsic_02" />
+    <Edge a="HiddenValley2Trinsic_02" b="HiddenValley2Trinsic_03" />
+    <Edge a="HiddenValley2Trinsic_03" b="HiddenValley2Trinsic_04" />
+    <Edge a="HiddenValley2Trinsic_04" b="HiddenValley2Trinsic_05" />
+    <Edge a="HiddenValley2Trinsic_05" b="HiddenValley2Trinsic_06" />
+    <Edge a="HiddenValley2Trinsic_06" b="HiddenValley2Trinsic_07" />
+    <Edge a="HiddenValley2Trinsic_07" b="HiddenValley2Trinsic_08" />
+    <Edge a="HiddenValley2Trinsic_08" b="HiddenValley2Trinsic_09" />
+    <Edge a="HiddenValley2Trinsic_09" b="HiddenValley2Trinsic_10" />
+    <Edge a="HiddenValley2Trinsic_10" b="HiddenValley2Trinsic_11" />
+    <Edge a="HiddenValley2Trinsic_11" b="HiddenValley2Trinsic_12" />
+    <Edge a="HiddenValley2Trinsic_12" b="HiddenValley2Trinsic_13" />
+    <Edge a="HiddenValley2Trinsic_13" b="HiddenValley2Trinsic_14" />
+    <Edge a="HiddenValley2Trinsic_14" b="HiddenValley2Trinsic_15" />
+    <Edge a="HiddenValley2Trinsic_15" b="HiddenValley2Trinsic_16" />
+    <Edge a="HiddenValley2Trinsic_16" b="HiddenValley2Trinsic_17" />
+    <Edge a="HiddenValley2Trinsic_17" b="HiddenValley2Trinsic_18" />
+    <Edge a="HiddenValley2Trinsic_18" b="BritTrinsicXroad2Trinsic_125" />
+    <Edge a="BritTrinsicXroad" b="BritTrinsicXroad2Brit_01" />
+    <Edge a="BritTrinsicXroad2Brit_01" b="BritTrinsicXroad2Brit_02" />
+    <Edge a="BritTrinsicXroad2Brit_02" b="BritTrinsicXroad2Brit_03" />
+    <Edge a="BritTrinsicXroad2Brit_03" b="BritTrinsicXroad2Brit_04" />
+    <Edge a="BritTrinsicXroad2Brit_04" b="BritTrinsicXroad2Brit_05" />
+    <Edge a="BritTrinsicXroad2Brit_05" b="BritTrinsicXroad2Brit_06" />
+    <Edge a="BritTrinsicXroad2Brit_06" b="BritTrinsicXroad2Brit_07" />
+    <Edge a="BritTrinsicXroad2Brit_07" b="BritTrinsicXroad2Brit_08" />
+    <Edge a="BritTrinsicXroad2Brit_08" b="BritTrinsicXroad2Brit_09" />
+    <Edge a="BritTrinsicXroad2Brit_09" b="BritTrinsicXroad2Brit_10" />
+    <Edge a="BritTrinsicXroad2Brit_10" b="BritTrinsicXroad2Brit_11" />
+    <Edge a="BritTrinsicXroad2Brit_11" b="BritTrinsicXroad2Brit_12" />
+    <Edge a="BritTrinsicXroad2Brit_12" b="BritTrinsicXroad2Brit_13" />
+    <Edge a="BritTrinsicXroad2Brit_13" b="BritTrinsicXroad2Brit_14" />
+    <Edge a="BritTrinsicXroad2Brit_14" b="Yew2Britain_181" />
   </Edges>
 </NavGraph>
