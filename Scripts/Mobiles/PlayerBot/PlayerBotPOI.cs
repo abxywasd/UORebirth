@@ -40,8 +40,8 @@ namespace Server.Mobiles
             // Towns — coordinates match PlayerBotNavigator landmarks
             Add( "Britain",            new Point3D( 1495, 1629, 10 ), Map.Felucca, BotPOIType.Town,           6, 30 );
             Add( "Trinsic",            new Point3D( 1907, 2760,  0 ), Map.Felucca, BotPOIType.Town,           4, 25 );
-            Add( "Vesper",             new Point3D( 2970,  688,  0 ), Map.Felucca, BotPOIType.Town,           3, 20 );
-            Add( "Minoc",              new Point3D( 2505,  544,  0 ), Map.Felucca, BotPOIType.Town,           3, 20 );
+            Add( "Vesper",             new Point3D( 2900,  685,  0 ), Map.Felucca, BotPOIType.Town,           3, 20 );
+            Add( "Minoc",              new Point3D( 2503,  562,  0 ), Map.Felucca, BotPOIType.Town,           3, 20 );
             Add( "Yew",                new Point3D(  546,  992,  0 ), Map.Felucca, BotPOIType.Town,           3, 20 );
             Add( "Cove",               new Point3D( 2259, 1206,  0 ), Map.Felucca, BotPOIType.Town,           2, 15 );
             Add( "Skara Brae",         new Point3D(  614, 2210,  0 ), Map.Felucca, BotPOIType.Town,           3, 20 );
@@ -53,18 +53,18 @@ namespace Server.Mobiles
 
             // Dungeon entrances
             Add( "Covetous entrance",  new Point3D( 2499,  918,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
-            Add( "Deceit entrance",    new Point3D( 1380, 1014,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
+            Add( "Deceit entrance",    new Point3D( 4111, 435,   5 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
             Add( "Despise entrance",   new Point3D( 1298, 1080,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
             Add( "Destard entrance",   new Point3D( 1176, 2640,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
-            Add( "Hythloth entrance",  new Point3D( 1473, 3502,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
-            Add( "Shame entrance",     new Point3D(  512, 1559,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
+            Add( "Hythloth entrance",  new Point3D( 4722, 3822,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
+            Add( "Shame entrance",     new Point3D(  514, 1562,  0 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
             Add( "Wrong entrance",     new Point3D( 2043,  236, 13 ), Map.Felucca, BotPOIType.DungeonEntrance, 2, 15 );
-            Add( "Orc Fort",           new Point3D( 2429, 1380,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 15 );
+            Add( "Orc Fort",           new Point3D( 2072, 1348,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 15 );
 
             // Road waypoints
-            Add( "South Britain road", new Point3D( 1660, 2100,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 20 );
-            Add( "East Britain road",  new Point3D( 2100, 1300,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 20 );
-            Add( "West crossroads",    new Point3D(  900, 1700,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 20 );
+            Add( "South Britain road", new Point3D( 1516, 2243,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 20 );
+            Add( "East Britain road",  new Point3D( 1788, 1285,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 20 );
+            Add( "West crossroads",    new Point3D( 1012, 1937,  0 ), Map.Felucca, BotPOIType.Crossroads,     2, 20 );
         }
 
         private static void Add( string name, Point3D loc, Map map, BotPOIType type, int maxBots, int radius )
