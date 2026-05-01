@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml;
 using Server;
 using Server.Commands;
+using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
@@ -266,19 +267,30 @@ namespace Server.Scripts.Commands
                 return;
             }
 
-            from.SendMessage( 0x55, "Node '{0}' ({1},{2}) — {3} edge(s):",
-                name, wp.Location.X, wp.Location.Y, neighbors.Count );
-
+            var rows = new List<NavNodeListGump.NavRow>();
             foreach ( string neighbor in neighbors )
             {
                 BotWaypoint nb = PlayerBotNavigator.GetLandmark( neighbor );
-                if ( nb == null ) { from.SendMessage( 0x55, "  -> {0} [MISSING]", neighbor ); continue; }
+                if ( nb == null ) continue;
+
                 double dx   = wp.Location.X - nb.Location.X;
                 double dy   = wp.Location.Y - nb.Location.Y;
                 double dist = Math.Sqrt( dx*dx + dy*dy );
-                string warn = dist > 300 ? " ← WARN" : "";
-                from.SendMessage( 0x55, "  <-> {0} ({1:F0} tiles){2}", neighbor, dist, warn );
+                string note = dist > 300
+                    ? string.Format( "{0:F0}t WARN", dist )
+                    : string.Format( "{0:F0} tiles", dist );
+
+                rows.Add( new NavNodeListGump.NavRow
+                {
+                    Name     = neighbor,
+                    Note     = note,
+                    Location = nb.Location,
+                    Map      = nb.Map
+                } );
             }
+
+            string title = string.Format( "{0} — {1} edge(s)", name, rows.Count );
+            from.SendGump( new NavNodeListGump( title, rows ) );
         }
 
         // ── connect ───────────────────────────────────────────────────────────────
@@ -701,8 +713,14 @@ namespace Server.Scripts.Commands
             candidates.Sort( ( a, b ) => a.Key.CompareTo( b.Key ) );
 
             int shown = Math.Min( count, candidates.Count );
-            from.SendMessage( 0x55, "Closest {0} node(s) to ({1},{2}):", shown, from.X, from.Y );
 
+            if ( shown == 0 )
+            {
+                from.SendMessage( 0x55, "No nodes on this map." );
+                return;
+            }
+
+            var rows = new List<NavNodeListGump.NavRow>();
             for ( int i = 0; i < shown; i++ )
             {
                 double      dist = candidates[i].Key;
@@ -712,40 +730,40 @@ namespace Server.Scripts.Commands
                 PlayerBotNavigator.Edges.TryGetValue( wp.Name, out neighbors );
                 int edgeCount = neighbors != null ? neighbors.Count : 0;
 
-                string edgeDesc = edgeCount == 0
-                    ? "isolated"
-                    : string.Join( ", ", neighbors.ToArray() );
+                string edgeInfo = edgeCount == 0 ? "isolated" : string.Format( "{0}e", edgeCount );
+                string routing  = wp.RoutingOnly ? " [rt]" : "";
+                string note     = string.Format( "{0:F0}t {1}{2}", dist, edgeInfo, routing );
 
-                string routing = wp.RoutingOnly ? " [routing]" : "";
-                from.SendMessage( 0x55,
-                    "  {0}. {1}{2} — {3:F0} tiles ({4},{5},{6}) | {7} edge(s): {8}",
-                    i + 1, wp.Name, routing,
-                    dist, wp.Location.X, wp.Location.Y, wp.Location.Z,
-                    edgeCount, edgeDesc );
+                rows.Add( new NavNodeListGump.NavRow
+                {
+                    Name     = wp.Name,
+                    Note     = note,
+                    Location = wp.Location,
+                    Map      = wp.Map
+                } );
             }
 
-            if ( candidates.Count == 0 )
-                from.SendMessage( 0x55, "  No nodes on this map." );
+            string title = string.Format( "Nearest {0} nodes to ({1},{2})", shown, from.X, from.Y );
+            from.SendGump( new NavNodeListGump( title, rows ) );
         }
 
         // ── isolated ── hardcoded landmarks with no edges ─────────────────────────
         private static void DoIsolated( CommandEventArgs e )
         {
-            Mobile from      = e.Mobile;
-            bool   showAll   = e.Length >= 2 && e.GetString( 1 ).ToLower() == "all";
+            Mobile from    = e.Mobile;
+            bool   showAll = e.Length >= 2 && e.GetString( 1 ).ToLower() == "all";
 
             var isolated = new List<BotWaypoint>();
 
             foreach ( BotWaypoint wp in PlayerBotNavigator.Landmarks.Values )
             {
-                if ( !showAll && wp.FromXml ) continue; // default: hardcoded only
+                if ( !showAll && wp.FromXml ) continue;
 
                 List<string> neighbors;
                 if ( !PlayerBotNavigator.Edges.TryGetValue( wp.Name, out neighbors ) || neighbors.Count == 0 )
                     isolated.Add( wp );
             }
 
-            // Sort: non-routing (destinations) first, then by tag, then by name
             isolated.Sort( ( a, b ) =>
             {
                 int r = a.RoutingOnly.CompareTo( b.RoutingOnly );
@@ -762,26 +780,24 @@ namespace Server.Scripts.Commands
                 return;
             }
 
-            from.SendMessage( 0x55, "{0} isolated {1} (no edges):", isolated.Count, scope );
-
-            WaypointTag lastTag = (WaypointTag)(-1);
+            var rows = new List<NavNodeListGump.NavRow>();
             foreach ( BotWaypoint wp in isolated )
             {
-                // Print a section header when the tag group changes
-                if ( wp.Tags != lastTag && !wp.RoutingOnly )
-                {
-                    lastTag = wp.Tags;
-                    from.SendMessage( 0x55, "  -- {0} --", wp.Tags == WaypointTag.None ? "Untagged" : wp.Tags.ToString() );
-                }
+                string note = wp.RoutingOnly
+                    ? "routing orphan"
+                    : (wp.Tags == WaypointTag.None ? "Untagged" : wp.Tags.ToString());
 
-                string suffix = wp.RoutingOnly ? " [routing orphan]" : "";
-                from.SendMessage( 0x55, "    {0}{1} ({2},{3},{4}) {5}",
-                    wp.Name, suffix,
-                    wp.Location.X, wp.Location.Y, wp.Location.Z,
-                    wp.Map );
+                rows.Add( new NavNodeListGump.NavRow
+                {
+                    Name     = wp.Name,
+                    Note     = note,
+                    Location = wp.Location,
+                    Map      = wp.Map
+                } );
             }
 
-            from.SendMessage( 0x55, "Use [navbuild goto <name> to jump to any of these." );
+            string title = string.Format( "Isolated {0} — {1} node(s)", scope, isolated.Count );
+            from.SendGump( new NavNodeListGump( title, rows ) );
         }
 
         // ── Trail mode ────────────────────────────────────────────────────────────

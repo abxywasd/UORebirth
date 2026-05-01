@@ -64,7 +64,9 @@ namespace Server.Mobiles
             Add( "SerpentsHold",     new Point3D( 3023, 3413, 15 ), Map.Felucca, WaypointTag.Town );
             Add( "SkaraBrae",        new Point3D(  576, 2200,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "Trinsic",          new Point3D( 1927, 2779,  0 ), Map.Felucca, WaypointTag.Town );
-            Add( "Vesper",           new Point3D( 2882,  788,  0 ), Map.Felucca, WaypointTag.Town );
+            Add( "VesperWest",       new Point3D( 2761,  972,  0 ), Map.Felucca, WaypointTag.Town );
+            Add( "VesperNorth",      new Point3D( 2907,  606,  0 ), Map.Felucca, WaypointTag.Town );
+            Add( "VesperDocks",      new Point3D( 3042,  828,  -3), Map.Felucca, WaypointTag.Town );
             Add( "Wind",             new Point3D( 5251,  134, 20 ), Map.Felucca, WaypointTag.Town | WaypointTag.LostLands );
             Add( "Yew",              new Point3D(  535,  992,  0 ), Map.Felucca, WaypointTag.Town );
 
@@ -182,6 +184,11 @@ namespace Server.Mobiles
             // No graveyard in Nujel'm wtf
             //Add( "NujelmCemetery",    new Point3D( 3557, 1262,  0 ), Map.Felucca, WaypointTag.Cemetery );
 
+            // Todo: New Implemented POIs to wire into the graph
+            Add( "VesperRuin",       new Point3D( 2582, 1120,  0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.PKHub );
+            Add( "CoveCemetery",     new Point3D( 2444, 1120,  8 ), Map.Felucca, WaypointTag.Cemetery | WaypointTag.PKHub );
+            Add( "CompassionBridge", new Point3D( 1866, 749,   0 ), Map.Felucca, WaypointTag.Wilderness | WaypointTag.PKHub );
+            //
             BuildGraph();
         }
 

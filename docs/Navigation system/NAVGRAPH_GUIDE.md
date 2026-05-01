@@ -71,7 +71,7 @@ Teleports you to a named node. Starting point for manual inspection.
 ```
 [navbuild edges <name>
 ```
-Lists all neighbors of a node with distances. Flags edges over 300 tiles.
+Opens a paginated Gump listing all neighbors of the node with distances. Rows with gaps over 300 tiles are flagged. Each row has a **Goto** button that teleports you to that neighbor and keeps the Gump open so you can inspect the full neighborhood.
 
 ```
 [navbuild rebuild
@@ -92,7 +92,7 @@ Spawns red gem markers (`NavNodeMarker`) at every node within range (default 600
 [navnearest [count]
 [navbuild nearest [count]
 ```
-Prints a sorted list of the closest N nodes (default 10) with distance, coordinates, and edge connections. The fastest way to orient yourself — run this first whenever you arrive at an area you want to work on.
+Opens a paginated Gump showing the closest N nodes (default 10), sorted by distance from your position. Each row displays the node name, distance and edge count, coordinates, and map. The **Goto** button teleports you to that node and keeps the Gump open. The fastest way to orient yourself — run this first whenever you arrive at an area you want to work on.
 
 ---
 
@@ -107,7 +107,7 @@ Runs A\* between two named nodes and prints every hop with distances. If it retu
 [navbuild isolated
 [navbuild isolated all
 ```
-Lists every hardcoded landmark (or, with `all`, every node) that has no edges. Output is grouped by tag category (Town, Dungeon, Shrine…) and sorted alphabetically within each group. This is your work order when starting a fresh graph — run it, pick a category, connect them one by one. Ends with `[navbuild goto <name>` reminder so you can jump straight to any listed node.
+Opens a paginated Gump listing every hardcoded landmark (or, with `all`, every node) that has no edges. Rows are grouped by tag category (Town, Dungeon, Shrine…) and sorted alphabetically within each group. Each row has a **Goto** button that teleports you directly to that node and keeps the Gump open so you can work through the list one by one. This is your work order when starting a fresh graph — run it, pick a category, connect them one by one.
 
 ```
 [navbuild export
@@ -149,7 +149,7 @@ Discards all nodes dropped this session, removes them from XML, rebuilds. Use wh
 ```
 [navbuild trail status
 ```
-Shows the active session: prefix, drop count, last node name/coords, and how far you currently are from the last drop.
+Shows the active session: prefix, drop count, minimum spacing, last node name/coords, and how far you currently are from the last drop.
 
 ---
 
@@ -206,10 +206,10 @@ Teleport to the POI. Run:
 [navnearest 10
 ```
 
-This shows the 10 closest nodes. You are looking for:
+This opens a Gump showing the 10 closest nodes. You are looking for:
 - Which existing node is the **nearest reachable neighbor** to the west, south, east, north
 - Whether there is already a node at or near this location (avoid duplicates)
-- Which nodes are isolated (shown as `isolated` in the edge list) — these are candidates for connection
+- Which nodes show `isolated` in the Note column — these orphans need wiring before you can use them as anchors
 
 Also run:
 ```
@@ -232,7 +232,7 @@ Or if bots should travel here (and you have set up the code):
 
 ### Step 4 — Find the nearest graph node to connect to
 
-From your `[navnearest` output, pick the closest node that is already part of the network (has edges). Note its name. Check the distance — if it's under 300 tiles and there is a clear overland path, you can connect directly.
+From your `[navnearest` Gump, pick the closest node that is already part of the network (has edges). Note its name. Check the distance — if it's under 300 tiles and there is a clear overland path, you can connect directly.
 
 ```
 [navbuild connect MyPOI <nearestNode>
@@ -248,12 +248,12 @@ If the distance is over 300 tiles, or if there is a mountain or water body in th
 
 If A\* finds a route, your node is connected. If it returns "no route found", there is still a gap somewhere between `MyPOI` and the rest of the network — usually because the nearest node you connected to is itself isolated.
 
-Check:
+Open the edges Gump for that node:
 ```
 [navbuild edges <nearestNode>
 ```
 
-If it says "isolated", you need to connect `nearestNode` into the network first, then re-run `[navtest`.
+If the Gump shows no rows (node is isolated), you need to connect `nearestNode` into the network first, then re-run `[navtest`.
 
 ---
 
@@ -264,7 +264,7 @@ You want to connect two existing nodes (or a POI to a node) across open terrain.
 ### The loop
 
 ```
-[navbuild trail start <prefix> <startNode>
+[navbuild trail start <prefix> <startNode> 5
   → walk toward the destination, staying on the road or overland path
 [navdrop
   → walk further
@@ -363,19 +363,19 @@ Watch the bot re-attempt the fixed segment.
 
 ## Workflow 4 — Fixing an isolated node
 
-`[navnearest` shows `isolated` next to a node that has no edges. These are orphans — they exist in the XML but no bot can ever route through them.
+`[navbuild isolated` lists every node that has no edges. These orphans exist in the graph but no bot can ever route through them.
 
 Causes:
 - Server restarted mid-trail (session was lost, XML nodes saved but edges not yet wired)
 - Manual `[navbuild addnode` without a subsequent `[navbuild connect`
 - A `[navbuild remove` on a node that was the only bridge between two others
 
-Fix:
+Fix — click **Goto** in the `[navbuild isolated` Gump to teleport directly to the node, then:
+
 ```
-[navbuild goto <isolatedNode>    ← teleport to it
-[navnearest 10                   ← see what's nearby
+[navnearest 10                              ← Gump shows what's nearby
 [navbuild connect <isolatedNode> <nearestNetworkNode>
-[navtest <isolatedNode> <anyTown>  ← confirm it's now reachable
+[navtest <isolatedNode> <anyTown>           ← confirm it's now reachable
 ```
 
 ---
@@ -384,7 +384,7 @@ Fix:
 
 | Distance | Guidance |
 |---|---|
-| < 30 tiles | Trail drop rejected (too close) |
+| < minDist | Trail drop rejected (default minimum: 30 tiles; use 5–10 for city work) |
 | 30–150 tiles | Ideal hop size for open road |
 | 150–300 tiles | Acceptable; consider terrain |
 | 300–500 tiles | Add 1–2 intermediate nodes |
@@ -400,7 +400,7 @@ Bots navigate by moving directly toward the next hop coordinate. If the hop is v
 The graph has no terrain awareness. If you place a node inside a mountain or on a water tile, bots will try to walk there and get stuck. Always confirm you are standing on walkable ground before dropping.
 
 **Forgetting to close a trail with `trail end` or `trail cancel`**
-The session persists until you close it. If the server restarts mid-trail, the session is lost but any XML-saved nodes remain as orphans. Run `[navnearest` in the area to find them and either wire them in or remove them.
+The session persists until you close it. If the server restarts mid-trail, the session is lost but any XML-saved nodes remain as orphans. Use `[navbuild isolated all` to find them and either wire them in or remove them.
 
 **Connecting a POI to an isolated node**
 Your POI now has an edge, but the edge leads to another orphan. Always verify with `[navtest` after any new connection.
@@ -411,20 +411,8 @@ Bridges are choke points. Place nodes on both approaches, not just one side. The
 **Naming conflicts**
 If a name already exists (hardcoded or XML), `[navbuild addnode` rejects it. Use `[navbuild edges <name>` to inspect the existing node before deciding whether to connect to it or rename your new one.
 
-
-**Rough Workflow**
-Hardcoded POIs are "final" landmarks that should be connected to the XML-based nodes and edges
-ie: Britain, Minoc.
-
-### The loop
-
+**Using default minDist in a city**
+The default 30-tile minimum is too coarse for city streets, bridges, and shop rows. Bots will cut corners, walk into buildings, and get stuck. Always start city trails with a low minDist:
 ```
-[navbuild trail start Britain2Minoc Britain 5
-  → walk toward the destination, staying on the road or overland path
-[navdrop
-  → walk further
-[navdrop
-[navdrop
-  → arrive near the destination node
-[navbuild trail end Minoc
+[navbuild trail start BritainDocks 5
 ```
