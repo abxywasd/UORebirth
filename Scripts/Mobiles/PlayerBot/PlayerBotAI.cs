@@ -21,8 +21,8 @@ namespace Server.Mobiles
         private DateTime m_AttackOrderIssuedTime;
         private const double AttackOrderGracePeriod = 8.0;
 
-        // AI timer interval for running activities — matches player-like run cadence
-        private const double BotRunSpeed = 0.15;
+        // AI timer interval for running activities — 0.2s matches Mobile.RunFoot (player run speed)
+        private const double BotRunSpeed = 0.2;
 
         // Navigation stuck detection
         private Point3D  m_LastTravelPos;
