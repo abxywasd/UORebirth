@@ -558,11 +558,28 @@ namespace Server.Mobiles
         // ── Activity: Flee ────────────────────────────────────────────────────
         private bool DoActivityFlee( PlayerBot bot )
         {
-            if ( m_Mobile.Hits > m_Mobile.HitsMax * 2 / 3 )
+            bool threatGone = m_Mobile.Combatant == null
+                              || m_Mobile.Combatant.Deleted
+                              || !m_Mobile.Combatant.Alive;
+
+            if ( threatGone || m_Mobile.Hits > m_Mobile.HitsMax * 2 / 3 )
             {
-                bot.ActivityState.SetActivity( BotActivity.Hunting );
-                Action = ActionType.Wander;
+                Action           = ActionType.Wander;
                 m_Mobile.Warmode = false;
+
+                var hops = bot.ActivityState.WaypointHops;
+                if ( hops != null && hops.Count > 0 )
+                {
+                    bot.ActivityState.TravelDestination = hops.Peek().Location;
+                    m_LastTravelPos = Point3D.Zero;
+                    m_StuckTicks    = 0;
+                    bot.ActivityState.SetActivity( BotActivity.Traveling );
+                }
+                else
+                {
+                    bot.ActivityState.SetActivity( BotActivity.Hunting );
+                }
+
                 return true;
             }
 
