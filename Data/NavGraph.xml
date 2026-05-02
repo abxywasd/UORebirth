@@ -1112,6 +1112,76 @@
     <Node name="BritTrinsicXroad2Brit_12" x="1375" y="1796" z="0" map="Felucca" routing="true" />
     <Node name="BritTrinsicXroad2Brit_13" x="1372" y="1789" z="15" map="Felucca" routing="true" />
     <Node name="BritTrinsicXroad2Brit_14" x="1364" y="1777" z="15" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_01" x="1299" y="645" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_02" x="1291" y="651" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_03" x="1281" y="651" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_04" x="1269" y="648" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_05" x="1263" y="642" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_06" x="1257" y="636" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_07" x="1252" y="633" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_08" x="1246" y="633" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_09" x="1241" y="635" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_10" x="1235" y="637" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_11" x="1230" y="641" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_12" x="1226" y="645" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_13" x="1221" y="648" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_14" x="1211" y="652" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_15" x="1206" y="656" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_16" x="1199" y="663" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_17" x="1192" y="670" z="12" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_18" x="1185" y="677" z="17" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_19" x="1178" y="684" z="11" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_20" x="1170" y="692" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_21" x="1165" y="698" z="6" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_22" x="1152" y="711" z="16" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_23" x="1149" y="715" z="16" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_24" x="1143" y="719" z="22" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_25" x="1129" y="731" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_26" x="1118" y="741" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_27" x="1110" y="749" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_28" x="1104" y="755" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_29" x="1097" y="760" z="1" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_30" x="1088" y="767" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_31" x="1074" y="778" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_32" x="1063" y="790" z="4" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_33" x="1051" y="800" z="5" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_34" x="1033" y="814" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_35" x="1026" y="822" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_36" x="1026" y="830" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_37" x="1026" y="849" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_38" x="1018" y="855" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_39" x="1000" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_40" x="993" y="873" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_41" x="977" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_42" x="963" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_43" x="946" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_44" x="934" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_45" x="918" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_46" x="904" y="872" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_47" x="892" y="881" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_48" x="879" y="883" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_49" x="865" y="886" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_50" x="843" y="886" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_51" x="822" y="886" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_52" x="799" y="893" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_53" x="780" y="896" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_54" x="745" y="892" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_55" x="733" y="890" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_56" x="739" y="907" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_57" x="744" y="914" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_58" x="749" y="927" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_59" x="751" y="939" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_60" x="743" y="957" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_61" x="734" y="966" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_62" x="714" y="979" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_63" x="705" y="984" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_64" x="694" y="989" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_65" x="683" y="985" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_66" x="670" y="983" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_67" x="651" y="977" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_68" x="639" y="964" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_69" x="626" y="956" z="0" map="Felucca" routing="true" />
+    <Node name="Justice2Yew_70" x="613" y="951" z="0" map="Felucca" routing="true" />
   </Nodes>
   <Edges>
     <Edge a="Britain" b="Britain2Minoc_01" />
@@ -2254,5 +2324,77 @@
     <Edge a="BritTrinsicXroad2Brit_12" b="BritTrinsicXroad2Brit_13" />
     <Edge a="BritTrinsicXroad2Brit_13" b="BritTrinsicXroad2Brit_14" />
     <Edge a="BritTrinsicXroad2Brit_14" b="Yew2Britain_181" />
+    <Edge a="ShrineJustice" b="Justice2Yew_01" />
+    <Edge a="Justice2Yew_01" b="Justice2Yew_02" />
+    <Edge a="Justice2Yew_02" b="Justice2Yew_03" />
+    <Edge a="Justice2Yew_03" b="Justice2Yew_04" />
+    <Edge a="Justice2Yew_04" b="Justice2Yew_05" />
+    <Edge a="Justice2Yew_05" b="Justice2Yew_06" />
+    <Edge a="Justice2Yew_06" b="Justice2Yew_07" />
+    <Edge a="Justice2Yew_07" b="Justice2Yew_08" />
+    <Edge a="Justice2Yew_08" b="Justice2Yew_09" />
+    <Edge a="Justice2Yew_09" b="Justice2Yew_10" />
+    <Edge a="Justice2Yew_10" b="Justice2Yew_11" />
+    <Edge a="Justice2Yew_11" b="Justice2Yew_12" />
+    <Edge a="Justice2Yew_12" b="Justice2Yew_13" />
+    <Edge a="Justice2Yew_13" b="Justice2Yew_14" />
+    <Edge a="Justice2Yew_14" b="Justice2Yew_15" />
+    <Edge a="Justice2Yew_15" b="Justice2Yew_16" />
+    <Edge a="Justice2Yew_16" b="Justice2Yew_17" />
+    <Edge a="Justice2Yew_17" b="Justice2Yew_18" />
+    <Edge a="Justice2Yew_18" b="Justice2Yew_19" />
+    <Edge a="Justice2Yew_19" b="Justice2Yew_20" />
+    <Edge a="Justice2Yew_20" b="Justice2Yew_21" />
+    <Edge a="Justice2Yew_21" b="Justice2Yew_22" />
+    <Edge a="Justice2Yew_22" b="Justice2Yew_23" />
+    <Edge a="Justice2Yew_23" b="Justice2Yew_24" />
+    <Edge a="Justice2Yew_24" b="Justice2Yew_25" />
+    <Edge a="Justice2Yew_25" b="Justice2Yew_26" />
+    <Edge a="Justice2Yew_26" b="Justice2Yew_27" />
+    <Edge a="Justice2Yew_27" b="Justice2Yew_28" />
+    <Edge a="Justice2Yew_28" b="Justice2Yew_29" />
+    <Edge a="Justice2Yew_29" b="Justice2Yew_30" />
+    <Edge a="Justice2Yew_30" b="Justice2Yew_31" />
+    <Edge a="Justice2Yew_31" b="Justice2Yew_32" />
+    <Edge a="Justice2Yew_32" b="Justice2Yew_33" />
+    <Edge a="Justice2Yew_33" b="Justice2Yew_34" />
+    <Edge a="Justice2Yew_34" b="Justice2Yew_35" />
+    <Edge a="Justice2Yew_35" b="Justice2Yew_36" />
+    <Edge a="Justice2Yew_36" b="Justice2Yew_37" />
+    <Edge a="Justice2Yew_37" b="Justice2Yew_38" />
+    <Edge a="Justice2Yew_38" b="Justice2Yew_39" />
+    <Edge a="Justice2Yew_39" b="Justice2Yew_40" />
+    <Edge a="Justice2Yew_40" b="Justice2Yew_41" />
+    <Edge a="Justice2Yew_41" b="Justice2Yew_42" />
+    <Edge a="Justice2Yew_42" b="Justice2Yew_43" />
+    <Edge a="Justice2Yew_43" b="Justice2Yew_44" />
+    <Edge a="Justice2Yew_44" b="Justice2Yew_45" />
+    <Edge a="Justice2Yew_45" b="Justice2Yew_46" />
+    <Edge a="Justice2Yew_46" b="Justice2Yew_47" />
+    <Edge a="Justice2Yew_47" b="Justice2Yew_48" />
+    <Edge a="Justice2Yew_48" b="Justice2Yew_49" />
+    <Edge a="Justice2Yew_49" b="Justice2Yew_50" />
+    <Edge a="Justice2Yew_50" b="Justice2Yew_51" />
+    <Edge a="Justice2Yew_51" b="Justice2Yew_52" />
+    <Edge a="Justice2Yew_52" b="Justice2Yew_53" />
+    <Edge a="Justice2Yew_53" b="Justice2Yew_54" />
+    <Edge a="Justice2Yew_54" b="Justice2Yew_55" />
+    <Edge a="Justice2Yew_55" b="Justice2Yew_56" />
+    <Edge a="Justice2Yew_56" b="Justice2Yew_57" />
+    <Edge a="Justice2Yew_57" b="Justice2Yew_58" />
+    <Edge a="Justice2Yew_58" b="Justice2Yew_59" />
+    <Edge a="Justice2Yew_59" b="Justice2Yew_60" />
+    <Edge a="Justice2Yew_60" b="Justice2Yew_61" />
+    <Edge a="Justice2Yew_61" b="Justice2Yew_62" />
+    <Edge a="Justice2Yew_62" b="Justice2Yew_63" />
+    <Edge a="Justice2Yew_63" b="Justice2Yew_64" />
+    <Edge a="Justice2Yew_64" b="Justice2Yew_65" />
+    <Edge a="Justice2Yew_65" b="Justice2Yew_66" />
+    <Edge a="Justice2Yew_66" b="Justice2Yew_67" />
+    <Edge a="Justice2Yew_67" b="Justice2Yew_68" />
+    <Edge a="Justice2Yew_68" b="Justice2Yew_69" />
+    <Edge a="Justice2Yew_69" b="Justice2Yew_70" />
+    <Edge a="Justice2Yew_70" b="Yew2Abbey_11" />
+    <Edge a="BritTrinsicXroad2Trinsic_11" b="MoongateBrit" />
   </Edges>
 </NavGraph>

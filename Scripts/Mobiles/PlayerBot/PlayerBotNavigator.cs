@@ -71,6 +71,7 @@ namespace Server.Mobiles
             Add( "SerpentsHold",     new Point3D( 3023, 3413, 15 ), Map.Felucca, WaypointTag.Town );
             Add( "SkaraBrae",        new Point3D(  576, 2200,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "Trinsic",          new Point3D( 1927, 2779,  0 ), Map.Felucca, WaypointTag.Town );
+            Add( "TrinsicSouth",     new Point3D( 2002, 2929,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "VesperWest",       new Point3D( 2761,  972,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "VesperNorth",      new Point3D( 2907,  606,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "VesperDocks",      new Point3D( 3042,  828,  -3), Map.Felucca, WaypointTag.Town );
@@ -113,6 +114,8 @@ namespace Server.Mobiles
             Add( "YewFortDamned",    new Point3D(  972,  768,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness | WaypointTag.PKHub );
             Add( "OrcFortYew",       new Point3D(  633, 1499,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "OrcFortCove",      new Point3D( 2171, 1372,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
+            Add( "SwampRuinsWest",   new Point3D( 1824, 2414,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness |
+            WaypointTag.PKHub );
 
             // Mining / crafting areas
             Add( "MinocMiningCamp",  new Point3D( 2583,  528, 15 ), Map.Felucca, WaypointTag.Mining | WaypointTag.Town );
