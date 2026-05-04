@@ -63,7 +63,7 @@ namespace Server.Mobiles
             Add( "Jhelom",           new Point3D( 1388, 3762,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "Magincia",         new Point3D( 3714, 2235, 20 ), Map.Felucca, WaypointTag.Town );
             Add( "Minoc",            new Point3D( 2475,  417, 15 ), Map.Felucca, WaypointTag.Town );
-            Add( "Moonglow",         new Point3D( 4442, 1122,  5 ), Map.Felucca, WaypointTag.Town );
+            Add( "Moonglow",         new Point3D( 4451, 1123,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "NujelM",           new Point3D( 3636, 1198,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "Ocllo",            new Point3D( 3650, 2516,  0 ), Map.Felucca, WaypointTag.Town );
             Add( "Delucia",          new Point3D( 5228, 3978, 37 ), Map.Felucca, WaypointTag.Town | WaypointTag.LostLands );
@@ -116,6 +116,8 @@ namespace Server.Mobiles
             Add( "OrcFortCove",      new Point3D( 2171, 1372,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness );
             Add( "SwampRuinsWest",   new Point3D( 1824, 2414,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Wilderness |
             WaypointTag.PKHub );
+            Add( "MoonglowZoo",      new Point3D( 4522, 1377,  23 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Town );
+            Add( "MoonglowTelescope", new Point3D( 4707, 1123,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Town );
 
             // Mining / crafting areas
             Add( "MinocMiningCamp",  new Point3D( 2583,  528, 15 ), Map.Felucca, WaypointTag.Mining | WaypointTag.Town );
@@ -156,6 +158,7 @@ namespace Server.Mobiles
             Add( "SnakePass",         new Point3D( 1700, 1440,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
             Add( "FireIslandEntrance",new Point3D( 2923, 3406,  8 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
             //Add( "SerpentPillarS",    new Point3D( 1475, 2987,  0 ), Map.Felucca, WaypointTag.Notable | WaypointTag.LostLands );
+            Add( "MoonglowT2ATeleport", new Point3D( 4545, 851,  30 ), Map.Felucca, WaypointTag.Notable | WaypointTag.Town );
 
 
             // Wilderness Landmarks

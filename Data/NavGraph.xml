@@ -1182,6 +1182,88 @@
     <Node name="Justice2Yew_68" x="639" y="964" z="0" map="Felucca" routing="true" />
     <Node name="Justice2Yew_69" x="626" y="956" z="0" map="Felucca" routing="true" />
     <Node name="Justice2Yew_70" x="613" y="951" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_01" x="4310" y="1010" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_02" x="4307" y="1018" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_03" x="4306" y="1027" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_04" x="4305" y="1035" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_05" x="4305" y="1044" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_06" x="4305" y="1052" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_07" x="4305" y="1061" z="8" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_08" x="4305" y="1071" z="8" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_09" x="4305" y="1079" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_10" x="4305" y="1088" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_11" x="4307" y="1097" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_12" x="4314" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_13" x="4326" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_14" x="4337" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_15" x="4350" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_16" x="4362" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_17" x="4373" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_18" x="4387" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_19" x="4400" y="1100" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_20" x="4420" y="1099" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_21" x="4429" y="1098" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_22" x="4429" y="1113" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_23" x="4429" y="1125" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_24" x="4429" y="1137" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_25" x="4429" y="1146" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_26" x="4438" y="1146" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_27" x="4449" y="1146" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_28" x="4459" y="1143" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_29" x="4457" y="1123" z="0" map="Felucca" routing="true" />
+    <Node name="Lycaeum2Moonglow_30" x="4452" y="1123" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_01" x="4459" y="1150" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_02" x="4459" y="1157" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_03" x="4459" y="1164" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_04" x="4456" y="1168" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_05" x="4442" y="1170" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_06" x="4442" y="1181" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_07" x="4442" y="1192" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_08" x="4442" y="1201" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_09" x="4442" y="1213" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_10" x="4442" y="1223" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_11" x="4442" y="1232" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_12" x="4448" y="1239" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_13" x="4455" y="1246" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_14" x="4462" y="1253" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_15" x="4467" y="1259" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_16" x="4470" y="1266" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_17" x="4470" y="1274" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Moongate_18" x="4470" y="1281" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_01" x="4449" y="1225" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_02" x="4457" y="1225" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_03" x="4465" y="1225" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_04" x="4472" y="1229" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_05" x="4476" y="1233" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_06" x="4481" y="1233" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_07" x="4488" y="1233" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_08" x="4490" y="1240" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_09" x="4490" y="1247" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_10" x="4497" y="1250" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_11" x="4504" y="1250" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_12" x="4511" y="1250" z="5" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_13" x="4517" y="1250" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_14" x="4524" y="1250" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_15" x="4532" y="1250" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_16" x="4539" y="1250" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_17" x="4544" y="1252" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_18" x="4545" y="1258" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_19" x="4545" y="1266" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_20" x="4547" y="1273" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_21" x="4553" y="1273" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_22" x="4558" y="1275" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_23" x="4561" y="1280" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_24" x="4568" y="1282" z="0" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_25" x="4568" y="1290" z="1" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_26" x="4571" y="1299" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_27" x="4571" y="1307" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_28" x="4570" y="1313" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_29" x="4567" y="1320" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_30" x="4567" y="1328" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_31" x="4567" y="1339" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_32" x="4567" y="1348" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_33" x="4560" y="1348" z="8" map="Felucca" routing="true" />
+    <Node name="Moonglow2Cemetery_34" x="4553" y="1347" z="8" map="Felucca" routing="true" />
   </Nodes>
   <Edges>
     <Edge a="Britain" b="Britain2Minoc_01" />
@@ -2396,5 +2478,90 @@
     <Edge a="Justice2Yew_69" b="Justice2Yew_70" />
     <Edge a="Justice2Yew_70" b="Yew2Abbey_11" />
     <Edge a="BritTrinsicXroad2Trinsic_11" b="MoongateBrit" />
+    <Edge a="Lycaeum" b="Lycaeum2Moonglow_01" />
+    <Edge a="Lycaeum2Moonglow_01" b="Lycaeum2Moonglow_02" />
+    <Edge a="Lycaeum2Moonglow_02" b="Lycaeum2Moonglow_03" />
+    <Edge a="Lycaeum2Moonglow_03" b="Lycaeum2Moonglow_04" />
+    <Edge a="Lycaeum2Moonglow_04" b="Lycaeum2Moonglow_05" />
+    <Edge a="Lycaeum2Moonglow_05" b="Lycaeum2Moonglow_06" />
+    <Edge a="Lycaeum2Moonglow_06" b="Lycaeum2Moonglow_07" />
+    <Edge a="Lycaeum2Moonglow_07" b="Lycaeum2Moonglow_08" />
+    <Edge a="Lycaeum2Moonglow_08" b="Lycaeum2Moonglow_09" />
+    <Edge a="Lycaeum2Moonglow_09" b="Lycaeum2Moonglow_10" />
+    <Edge a="Lycaeum2Moonglow_10" b="Lycaeum2Moonglow_11" />
+    <Edge a="Lycaeum2Moonglow_11" b="Lycaeum2Moonglow_12" />
+    <Edge a="Lycaeum2Moonglow_12" b="Lycaeum2Moonglow_13" />
+    <Edge a="Lycaeum2Moonglow_13" b="Lycaeum2Moonglow_14" />
+    <Edge a="Lycaeum2Moonglow_14" b="Lycaeum2Moonglow_15" />
+    <Edge a="Lycaeum2Moonglow_15" b="Lycaeum2Moonglow_16" />
+    <Edge a="Lycaeum2Moonglow_16" b="Lycaeum2Moonglow_17" />
+    <Edge a="Lycaeum2Moonglow_17" b="Lycaeum2Moonglow_18" />
+    <Edge a="Lycaeum2Moonglow_18" b="Lycaeum2Moonglow_19" />
+    <Edge a="Lycaeum2Moonglow_19" b="Lycaeum2Moonglow_20" />
+    <Edge a="Lycaeum2Moonglow_20" b="Lycaeum2Moonglow_21" />
+    <Edge a="Lycaeum2Moonglow_21" b="Lycaeum2Moonglow_22" />
+    <Edge a="Lycaeum2Moonglow_22" b="Lycaeum2Moonglow_23" />
+    <Edge a="Lycaeum2Moonglow_23" b="Lycaeum2Moonglow_24" />
+    <Edge a="Lycaeum2Moonglow_24" b="Lycaeum2Moonglow_25" />
+    <Edge a="Lycaeum2Moonglow_25" b="Lycaeum2Moonglow_26" />
+    <Edge a="Lycaeum2Moonglow_26" b="Lycaeum2Moonglow_27" />
+    <Edge a="Lycaeum2Moonglow_27" b="Lycaeum2Moonglow_28" />
+    <Edge a="Lycaeum2Moonglow_28" b="Lycaeum2Moonglow_29" />
+    <Edge a="Lycaeum2Moonglow_29" b="Lycaeum2Moonglow_30" />
+    <Edge a="Lycaeum2Moonglow_30" b="Moonglow" />
+    <Edge a="Lycaeum2Moonglow_28" b="Moonglow2Moongate_01" />
+    <Edge a="Moonglow2Moongate_01" b="Moonglow2Moongate_02" />
+    <Edge a="Moonglow2Moongate_02" b="Moonglow2Moongate_03" />
+    <Edge a="Moonglow2Moongate_03" b="Moonglow2Moongate_04" />
+    <Edge a="Moonglow2Moongate_04" b="Moonglow2Moongate_05" />
+    <Edge a="Moonglow2Moongate_05" b="Moonglow2Moongate_06" />
+    <Edge a="Moonglow2Moongate_06" b="Moonglow2Moongate_07" />
+    <Edge a="Moonglow2Moongate_07" b="Moonglow2Moongate_08" />
+    <Edge a="Moonglow2Moongate_08" b="Moonglow2Moongate_09" />
+    <Edge a="Moonglow2Moongate_09" b="Moonglow2Moongate_10" />
+    <Edge a="Moonglow2Moongate_10" b="Moonglow2Moongate_11" />
+    <Edge a="Moonglow2Moongate_11" b="Moonglow2Moongate_12" />
+    <Edge a="Moonglow2Moongate_12" b="Moonglow2Moongate_13" />
+    <Edge a="Moonglow2Moongate_13" b="Moonglow2Moongate_14" />
+    <Edge a="Moonglow2Moongate_14" b="Moonglow2Moongate_15" />
+    <Edge a="Moonglow2Moongate_15" b="Moonglow2Moongate_16" />
+    <Edge a="Moonglow2Moongate_16" b="Moonglow2Moongate_17" />
+    <Edge a="Moonglow2Moongate_17" b="Moonglow2Moongate_18" />
+    <Edge a="Moonglow2Moongate_18" b="MoongateMoonglow" />
+    <Edge a="Moonglow2Moongate_10" b="Moonglow2Cemetery_01" />
+    <Edge a="Moonglow2Cemetery_01" b="Moonglow2Cemetery_02" />
+    <Edge a="Moonglow2Cemetery_02" b="Moonglow2Cemetery_03" />
+    <Edge a="Moonglow2Cemetery_03" b="Moonglow2Cemetery_04" />
+    <Edge a="Moonglow2Cemetery_04" b="Moonglow2Cemetery_05" />
+    <Edge a="Moonglow2Cemetery_05" b="Moonglow2Cemetery_06" />
+    <Edge a="Moonglow2Cemetery_06" b="Moonglow2Cemetery_07" />
+    <Edge a="Moonglow2Cemetery_07" b="Moonglow2Cemetery_08" />
+    <Edge a="Moonglow2Cemetery_08" b="Moonglow2Cemetery_09" />
+    <Edge a="Moonglow2Cemetery_09" b="Moonglow2Cemetery_10" />
+    <Edge a="Moonglow2Cemetery_10" b="Moonglow2Cemetery_11" />
+    <Edge a="Moonglow2Cemetery_11" b="Moonglow2Cemetery_12" />
+    <Edge a="Moonglow2Cemetery_12" b="Moonglow2Cemetery_13" />
+    <Edge a="Moonglow2Cemetery_13" b="Moonglow2Cemetery_14" />
+    <Edge a="Moonglow2Cemetery_14" b="Moonglow2Cemetery_15" />
+    <Edge a="Moonglow2Cemetery_15" b="Moonglow2Cemetery_16" />
+    <Edge a="Moonglow2Cemetery_16" b="Moonglow2Cemetery_17" />
+    <Edge a="Moonglow2Cemetery_17" b="Moonglow2Cemetery_18" />
+    <Edge a="Moonglow2Cemetery_18" b="Moonglow2Cemetery_19" />
+    <Edge a="Moonglow2Cemetery_19" b="Moonglow2Cemetery_20" />
+    <Edge a="Moonglow2Cemetery_20" b="Moonglow2Cemetery_21" />
+    <Edge a="Moonglow2Cemetery_21" b="Moonglow2Cemetery_22" />
+    <Edge a="Moonglow2Cemetery_22" b="Moonglow2Cemetery_23" />
+    <Edge a="Moonglow2Cemetery_23" b="Moonglow2Cemetery_24" />
+    <Edge a="Moonglow2Cemetery_24" b="Moonglow2Cemetery_25" />
+    <Edge a="Moonglow2Cemetery_25" b="Moonglow2Cemetery_26" />
+    <Edge a="Moonglow2Cemetery_26" b="Moonglow2Cemetery_27" />
+    <Edge a="Moonglow2Cemetery_27" b="Moonglow2Cemetery_28" />
+    <Edge a="Moonglow2Cemetery_28" b="Moonglow2Cemetery_29" />
+    <Edge a="Moonglow2Cemetery_29" b="Moonglow2Cemetery_30" />
+    <Edge a="Moonglow2Cemetery_30" b="Moonglow2Cemetery_31" />
+    <Edge a="Moonglow2Cemetery_31" b="Moonglow2Cemetery_32" />
+    <Edge a="Moonglow2Cemetery_32" b="Moonglow2Cemetery_33" />
+    <Edge a="Moonglow2Cemetery_33" b="Moonglow2Cemetery_34" />
+    <Edge a="Moonglow2Cemetery_34" b="MoonglewCemetery" />
   </Edges>
 </NavGraph>
