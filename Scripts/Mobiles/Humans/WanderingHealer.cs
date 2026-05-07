@@ -78,7 +78,15 @@ namespace Server.Mobiles
 			{
 				m_NextResurrect = DateTime.Now + Healer.ResurrectDelay;
 
-				if ( m.Region is Regions.HouseRegion || m.Map == null || !m.Map.CanFit( m.Location, 16, false, false ) )
+				if ( m is PlayerBot )
+				{
+					Direction = GetDirectionTo( m );
+					Say( 501224 ); // Thou hast strayed from the path of virtue, but thou still deservest a second chance.
+					m.PlaySound( 0x214 );
+					m.FixedEffect( 0x376A, 10, 16 );
+					((BaseCreature)m).ResurrectPet();
+				}
+				else if ( m.Region is Regions.HouseRegion || m.Map == null || !m.Map.CanFit( m.Location, 16, false, false ) )
 				{
 					m.SendLocalizedMessage( 502391 ); // Thou can not be resurrected there!
 				}
@@ -93,6 +101,25 @@ namespace Server.Mobiles
 					//m.CloseGump( typeof( ResurrectGump ) );
 					m.SendMenu( new ResurrectMenu( m, ResurrectMessage.Healer ) );
 				}
+			}
+			else if ( m.Player && m.Alive && m.Map != null && DateTime.Now >= m_NextResurrect && InRange( m, 4 ) && !InRange( oldLocation, 4 ) && InLOS( m ) )
+			{
+				IPooledEnumerable eable = m.Map.GetMobilesInRange( m.Location, 4 );
+				foreach ( Mobile mob in eable )
+				{
+					PlayerBot pb = mob as PlayerBot;
+					if ( pb != null && !pb.Alive && pb.ControlMaster == m && InRange( pb, 4 ) && InLOS( pb ) )
+					{
+						m_NextResurrect = DateTime.Now + Healer.ResurrectDelay;
+						Direction = GetDirectionTo( pb );
+						Say( 501224 ); // Thou hast strayed from the path of virtue, but thou still deservest a second chance.
+						pb.PlaySound( 0x214 );
+						pb.FixedEffect( 0x376A, 10, 16 );
+						((BaseCreature)pb).ResurrectPet();
+						break;
+					}
+				}
+				eable.Free();
 			}
 		}
 

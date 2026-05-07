@@ -56,6 +56,9 @@ namespace Server.Mobiles
             if ( bot.IsPaused )
                 return true;
 
+            if ( bot.IsDeadPet )
+                return DoOrderFollow();
+
             // Restore stashed weapons whenever not actively casting or awaiting target
             if ( bot.UsesMagic )
                 MaybeRestoreWeapons();
@@ -116,6 +119,9 @@ namespace Server.Mobiles
 
             if ( bot.IsPaused )
                 return true;
+
+            if ( bot.IsDeadPet )
+                return DoOrderFollow();
 
             if ( bot.UsesMagic )
                 MaybeRestoreWeapons();

@@ -2,6 +2,7 @@ using System;
 using Server.Targeting;
 using Server.Network;
 using Server.Gumps;
+using Server.Mobiles;
 
 namespace Server.Spells.Eighth
 {
@@ -48,9 +49,16 @@ namespace Server.Spells.Eighth
 			{
 				Caster.SendLocalizedMessage( 501042 ); // Target is not close enough.
 			}
-			else if ( !m.Player )
+			else if ( !m.Player && !(m is PlayerBot) )
 			{
 				Caster.SendLocalizedMessage( 501043 ); // Target is not a being.
+			}
+			else if ( m is PlayerBot )
+			{
+				SpellHelper.Turn( Caster, m );
+				m.PlaySound( 0x214 );
+				m.FixedEffect( 0x376A, 10, 16 );
+				((BaseCreature)m).ResurrectPet();
 			}
 			else if ( m.Map == null || !m.Map.CanFit( m.Location, 16, false, false ) )
 			{

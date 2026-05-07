@@ -65,6 +65,8 @@ namespace Server.Mobiles
         private ActivityState       m_ActivityState;
         private PlayerBotGroup      m_Group;
         private PlayerBotSkillTimer m_SkillTimer;
+        private Timer               m_GhostSpeechTimer;
+        private DeathShroud         m_GhostRobe;
 
         [NonSerialized]
         public DateTime NextCraftTime;
@@ -211,6 +213,15 @@ namespace Server.Mobiles
                 pb.MoveToWorld( loc, map );
         }
 
+        // ── Alive override (Mobile.Alive is always true for non-players; ghost bots must appear dead) ──
+        public override bool Alive { get { return !IsDeadPet && base.Alive; } }
+
+        public override bool CanPaperdollBeOpenedBy( Mobile from )
+        {
+            if ( IsDeadPet ) return false;
+            return base.CanPaperdollBeOpenedBy( from );
+        }
+
         // ── Serialization ───────────────────────────────────────────────────────
         public override void Serialize( GenericWriter writer )
         {
@@ -274,6 +285,8 @@ namespace Server.Mobiles
             }
 
             StartSkillTimer();
+            if ( IsDeadPet )
+                StartGhostSpeechTimer();
             Timer.DelayCall( TimeSpan.FromSeconds( 2.0 ), new TimerCallback( ReEquipWeaponIfNeeded ) );
         }
 
@@ -1384,6 +1397,8 @@ namespace Server.Mobiles
 
         public override void OnDelete()
         {
+            StopGhostSpeechTimer();
+
             if ( m_SkillTimer != null )
             {
                 m_SkillTimer.Stop();
@@ -1397,6 +1412,156 @@ namespace Server.Mobiles
                 PlayerBotDirector.Instance.UnregisterBot( this );
 
             base.OnDelete();
+        }
+
+        // ── Ghost death ──────────────────────────────────────────────────────────
+        public override void OnDeath( Container c )
+        {
+            if ( Controled && ControlMaster != null )
+            {
+                int sound = GetDeathSound();
+                if ( sound >= 0 )
+                    Effects.PlaySound( this, Map, sound );
+
+                Warmode   = false;
+                Poison    = null;
+                Combatant = null;
+                Hits = 0; Stam = 0; Mana = 0;
+
+                IsDeadPet     = true;
+                ControlTarget = ControlMaster;
+                ControlOrder  = OrderType.Follow;
+
+                StripEquipmentToPack();
+                m_GhostRobe = new DeathShroud();
+                AddItem( m_GhostRobe );
+
+                ProcessDeltaQueue();
+                SendIncomingPacket();
+                SendIncomingPacket();
+
+                StartGhostSpeechTimer( firstFire: true );
+                CheckStatTimers();
+                return;
+            }
+
+            base.OnDeath( c );
+        }
+
+        public override void OnAfterResurrect()
+        {
+            base.OnAfterResurrect();
+            StopGhostSpeechTimer();
+
+            if ( m_GhostRobe != null )
+            {
+                m_GhostRobe.Delete();
+                m_GhostRobe = null;
+            }
+            AddItem( new DeathRobe() );
+        }
+
+        private void StripEquipmentToPack()
+        {
+            var toStrip = new System.Collections.Generic.List<Item>();
+            foreach ( Item item in Items )
+            {
+                Layer l = item.Layer;
+                if ( l != Layer.Hair && l != Layer.FacialHair && l != Layer.Backpack && l != Layer.Bank )
+                    toStrip.Add( item );
+            }
+            foreach ( Item item in toStrip )
+                AddToBackpack( item );
+        }
+
+        private void StartGhostSpeechTimer( bool firstFire = false )
+        {
+            StopGhostSpeechTimer();
+            int delay = firstFire ? Utility.RandomMinMax( 5, 10 ) : Utility.RandomMinMax( 45, 90 );
+            m_GhostSpeechTimer = Timer.DelayCall(
+                TimeSpan.FromSeconds( delay ),
+                new TimerCallback( OnGhostSpeak ) );
+        }
+
+        private void StopGhostSpeechTimer()
+        {
+            if ( m_GhostSpeechTimer != null )
+            {
+                m_GhostSpeechTimer.Stop();
+                m_GhostSpeechTimer = null;
+            }
+        }
+
+        private void OnGhostSpeak()
+        {
+            if ( !IsDeadPet || Deleted || Map == null ) return;
+
+            string real    = PickGhostLine();
+            string garbled = GarbleSpeech( real );
+
+            IPooledEnumerable eable = Map.GetClientsInRange( Location, 12 );
+            foreach ( Server.Network.NetState ns in eable )
+            {
+                Mobile listener = ns.Mobile;
+                if ( listener == null ) continue;
+                bool hearGarbled = listener.Alive && !listener.CanHearGhosts;
+                PrivateOverheadMessage( MessageType.Regular, SpeechHue, true, hearGarbled ? garbled : real, ns );
+            }
+            eable.Free();
+
+            StartGhostSpeechTimer();
+        }
+
+        private static string GarbleSpeech( string text )
+        {
+            char[] gc = Mobile.GhostChars;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder( text.Length );
+            for ( int i = 0; i < text.Length; ++i )
+                sb.Append( text[i] == ' ' ? ' ' : gc[Utility.Random( gc.Length )] );
+            return sb.ToString();
+        }
+
+        private static readonly string[][] m_GhostLines = new string[][]
+        {
+            // [0] generic
+            new string[] {
+                "Could have used a heal back there.",
+                "Is anyone listening?",
+                "I can see the shrine from here.",
+                "It's cold.",
+                "Don't leave me here.",
+                "I feel... lighter somehow.",
+                "Next time, maybe stay closer.",
+            },
+            // [1] PlayerKiller (Profile=0)
+            new string[] {
+                "I didn't see that mage coming. Well. I did.",
+                "Mark my words.",
+                "Find whoever did this.",
+                "I'll be back. Don't go anywhere.",
+            },
+            // [2] Crafter (Profile=1)
+            new string[] {
+                "That was my best armor.",
+                "Do you know how long that gorget took to make?",
+                "I could have been at the forge right now.",
+                "Someone is going to pay for this leather.",
+            },
+            // [3] Adventurer (Profile=2)
+            new string[] {
+                "Tell me you at least looted the chest.",
+                "I dropped my sword back there somewhere.",
+                "We were so close.",
+                "I've died in worse places. Barely.",
+            },
+        };
+
+        private string PickGhostLine()
+        {
+            string[] pool = Utility.RandomBool()
+                ? m_GhostLines[0]
+                : m_GhostLines[(int)m_Persona.Profile + 1];
+            return pool[Utility.Random( pool.Length )];
         }
 
         // ── Hire / ownership ────────────────────────────────────────────────────

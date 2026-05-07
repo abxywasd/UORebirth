@@ -22,6 +22,12 @@ namespace Server.Items
 			if ( m.Alive )
 				return;
 
+			if ( m is PlayerBot )
+			{
+				((BaseCreature)m).ResurrectPet();
+				return;
+			}
+
 			if ( !m.InRange( item.GetWorldLocation(), ResurrectRange ) )
 				m.SendLocalizedMessage( 500446 ); // That is too far away.
 			else if ( m.Map != null && m.Map.CanFit( m.Location, 16, false, false ) && ( reds || m.Karma > (int)Noto.Dark ) )
