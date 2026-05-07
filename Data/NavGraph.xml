@@ -1264,6 +1264,59 @@
     <Node name="Moonglow2Cemetery_32" x="4567" y="1348" z="8" map="Felucca" routing="true" />
     <Node name="Moonglow2Cemetery_33" x="4560" y="1348" z="8" map="Felucca" routing="true" />
     <Node name="Moonglow2Cemetery_34" x="4553" y="1347" z="8" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_01" x="1868" y="2789" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_02" x="1868" y="2799" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_03" x="1868" y="2806" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_04" x="1868" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_05" x="1876" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_06" x="1887" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_07" x="1897" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_08" x="1908" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_09" x="1919" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_10" x="1928" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_11" x="1937" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_12" x="1948" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_13" x="1960" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_14" x="1971" y="2818" z="10" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_15" x="1980" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_16" x="1994" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_17" x="2005" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_18" x="2016" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_19" x="2027" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_20" x="2037" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_21" x="2044" y="2818" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_22" x="2044" y="2825" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_23" x="2044" y="2836" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_24" x="2044" y="2847" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_25" x="2044" y="2863" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_26" x="2044" y="2875" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_27" x="2038" y="2889" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_28" x="2027" y="2892" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_29" x="2015" y="2892" z="2" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_30" x="2003" y="2892" z="5" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_31" x="2003" y="2907" z="0" map="Felucca" routing="true" />
+    <Node name="Trinsic2TrinsicSouth_32" x="2002" y="2923" z="10" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_01" x="1700" y="796" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_02" x="1692" y="803" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_03" x="1682" y="803" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_04" x="1676" y="801" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_05" x="1663" y="800" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_06" x="1654" y="801" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_07" x="1639" y="803" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_08" x="1628" y="805" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_09" x="1620" y="812" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_10" x="1615" y="812" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_11" x="1607" y="817" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_12" x="1599" y="817" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_13" x="1591" y="817" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_14" x="1584" y="821" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_15" x="1578" y="827" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_16" x="1567" y="837" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_17" x="1560" y="850" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_18" x="1555" y="864" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_19" x="1549" y="873" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_20" x="1540" y="876" z="0" map="Felucca" routing="true" />
+    <Node name="Compassion2NorthernRoad_21" x="1532" y="876" z="0" map="Felucca" routing="true" />
   </Nodes>
   <Edges>
     <Edge a="Britain" b="Britain2Minoc_01" />
@@ -2563,5 +2616,62 @@
     <Edge a="Moonglow2Cemetery_32" b="Moonglow2Cemetery_33" />
     <Edge a="Moonglow2Cemetery_33" b="Moonglow2Cemetery_34" />
     <Edge a="Moonglow2Cemetery_34" b="MoonglewCemetery" />
+    <Edge a="BritTrinsicXroad2Trinsic_14" b="Trinsic2TrinsicSouth_01" />
+    <Edge a="Trinsic2TrinsicSouth_01" b="Trinsic2TrinsicSouth_02" />
+    <Edge a="Trinsic2TrinsicSouth_02" b="Trinsic2TrinsicSouth_03" />
+    <Edge a="Trinsic2TrinsicSouth_03" b="Trinsic2TrinsicSouth_04" />
+    <Edge a="Trinsic2TrinsicSouth_04" b="Trinsic2TrinsicSouth_05" />
+    <Edge a="Trinsic2TrinsicSouth_05" b="Trinsic2TrinsicSouth_06" />
+    <Edge a="Trinsic2TrinsicSouth_06" b="Trinsic2TrinsicSouth_07" />
+    <Edge a="Trinsic2TrinsicSouth_07" b="Trinsic2TrinsicSouth_08" />
+    <Edge a="Trinsic2TrinsicSouth_08" b="Trinsic2TrinsicSouth_09" />
+    <Edge a="Trinsic2TrinsicSouth_09" b="Trinsic2TrinsicSouth_10" />
+    <Edge a="Trinsic2TrinsicSouth_10" b="Trinsic2TrinsicSouth_11" />
+    <Edge a="Trinsic2TrinsicSouth_11" b="Trinsic2TrinsicSouth_12" />
+    <Edge a="Trinsic2TrinsicSouth_12" b="Trinsic2TrinsicSouth_13" />
+    <Edge a="Trinsic2TrinsicSouth_13" b="Trinsic2TrinsicSouth_14" />
+    <Edge a="Trinsic2TrinsicSouth_14" b="Trinsic2TrinsicSouth_15" />
+    <Edge a="Trinsic2TrinsicSouth_15" b="Trinsic2TrinsicSouth_16" />
+    <Edge a="Trinsic2TrinsicSouth_16" b="Trinsic2TrinsicSouth_17" />
+    <Edge a="Trinsic2TrinsicSouth_17" b="Trinsic2TrinsicSouth_18" />
+    <Edge a="Trinsic2TrinsicSouth_18" b="Trinsic2TrinsicSouth_19" />
+    <Edge a="Trinsic2TrinsicSouth_19" b="Trinsic2TrinsicSouth_20" />
+    <Edge a="Trinsic2TrinsicSouth_20" b="Trinsic2TrinsicSouth_21" />
+    <Edge a="Trinsic2TrinsicSouth_21" b="Trinsic2TrinsicSouth_22" />
+    <Edge a="Trinsic2TrinsicSouth_22" b="Trinsic2TrinsicSouth_23" />
+    <Edge a="Trinsic2TrinsicSouth_23" b="Trinsic2TrinsicSouth_24" />
+    <Edge a="Trinsic2TrinsicSouth_24" b="Trinsic2TrinsicSouth_25" />
+    <Edge a="Trinsic2TrinsicSouth_25" b="Trinsic2TrinsicSouth_26" />
+    <Edge a="Trinsic2TrinsicSouth_26" b="Trinsic2TrinsicSouth_27" />
+    <Edge a="Trinsic2TrinsicSouth_27" b="Trinsic2TrinsicSouth_28" />
+    <Edge a="Trinsic2TrinsicSouth_28" b="Trinsic2TrinsicSouth_29" />
+    <Edge a="Trinsic2TrinsicSouth_29" b="Trinsic2TrinsicSouth_30" />
+    <Edge a="Trinsic2TrinsicSouth_30" b="Trinsic2TrinsicSouth_31" />
+    <Edge a="Trinsic2TrinsicSouth_31" b="Trinsic2TrinsicSouth_32" />
+    <Edge a="Trinsic2TrinsicSouth_32" b="TrinsicSouth" />
+    <Edge a="ShrineChaos" b="GreatNorthernRoad" />
+    <Edge a="CompassionBridge2NorthBrit_18" b="Compassion2NorthernRoad_01" />
+    <Edge a="Compassion2NorthernRoad_01" b="Compassion2NorthernRoad_02" />
+    <Edge a="Compassion2NorthernRoad_02" b="Compassion2NorthernRoad_03" />
+    <Edge a="Compassion2NorthernRoad_03" b="Compassion2NorthernRoad_04" />
+    <Edge a="Compassion2NorthernRoad_04" b="Compassion2NorthernRoad_05" />
+    <Edge a="Compassion2NorthernRoad_05" b="Compassion2NorthernRoad_06" />
+    <Edge a="Compassion2NorthernRoad_06" b="Compassion2NorthernRoad_07" />
+    <Edge a="Compassion2NorthernRoad_07" b="Compassion2NorthernRoad_08" />
+    <Edge a="Compassion2NorthernRoad_08" b="Compassion2NorthernRoad_09" />
+    <Edge a="Compassion2NorthernRoad_09" b="Compassion2NorthernRoad_10" />
+    <Edge a="Compassion2NorthernRoad_10" b="Compassion2NorthernRoad_11" />
+    <Edge a="Compassion2NorthernRoad_11" b="Compassion2NorthernRoad_12" />
+    <Edge a="Compassion2NorthernRoad_12" b="Compassion2NorthernRoad_13" />
+    <Edge a="Compassion2NorthernRoad_13" b="Compassion2NorthernRoad_14" />
+    <Edge a="Compassion2NorthernRoad_14" b="Compassion2NorthernRoad_15" />
+    <Edge a="Compassion2NorthernRoad_15" b="Compassion2NorthernRoad_16" />
+    <Edge a="Compassion2NorthernRoad_16" b="Compassion2NorthernRoad_17" />
+    <Edge a="Compassion2NorthernRoad_17" b="Compassion2NorthernRoad_18" />
+    <Edge a="Compassion2NorthernRoad_18" b="Compassion2NorthernRoad_19" />
+    <Edge a="Compassion2NorthernRoad_19" b="Compassion2NorthernRoad_20" />
+    <Edge a="Compassion2NorthernRoad_20" b="Compassion2NorthernRoad_21" />
+    <Edge a="Compassion2NorthernRoad_21" b="GreatNorthernRoad" />
+    <Edge a="MtKendallPass" b="Britain2Minoc_145" />
   </Edges>
 </NavGraph>
