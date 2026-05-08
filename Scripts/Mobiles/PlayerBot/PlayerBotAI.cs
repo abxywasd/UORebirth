@@ -14,6 +14,7 @@ namespace Server.Mobiles
         private DateTime m_NextSpeechTime;
         private DateTime m_NextActivityChange;
         private DateTime m_NextTargetScanTime;
+        private DateTime m_NextFleeCheckTime;
         private int      m_CombatTick;
 
         // Attack order stickiness: suppress "assist master" override for this many seconds
@@ -58,9 +59,13 @@ namespace Server.Mobiles
 
             if ( bot.IsDeadPet )
             {
-                bool r = DoOrderFollow();
-                if ( !bot.Warmode ) bot.Warmode = true;
-                return r;
+                if ( m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile )
+                {
+                    int dist = (int)m_Mobile.GetDistanceToSqrt( m_Mobile.ControlTarget );
+                    if ( dist > 1 && dist <= m_Mobile.RangePerception )
+                        WalkMobileRange( m_Mobile.ControlTarget, 1, true, 0, 1 );
+                }
+                return true;
             }
 
             // Restore stashed weapons whenever not actively casting or awaiting target
@@ -126,9 +131,13 @@ namespace Server.Mobiles
 
             if ( bot.IsDeadPet )
             {
-                bool r = DoOrderFollow();
-                if ( !bot.Warmode ) bot.Warmode = true;
-                return r;
+                if ( m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile )
+                {
+                    int dist = (int)m_Mobile.GetDistanceToSqrt( m_Mobile.ControlTarget );
+                    if ( dist > 1 && dist <= m_Mobile.RangePerception )
+                        WalkMobileRange( m_Mobile.ControlTarget, 1, true, 0, 1 );
+                }
+                return true;
             }
 
             if ( bot.UsesMagic )
@@ -552,12 +561,14 @@ namespace Server.Mobiles
                 m_Mobile.Direction = m_Mobile.GetDirectionTo( c );
             }
 
-            // Flee check
-            if ( bot.ShouldFlee( c ) )
+            // Flee check — rate-limited to once every 3 seconds to prevent instant flee on threshold
+            // Do NOT set Action = ActionType.Flee: that forces CurrentSpeed = ActiveSpeed (0.15),
+            // which is faster than BotRunSpeed (0.2) and bypasses EnsureRunSpeed's downward-only cap.
+            if ( DateTime.Now >= m_NextFleeCheckTime && bot.ShouldFlee( c ) )
             {
+                m_NextFleeCheckTime = DateTime.Now + TimeSpan.FromSeconds( 3.0 );
                 m_Mobile.FocusMob = c;
                 bot.ActivityState.SetActivity( BotActivity.Fleeing );
-                Action = ActionType.Flee;
                 return true;
             }
 
@@ -576,7 +587,9 @@ namespace Server.Mobiles
                               || m_Mobile.Combatant.Deleted
                               || !m_Mobile.Combatant.Alive;
 
-            if ( threatGone || m_Mobile.Hits > m_Mobile.HitsMax * 2 / 3 )
+            double recoverThreshold = Math.Min( 1.0, bot.GetFleeThreshold() + 0.20 );
+
+            if ( threatGone || (double)m_Mobile.Hits / m_Mobile.HitsMax > recoverThreshold )
             {
                 Action           = ActionType.Wander;
                 m_Mobile.Warmode = false;
@@ -597,9 +610,15 @@ namespace Server.Mobiles
                 return true;
             }
 
-            EnsureRunSpeed();
-            m_Mobile.FocusMob = m_Mobile.Combatant;
-            base.DoActionFlee();
+            // Explicitly enforce BotRunSpeed. ActionType.Flee would set CurrentSpeed = ActiveSpeed
+            // (0.15), which is lower than BotRunSpeed (0.2) and bypasses EnsureRunSpeed's
+            // downward-only cap — making fleeing bots move faster than intended.
+            if ( m_Mobile.CurrentSpeed != BotRunSpeed )
+                m_Mobile.CurrentSpeed = BotRunSpeed;
+
+            m_Mobile.Warmode = true;
+            // Flee only 8-10 tiles — base.DoActionFlee() targets RangePerception*2-3 = 20-30 tiles
+            WalkMobileRange( m_Mobile.Combatant, 1, true, 8, 10 );
             MaybeSpeak( bot );
             return true;
         }

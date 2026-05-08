@@ -1043,12 +1043,6 @@ namespace Server.Mobiles
         // ── Activity logic ──────────────────────────────────────────────────────
         public void ChooseNextActivity()
         {
-            if ( Hits < HitsMax / 2 )
-            {
-                ActivityState.SetActivity( BotActivity.Fleeing );
-                return;
-            }
-
             int roll = Utility.Random( 10 );
 
             switch ( m_Persona.Profile )
@@ -1155,9 +1149,26 @@ namespace Server.Mobiles
             return m_Persona.Profile != PlayerBotPersona.PlayerBotProfile.Crafter;
         }
 
+        public double GetFleeThreshold()
+        {
+            double threshold;
+            switch ( m_Persona.Experience )
+            {
+                case PlayerBotPersona.PlayerBotExperience.Newbie:      threshold = 0.55; break;
+                case PlayerBotPersona.PlayerBotExperience.Average:     threshold = 0.45; break;
+                case PlayerBotPersona.PlayerBotExperience.Proficient:  threshold = 0.35; break;
+                default: /* Grandmaster */                              threshold = 0.25; break;
+            }
+            if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                threshold -= 0.10;
+            if ( m_Persona.Profile == PlayerBotPersona.PlayerBotProfile.Crafter )
+                threshold += 0.10;
+            return Math.Max( 0.15, threshold );
+        }
+
         public bool ShouldFlee( Mobile attacker )
         {
-            if ( Hits > HitsMax / 2 ) return false;
+            if ( (double)Hits / HitsMax > GetFleeThreshold() ) return false;
 
             int diff = attacker.Hits - Hits;
             return Utility.Random( 100 ) < (15 + diff);
