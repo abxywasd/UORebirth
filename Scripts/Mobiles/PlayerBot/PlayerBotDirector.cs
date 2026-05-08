@@ -319,7 +319,7 @@ namespace Server.Mobiles
                 PlayerBot bot = World.FindMobile( m_BotSerials[i] ) as PlayerBot;
                 if ( bot == null || bot.Deleted )
                     m_BotSerials.RemoveAt( i );
-                else if ( bot.Map == Map.Internal )
+                else if ( bot.Map == Map.Internal && !bot.Controled )
                     bot.Delete(); // ghost bot — OnDelete() removes it from m_BotSerials
             }
 

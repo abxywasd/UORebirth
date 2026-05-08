@@ -124,6 +124,10 @@ namespace Server.Mobiles
 
         public override bool AlwaysMurderer { get { return m_IsPlayerKiller; } }
 
+        // Prevent the standard RunUO LoyaltyTimer from decrementing loyalty and
+        // eventually releasing hired bots via DoOrderRelease() after 10+ hours.
+        public override bool Commandable { get { return false; } }
+
         public ActivityState ActivityState
         {
             get
@@ -1646,7 +1650,10 @@ namespace Server.Mobiles
 
             bool success = SetControlMaster( m );
             if ( success )
+            {
+                Loyalty = (PetLoyalty)100;
                 ActivityState.SetActivity( BotActivity.Recruited );
+            }
 
             return success;
         }
