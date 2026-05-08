@@ -47,11 +47,14 @@ namespace Server.Mobiles
         private Timer        m_EncounterTimer;
         private Timer        m_BurstTimer;
 
+        // Per-player last-PK-encounter timestamp (transient, not serialized)
+        private Dictionary<Serial, DateTime> m_LastPKEncounterTime = new Dictionary<Serial, DateTime>();
+
         // Tunable settings (serialized v1)
         private int m_PoiTimeoutMinutes       = 15;
         private int m_EncounterTimeoutMinutes  = 8;
-        private int m_EncounterChancePct       = 40;
-        private int m_EncounterTickSeconds     = 15;
+        private int m_EncounterChancePct       = 15;
+        private int m_EncounterTickSeconds     = 30;
         private int m_PoiTickMinutes           = 2;
         private int m_DirectorTickMinutes      = 1;
         private int m_MaxBurstPerTick          = 5;
@@ -425,6 +428,9 @@ namespace Server.Mobiles
             Point3D? spawnPt = FindEncounterSpawnPoint( player );
             if ( !spawnPt.HasValue ) return;
 
+            // Fix 3: don't stack — skip if the player already has 2+ encounter bots nearby
+            if ( CountEncounterBotsNear( player.Location, player.Map, 30 ) >= 2 ) return;
+
             bool inTown       = Region.Find( spawnPt.Value,  player.Map ) is GuardedRegion;
             bool playerInTown = Region.Find( player.Location, player.Map ) is GuardedRegion;
 
@@ -440,12 +446,36 @@ namespace Server.Mobiles
 
                 if ( inTown && Utility.Random( 3 ) == 0 )
                     continue;
+
                 PlayerBot bot = new PlayerBot();
+
+                // Fix 4: reduce PK frequency in encounter spawns to ~1/3 of base rate
+                if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller
+                     && Utility.Random( 3 ) != 0 )
+                {
+                    bot.Delete();
+                    continue;
+                }
+
                 if ( (inTown || playerInTown) && bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
                 {
                     bot.Delete();
                     continue;
                 }
+
+                // Fix 1: PK-only cooldown — 4 minutes between PK encounter spawns per player
+                if ( bot.PlayerBotProfile == PlayerBotPersona.PlayerBotProfile.PlayerKiller )
+                {
+                    DateTime lastPK;
+                    if ( m_LastPKEncounterTime.TryGetValue( player.Serial, out lastPK )
+                         && (DateTime.Now - lastPK).TotalMinutes < 4.0 )
+                    {
+                        bot.Delete();
+                        continue;
+                    }
+                    m_LastPKEncounterTime[player.Serial] = DateTime.Now;
+                }
+
                 bot.MoveToWorld( loc, Map.Felucca );
                 bot.IsEncounterBot = true;
                 bot.MarkObserved();
@@ -464,6 +494,20 @@ namespace Server.Mobiles
 
                 RegisterBot( bot );
             }
+        }
+
+        private int CountEncounterBotsNear( Point3D loc, Map map, int range )
+        {
+            if ( map == null || map == Map.Internal ) return 0;
+            int count = 0;
+            foreach ( Serial s in m_BotSerials )
+            {
+                PlayerBot bot = World.FindMobile( s ) as PlayerBot;
+                if ( bot != null && !bot.Deleted && bot.IsEncounterBot
+                     && bot.Map == map && bot.InRange( loc, range ) )
+                    count++;
+            }
+            return count;
         }
 
         private Point3D? FindEncounterSpawnPoint( Mobile player )
@@ -664,8 +708,8 @@ namespace Server.Mobiles
         {
             m_PoiTimeoutMinutes       = 15;
             m_EncounterTimeoutMinutes  = 8;
-            m_EncounterChancePct      = 40;
-            m_EncounterTickSeconds    = 15;
+            m_EncounterChancePct      = 15;
+            m_EncounterTickSeconds    = 30;
             m_PoiTickMinutes          = 2;
             m_DirectorTickMinutes     = 1;
             m_MaxBurstPerTick         = 5;

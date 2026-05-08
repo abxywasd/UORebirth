@@ -1060,8 +1060,9 @@ namespace Server.Mobiles
                     break;
 
                 case PlayerBotPersona.PlayerBotProfile.PlayerKiller:
-                    if ( roll < 6 )      TravelToRandom( BotActivity.Hunting );
-                    else if ( roll < 9 ) ActivityState.SetActivity( BotActivity.Hunting );
+                    if ( roll < 4 )      TravelToRandom( BotActivity.Hunting );
+                    else if ( roll < 6 ) ActivityState.SetActivity( BotActivity.Hunting );
+                    else if ( roll < 8 ) TravelToRandom( BotActivity.TownVisit );
                     else                 ActivityState.SetActivity( BotActivity.Wandering );
                     break;
 
