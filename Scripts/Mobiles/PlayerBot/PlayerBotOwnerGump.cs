@@ -1101,4 +1101,97 @@ namespace Server.Mobiles
             }
         }
     }
+
+    // ============================================================
+    // PlayerBotLootTarget — collects a dead bot's corpse contents
+    // into a bag placed in the looting bot's backpack.
+    // Only Corpse items whose Owner is a PlayerBot are accepted.
+    // ============================================================
+    public class PlayerBotLootTarget : Target
+    {
+        private Mobile    m_From;
+        private PlayerBot m_Bot;   // the living bot that will carry the loot bag
+
+        public PlayerBotLootTarget( Mobile from, PlayerBot bot )
+            : base( 8, false, TargetFlags.None )
+        {
+            m_From = from;
+            m_Bot  = bot;
+        }
+
+        protected override void OnTarget( Mobile from, object targeted )
+        {
+            if ( m_Bot == null || m_Bot.Deleted || !m_Bot.Alive
+                 || !m_Bot.Controled || m_Bot.ControlMaster != from )
+            {
+                from.SendMessage( "Your bot is no longer available to carry loot." );
+                return;
+            }
+
+            if ( m_Bot.Backpack == null )
+            {
+                from.SendMessage( m_Bot.Name + " has no backpack." );
+                return;
+            }
+
+            Corpse corpse = targeted as Corpse;
+            if ( corpse != null && !corpse.Deleted )
+            {
+                PlayerBot corpseOwner = corpse.Owner as PlayerBot;
+                if ( corpseOwner != null )
+                {
+                    LootFromContainer( from, corpse, corpseOwner.Name );
+                    return;
+                }
+            }
+
+            from.SendMessage( "You can only loot the remains of a fallen bot." );
+        }
+
+        private void LootFromContainer( Mobile from, Container source, string deceasedName )
+        {
+            if ( source == null || source.Deleted )
+            {
+                from.SendMessage( "There is nothing to loot." );
+                return;
+            }
+
+            var items = new List<Item>();
+            foreach ( Item item in source.Items )
+            {
+                if ( item != null && !item.Deleted )
+                    items.Add( item );
+            }
+
+            if ( items.Count == 0 )
+            {
+                from.SendMessage( "There is nothing to loot." );
+                return;
+            }
+
+            if ( m_Bot.Backpack.Items.Count >= 125 )
+            {
+                from.SendMessage( m_Bot.Name + "'s pack is full." );
+                return;
+            }
+
+            Backpack bag = new Backpack();
+            bag.Name = deceasedName + "'s belongings";
+
+            foreach ( Item item in items )
+                bag.DropItem( item );
+
+            m_Bot.Backpack.DropItem( bag );
+            from.SendMessage( "{0} collects {1}'s belongings.", m_Bot.Name, deceasedName );
+        }
+
+        protected override void OnTargetOutOfRange( Mobile from, object targeted )
+        {
+            from.SendMessage( "That is too far away." );
+        }
+
+        protected override void OnTargetCancel( Mobile from, TargetCancelType cancelType )
+        {
+        }
+    }
 }

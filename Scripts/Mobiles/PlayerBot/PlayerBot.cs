@@ -1368,6 +1368,40 @@ namespace Server.Mobiles
                 }
             }
 
+            // ── Loot command: "loot" or "<botname> loot" ─────────────────────────
+            if ( !e.Handled && e.Mobile.InRange( this, 6 ) )
+            {
+                string lootSpeech = e.Speech.ToLower().Trim();
+                string botNameLow = this.Name != null ? this.Name.ToLower() : "";
+
+                bool isLoot = lootSpeech == "loot" || lootSpeech == botNameLow + " loot";
+
+                if ( isLoot )
+                {
+                    e.Handled = true;
+
+                    if ( this.Controled && this.ControlMaster == e.Mobile )
+                    {
+                        if ( this.IsDeadPet )
+                        {
+                            e.Mobile.SendMessage( "Your bot is dead and cannot carry loot." );
+                        }
+                        else
+                        {
+                            e.Mobile.SendMessage( this.Name + " is ready to collect loot. Target a fallen bot's remains." );
+                            e.Mobile.Target = new PlayerBotLootTarget( e.Mobile, this );
+                        }
+                    }
+                    else
+                    {
+                        Say( "I don't think we've been introduced..." );
+                    }
+
+                    base.OnSpeech( e );
+                    return;
+                }
+            }
+
             if ( !e.Handled && e.Mobile.InRange( this, 4 ) )
             {
                 // Hire keyword
