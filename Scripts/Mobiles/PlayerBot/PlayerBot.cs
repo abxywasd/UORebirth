@@ -1429,6 +1429,7 @@ namespace Server.Mobiles
                 Hits = 0; Stam = 0; Mana = 0;
 
                 IsDeadPet     = true;
+                Warmode       = true;   // ghost visible via CanSee(m.Warmode) check
                 ControlTarget = ControlMaster;
                 ControlOrder  = OrderType.Follow;
 
@@ -1452,6 +1453,7 @@ namespace Server.Mobiles
         {
             base.OnAfterResurrect();
             StopGhostSpeechTimer();
+            Warmode = false;
 
             if ( m_GhostRobe != null )
             {
